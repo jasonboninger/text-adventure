@@ -1,16 +1,43 @@
 import { XMessage } from "./message";
-import { IOneOrArray, IOneOrDictionary } from "./core";
-import { IFunction, IFunctionCondition } from "./function";
+import { IOneOrArray, IDictionary } from "./core";
+import { IConditions } from "./condition";
 
-export type XActions = IActions | IAction;
-
-export interface IActions {
-	tests?: IOneOrDictionary<IFunctionCondition>;
-	actions: IOneOrArray<IAction>;
-}
+export type XAction = IActionIIf | IActionMessage | IActionChanges | IActionTriggers;
 
 export interface IAction {
-	tests?: IOneOrDictionary<IFunctionCondition>;
-	messages?: IOneOrArray<XMessage>;
-	functions?: IOneOrArray<IFunction>;
+	tests?: IDictionary<IConditions>;
+}
+
+export interface IActionIIf extends IAction {
+	if: IIf;
+	messages?: never;
+	changes?: never;
+	triggers?: never;
+}
+
+export interface IActionMessage extends IAction {
+	if?: never;
+	messages: IOneOrArray<XMessage>;
+	changes?: never;
+	triggers?: never;
+}
+
+export interface IActionChanges extends IAction {
+	if?: never;
+	messages?: never;
+	changes: IDictionary<string>;
+	triggers?: never;
+}
+
+export interface IActionTriggers extends IAction {
+	if?: never;
+	messages?: never;
+	changes?: never;
+	triggers: IDictionary<IDictionary<string>>;
+}
+
+export interface IIf {
+	condition: IConditions;
+	true?: IOneOrArray<XAction>;
+	false?: IOneOrArray<XAction>;
 }

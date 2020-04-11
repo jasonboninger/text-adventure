@@ -1,11 +1,10 @@
 import { IDictionary, IOneOrArray } from "./core";
+import { IItem } from "./item";
 import { IConditions } from "./condition";
 import { ICommand } from "./command";
 
-export interface IItem {
-	names: IOneOrArray<string>;
-	active?: boolean;
+export interface IArea {
+	items?: IDictionary<IItem>;
 	tests?: IDictionary<IConditions>;
-	commands?: IDictionary<ICommand>;
-	items?: IOneOrArray<IItem>;
+	commands?: IDictionary<IOneOrArray<ICommand>>;
 }

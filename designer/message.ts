@@ -1,15 +1,19 @@
-import { IOneOrDictionary } from "./core";
+import { IOneOrArray, IDictionary } from "./core";
 
-export type XMessage = string | IMessageRaw | IMessageFormatted;
-export type XLine = string | ILine | ISpecial;
+export type XMessage = string | IMessageInlined | IMessageTemplated | IInput;
+export type XLine = string | ILine | ISpecial | IInput;
 
-export interface IMessageRaw {
-	lines: XLine | XLine[];
+export interface IMessageInlined {
+	lines: IOneOrArray<XLine>;
 }
 
-export interface IMessageFormatted {
+export interface IMessageTemplated {
 	template: string;
-	inputs: IOneOrDictionary<XMessage>
+	inputs?: {
+		messages?: IDictionary<IOneOrArray<XMessage>>;
+		lines?: IDictionary<IOneOrArray<XLine>>;
+		texts?: IDictionary<string>;
+	}
 }
 
 export interface ILine {
@@ -18,4 +22,8 @@ export interface ILine {
 
 export interface ISpecial {
 	special: "horizontal-rule" | "blank";
+}
+
+export interface IInput {
+	input: string;
 }
