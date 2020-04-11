@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace BoningerWorks.TextAdventure.Engine.Instructions
+namespace BoningerWorks.TextAdventure.Engine.Blueprints
 {
 	public class CommandBlueprint
 	{

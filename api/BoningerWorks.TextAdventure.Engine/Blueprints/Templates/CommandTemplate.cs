@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace BoningerWorks.TextAdventure.Engine.Instructions.Templates
+namespace BoningerWorks.TextAdventure.Engine.Blueprints.Templates
 {
 	public class CommandTemplate
 	{
