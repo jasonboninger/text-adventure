@@ -1,4 +1,5 @@
 ﻿using BoningerWorks.TextAdventure.Engine.Static;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -8,24 +9,28 @@ namespace BoningerWorks.TextAdventure.Engine.Utilities
 {
 	public class Names : IReadOnlyList<Name>
 	{
-		public int Count => _names.Count;
+		public int Count => _names.Length;
 		public Name this[int index] => _names[index];
 
 		public string RegularExpression { get; }
 
-		private readonly ImmutableList<Name> _names;
+		private readonly ImmutableArray<Name> _names;
+		private readonly IEnumerable<Name> _namesEnumerable;
 
-		public Names(IEnumerable<string> strings) : this(strings.Select(s => new Name(s))) { }
-		public Names(IEnumerable<Name> names) : this(names.ToImmutableList()) { }
-		public Names(ImmutableList<Name> names)
+		public Names(IEnumerable<string> strings) : this(strings?.Select(s => new Name(s))) { }
+		public Names(IEnumerable<Name> names) : this(names?.ToImmutableArray()) { }
+		public Names(ImmutableArray<Name> names) : this((ImmutableArray<Name>?)names) { }
+		private Names(ImmutableArray<Name>? names)
 		{
 			// Set names
-			_names = names;
+			_names = names ?? throw new ArgumentException("Names cannot be null.", nameof(names));
+			// Set enumerable names
+			_namesEnumerable = _names;
 			// Set regular expression
 			RegularExpression = _CreateRegularExpression(_names);
 		}
 
-		private static string _CreateRegularExpression(ImmutableList<Name> names)
+		private static string _CreateRegularExpression(ImmutableArray<Name> names)
 		{
 			// Create regular expression
 			var regularExpression = string.Join(@"|", names.Select(n => RegularExpressions.CreateNonCapturingGroup(n.RegularExpression)));
@@ -33,7 +38,7 @@ namespace BoningerWorks.TextAdventure.Engine.Utilities
 			return regularExpression;
 		}
 
-		public IEnumerator<Name> GetEnumerator() => _names.GetEnumerator();
-		IEnumerator IEnumerable.GetEnumerator() => _names.GetEnumerator();
+		public IEnumerator<Name> GetEnumerator() => _namesEnumerable.GetEnumerator();
+		IEnumerator IEnumerable.GetEnumerator() => _namesEnumerable.GetEnumerator();
 	}
 }
