@@ -1,7 +1,9 @@
-import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { HttpClientModule } from "@angular/common/http";
 
 import { AppRoutingModule } from "./app-routing.module";
+import { SharedModule } from "./modules/shared/shared.module";
 import { AppComponent } from "./app.component";
 import { ShellComponent } from "./components/shell/shell.component";
 import { PageNotFoundComponent } from "./components/page-not-found/page-not-found.component";
@@ -13,8 +15,10 @@ import { PageNotFoundComponent } from "./components/page-not-found/page-not-foun
 		PageNotFoundComponent
 	],
 	imports: [
-		BrowserModule,
-		AppRoutingModule
+		BrowserAnimationsModule,
+		HttpClientModule,
+		AppRoutingModule,
+		SharedModule,
 	],
 	providers: [],
 	bootstrap: [AppComponent]
