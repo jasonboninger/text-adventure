@@ -107,7 +107,7 @@ export const CRAZY_EX: IGame = {
 	areas: {
 		HOTEL_ROOM: {
 			tests: {
-				DOOR_USED: ["${HOTEL_ROOM.DOOR.USED}", "==", "yes"]
+				DOOR_USED: ["${DOOR.USED}", "==", "yes"]
 			},
 			items: {
 				DOOR: {
@@ -123,13 +123,13 @@ export const CRAZY_EX: IGame = {
 										},
 										{
 											changes: {
-												"HOTEL_ROOM.DOOR.USED": "yes"
+												"DOOR.USED": "yes"
 											}
 										},
 										{
 											triggers: {
 												USE: {
-													ITEM: "HOTEL_ROOM.DOOR"
+													ITEM: "DOOR"
 												}
 											}
 										}
@@ -150,13 +150,13 @@ export const CRAZY_EX: IGame = {
 				SURVEY: {
 					actions: {
 						if: {
-							condition: "!HOTEL_ROOM.DOOR_USED",
+							condition: "!DOOR_USED",
 							true: {
 								messages: "This room looks pretty cool, but you just want to get out of here and go about your day. You should probably head for the door."
 							},
 							false: {
 								if: {
-									condition: ["${HOTEL_ROOM.NOTE_WOODEN.VIEWED}", "==", "yes"],
+									condition: ["${NOTE_WOODEN.VIEWED}", "==", "yes"],
 									true: {
 										messages: "You glance around the room, and it all looks pretty normal. You still can't believe that the door is locked. Maybe there's something to be done if you take a closer look."
 									},
