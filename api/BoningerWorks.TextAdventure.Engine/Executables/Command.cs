@@ -112,11 +112,11 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 
 		private ImmutableArray<Symbol> _CreatePartSymbols(List<string> parts)
 		{
-			// Check if parts does not exist
-			if (parts == null)
+			// Check if parts does not exist or is empty
+			if (parts == null || parts.Count == 0)
 			{
 				// Throw error
-				throw new ArgumentException($"Command ({Symbol}) parts cannot be null.", nameof(parts));
+				throw new ArgumentException($"Command ({Symbol}) parts cannot be null or empty.", nameof(parts));
 			}
 			// Create part symbols
 			var partSymbols = parts.Select(p => new Symbol(p)).ToImmutableArray();
