@@ -7,13 +7,13 @@ import { IConditions } from "./condition";
 import { XAction } from "./action";
 
 export interface IGame {
-	templates?: {
-		commands?: IDictionary<ICommandTemplate>;
+	templates: {
+		commands: IDictionary<ICommandTemplate>;
 		messages?: IDictionary<IMessageTemplate>;
 	};
-	player?: IPlayer;
+	player: IPlayer;
 	tests?: IDictionary<IConditions>;
 	start?: IOneOrArray<XAction>;
-	areas?: IDictionary<IArea>;
+	areas: IDictionary<IArea>;
 	end?: IOneOrArray<XAction>;
 }

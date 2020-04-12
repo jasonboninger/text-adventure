@@ -48,26 +48,25 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		private readonly ImmutableDictionary<Symbol, Item> _itemSymbolToItemMappings;
 		private readonly ImmutableDictionary<Name, ImmutableArray<Item>> _itemNameToItemsMappings;
 
-		public Items(IEnumerable<Item> items) : this(items?.ToImmutableArray()) { }
-		public Items(ImmutableArray<Item> items) : this((ImmutableArray<Item>?)items) { }
-		private Items(ImmutableArray<Item>? items)
+		public Items(IEnumerable<Item> items) : this(items.ToImmutableArray()) { }
+		public Items(ImmutableArray<Item> items)
 		{
-			// Set items
-			_items = items ?? throw new ArgumentException("Items cannot be null.", nameof(items));
-			// Set enumerable items
-			_itemsEnumerable = _items;
 			// Check if not all items exist
-			if (_items.Any(i => i == null))
+			if (items.Any(i => i == null))
 			{
 				// Throw error
 				throw new ArgumentException("No items can be null", nameof(items));
 			}
 			// Check if not all item names are unique
-			if (_items.Select(i => i.Name).Distinct().Count() != _items.Length)
+			if (items.Select(i => i.Name).Distinct().Count() != items.Length)
 			{
 				// Throw error
 				throw new ArgumentException("Not all item names are unique.", nameof(items));
 			}
+			// Set items
+			_items = items;
+			// Set enumerable items
+			_itemsEnumerable = _items;
 			// Create item symbol to item mappings
 			_itemSymbolToItemMappings = _items.ToImmutableDictionary(i => i.Symbol);
 			// Create item name to items mappings

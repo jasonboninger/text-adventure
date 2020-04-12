@@ -11,14 +11,15 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 {
 	public class CommandParser
 	{
+		public ImmutableArray<Symbol> ItemSymbols { get; }
+
 		private readonly Items _items;
 		private readonly Regex _regularExpression;
-		private readonly ImmutableArray<Symbol> _itemSymbols;
 
 		public CommandParser(Items items, CommandTemplate commandTemplate)
 		{
 			// Set items
-			_items = items ?? throw new ArgumentException("Items cannot be null.", nameof(items));
+			_items = items;
 			// Check if command template does not exist
 			if (commandTemplate == null)
 			{
@@ -28,7 +29,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			// Get part symbols
 			var partSymbols = _CreatePartSymbols(commandTemplate.Parts);
 			// Check if not all part symbols are unique
-			if (partSymbols.Distinct().Count() != partSymbols.Count)
+			if (partSymbols.Distinct().Count() != partSymbols.Length)
 			{
 				// Throw error
 				throw new InvalidOperationException("Not all part symbols are unique.");
@@ -51,10 +52,10 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			// Set regular expression
 			_regularExpression = _CreateRegularExpression(_items, partSymbols, wordSymbolToWordNamesMappings, itemSymbols);
 			// Set item symbols
-			_itemSymbols = partSymbols.Where(p => itemSymbols.Contains(p)).ToImmutableArray();
+			ItemSymbols = partSymbols.Where(p => itemSymbols.Contains(p)).ToImmutableArray();
 		}
 
-		public bool TryParseInput(string input, out Dictionary<Symbol, ImmutableArray<Item>> itemSymbolToItemsMappings)
+		public bool TryMatchCommand(string input, out ImmutableDictionary<Symbol, ImmutableArray<Item>> itemSymbolToItemsMappings)
 		{
 			// Get match
 			var match = _regularExpression.Match(input);
@@ -66,12 +67,12 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				// Return failed
 				return false;
 			}
-			// Create item symbol to items mappings
-			itemSymbolToItemsMappings = new Dictionary<Symbol, ImmutableArray<Item>>();
+			// Create item symbol to items mappings builder
+			var itemSymbolToItemsMappingsBuilder = ImmutableDictionary.CreateBuilder<Symbol, ImmutableArray<Item>>();
 			// Run through item symbols
-			for (int i = 0; i < _itemSymbols.Length; i++)
+			for (int i = 0; i < ItemSymbols.Length; i++)
 			{
-				var itemSymbol = _itemSymbols[i];
+				var itemSymbol = ItemSymbols[i];
 				// Get item group
 				var itemGroup = itemSymbol.ToString();
 				// Get group
@@ -81,13 +82,15 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				// Get items
 				var items = _items[itemName];
 				// Add item symbol to items mapping
-				itemSymbolToItemsMappings.Add(itemSymbol, items);
+				itemSymbolToItemsMappingsBuilder.Add(itemSymbol, items);
 			}
+			// Set item symbol to items mappings
+			itemSymbolToItemsMappings = itemSymbolToItemsMappingsBuilder.ToImmutable();
 			// Return succeeded
 			return true;
 		}
 
-		private static List<Symbol> _CreatePartSymbols(List<string> parts)
+		private static ImmutableArray<Symbol> _CreatePartSymbols(List<string> parts)
 		{
 			// Check if parts does not exist
 			if (parts == null)
@@ -96,35 +99,35 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				throw new ArgumentException("Parts cannot be null.", nameof(parts));
 			}
 			// Create part symbols
-			var partSymbols = parts.Select(p => new Symbol(p)).ToList();
+			var partSymbols = parts.Select(p => new Symbol(p)).ToImmutableArray();
 			// Return part symbols
 			return partSymbols;
 		}
 
-		private static Dictionary<Symbol, Names> _CreateWordSymbolToWordNamesMappings(Dictionary<string, OneOrManyList<string>> words)
+		private static ImmutableDictionary<Symbol, Names> _CreateWordSymbolToWordNamesMappings(Dictionary<string, OneOrManyList<string>> words)
 		{
 			// Check if words does not exist
 			if (words == null)
 			{
 				// Return no word symbol to word names mappings
-				return new Dictionary<Symbol, Names>();
+				return ImmutableDictionary<Symbol, Names>.Empty;
 			}
 			// Create word symbol to word names mappings
-			var wordSymbolToWordNamesMappings = words.ToDictionary(kv => new Symbol(kv.Key), kv => new Names(kv.Value));
+			var wordSymbolToWordNamesMappings = words.ToImmutableDictionary(kv => new Symbol(kv.Key), kv => new Names(kv.Value));
 			// Return word symbol to word names mappings
 			return wordSymbolToWordNamesMappings;
 		}
 
-		private static List<Symbol> _CreateItemSymbols(List<string> items)
+		private static ImmutableList<Symbol> _CreateItemSymbols(List<string> items)
 		{
 			// Check if items does not exist
 			if (items == null)
 			{
 				// Return no item symbols
-				return new List<Symbol>();
+				return ImmutableList<Symbol>.Empty;
 			}
 			// Create item symbols
-			var itemSymbols = items.Select(i => new Symbol(i)).ToList();
+			var itemSymbols = items.Select(i => new Symbol(i)).ToImmutableList();
 			// Return item symbols
 			return itemSymbols;
 		}
@@ -132,9 +135,9 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		private static Regex _CreateRegularExpression
 		(
 			Items items,
-			List<Symbol> partSymbols, 
-			Dictionary<Symbol, Names> wordSymbolToWordNamesMappings, 
-			List<Symbol> itemSymbols
+			ImmutableArray<Symbol> partSymbols,
+			ImmutableDictionary<Symbol, Names> wordSymbolToWordNamesMappings,
+			ImmutableList<Symbol> itemSymbols
 		)
 		{
 			// Create regular expressions
