@@ -6,8 +6,8 @@
 			"@app/*": ["src/app/*"],
 			"@models/*": ["src/app/models/*"],
 			"@services/*": ["src/app/services/*"],
-			"@utility/*": ["src/app/utility/*"],
 			"@shared/*": ["src/app/modules/shared/*"],
+			"@utilities/*": ["src/app/utilities/*"],
 			"@env/*": ["src/environments/*"]
 		},
 		"outDir": "./dist/out-tsc",
