@@ -1,18 +1,22 @@
-﻿using BoningerWorks.TextAdventure.Engine.Blueprints.Items;
+﻿using BoningerWorks.TextAdventure.Engine.Blueprints;
+using BoningerWorks.TextAdventure.Engine.Blueprints.Items;
+using BoningerWorks.TextAdventure.Engine.Executables.Maps;
 using BoningerWorks.TextAdventure.Engine.Utilities;
 using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 
 namespace BoningerWorks.TextAdventure.Engine.Executables
 {
 	public class Item
 	{
-		public string RegularExpression => Names.RegularExpression;
-
 		public Symbol Symbol { get; }
 		public Name Name { get; }
 		public Names Names { get; }
+		public string RegularExpression { get; }
 		public bool Active { get; }
+		public ImmutableArray<CommandMap> CommandMaps { get; }
 
 		public Item(Symbol symbol, ItemBlueprint itemBlueprint)
 		{
@@ -34,14 +38,32 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			Names = new Names(itemBlueprint.Names.Select(n => new Name(n)));
 			// Set name
 			Name = Names.First();
+			// Set regular expression
+			RegularExpression = Names.RegularExpression;
 			// Set active
 			Active = itemBlueprint.Active ?? true;
+			// Set command maps
+			CommandMaps = _CreateCommandMaps(itemBlueprint.Commands);
 		}
 
 		public override string ToString()
 		{
 			// Return symbol
 			return Symbol.ToString();
+		}
+
+		private ImmutableArray<CommandMap> _CreateCommandMaps(Dictionary<string, CommandBlueprint> commandBlueprints)
+		{
+			// Check if command blueprints does not exist
+			if (commandBlueprints == null)
+			{
+				// Return no command maps
+				return ImmutableArray<CommandMap>.Empty;
+			}
+			// Create command maps
+			var commandMaps = commandBlueprints.Select(kv => new CommandMap(new Symbol(kv.Key), kv.Value, Symbol)).ToImmutableArray();
+			// Return command maps
+			return commandMaps;
 		}
 	}
 }

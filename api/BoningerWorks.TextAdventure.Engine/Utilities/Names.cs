@@ -17,13 +17,17 @@ namespace BoningerWorks.TextAdventure.Engine.Utilities
 		private readonly ImmutableArray<Name> _names;
 		private readonly IEnumerable<Name> _namesEnumerable;
 
-		public Names(IEnumerable<string> strings) : this(strings?.Select(s => new Name(s))) { }
-		public Names(IEnumerable<Name> names) : this(names?.ToImmutableArray()) { }
-		public Names(ImmutableArray<Name> names) : this((ImmutableArray<Name>?)names) { }
-		private Names(ImmutableArray<Name>? names)
+		public Names(IEnumerable<Name> names) : this(names.ToImmutableArray()) { }
+		public Names(ImmutableArray<Name> names)
 		{
+			// Check if no names exist
+			if (names.Length == 0)
+			{
+				// Throw error
+				throw new ArgumentException("At least one name is required.", nameof(names));
+			}
 			// Set names
-			_names = names ?? throw new ArgumentException("Names cannot be null.", nameof(names));
+			_names = names;
 			// Set enumerable names
 			_namesEnumerable = _names;
 			// Set regular expression

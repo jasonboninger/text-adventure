@@ -57,6 +57,12 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				// Throw error
 				throw new ArgumentException("No items can be null", nameof(items));
 			}
+			// Check if not all item symbols are unique
+			if (items.Select(i => i.Symbol).Distinct().Count() != items.Length)
+			{
+				// Throw error
+				throw new ArgumentException("Not all item symbols are unique.", nameof(items));
+			}
 			// Check if not all item names are unique
 			if (items.Select(i => i.Name).Distinct().Count() != items.Length)
 			{
@@ -76,6 +82,18 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				.ToImmutableDictionary(g => g.Key, g => g.Distinct().ToImmutableArray());
 			// Set regular expression
 			RegularExpression = _CreateRegularExpression(_items);
+		}
+
+		public bool ExistsItem(Symbol symbol)
+		{
+			// Return if item symbol exists
+			return _itemSymbolToItemMappings.ContainsKey(symbol);
+		}
+
+		public bool ExistsName(Name name)
+		{
+			// Return if item name exists
+			return _itemNameToItemsMappings.ContainsKey(name);
 		}
 
 		public IEnumerator<Item> GetEnumerator() => _itemsEnumerable.GetEnumerator();
