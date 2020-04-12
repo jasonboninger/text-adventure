@@ -1,4 +1,9 @@
 ﻿namespace BoningerWorks.TextAdventure.Engine.Blueprints
 {
-	public class ActionBlueprint { }
+	public class ActionBlueprint 
+	{
+	
+	
+	
+	}
 }

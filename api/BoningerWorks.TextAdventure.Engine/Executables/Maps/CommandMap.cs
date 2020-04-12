@@ -5,13 +5,14 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
-namespace BoningerWorks.TextAdventure.Engine.Executables
+namespace BoningerWorks.TextAdventure.Engine.Executables.Maps
 {
 	public class CommandMap
 	{
 		public Symbol CommandSymbol { get; }
 		public ImmutableDictionary<Symbol, Symbol> CommandItemSymbolToItemSymbolMappings { get; }
 		public Symbol ItemSymbolDefault { get; }
+		public ActionMap ActionMap { get; }
 
 		public CommandMap(Symbol commandSymbol, CommandBlueprint commandBlueprint, Symbol itemSymbolDefault = null)
 		{
@@ -28,6 +29,8 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				.ToImmutableDictionary(kv => new Symbol(kv.Key), kv => new Symbol(kv.Value));
 			// Set default item symbol
 			ItemSymbolDefault = itemSymbolDefault;
+			// Create action map
+			ActionMap = new ActionMap(commandBlueprint.Actions);
 		}
 	}
 }
