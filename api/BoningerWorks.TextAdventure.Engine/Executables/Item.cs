@@ -10,11 +10,10 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 {
 	public class Item
 	{
-		public string RegularExpression => Names.RegularExpression;
-
 		public Symbol Symbol { get; }
 		public Name Name { get; }
 		public Names Names { get; }
+		public string RegularExpression { get; }
 		public bool Active { get; }
 		public ImmutableArray<CommandMap> CommandMaps { get; }
 
@@ -38,6 +37,8 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			Names = new Names(itemBlueprint.Names.Select(n => new Name(n)));
 			// Set name
 			Name = Names.First();
+			// Set regular expression
+			RegularExpression = Names.RegularExpression;
 			// Set active
 			Active = itemBlueprint.Active ?? true;
 			// Set command maps
