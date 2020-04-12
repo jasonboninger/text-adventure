@@ -133,7 +133,12 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				return ImmutableDictionary<Symbol, Names>.Empty;
 			}
 			// Create word symbol to word names mappings
-			var wordSymbolToWordNamesMappings = words.ToImmutableDictionary(kv => new Symbol(kv.Key), kv => new Names(kv.Value));
+			var wordSymbolToWordNamesMappings = words
+				.ToImmutableDictionary
+					(
+						kv => new Symbol(kv.Key), 
+						kv => new Names(kv.Value.Select(n => new Name(n)))
+					);
 			// Return word symbol to word names mappings
 			return wordSymbolToWordNamesMappings;
 		}
