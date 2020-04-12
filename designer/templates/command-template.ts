@@ -1,7 +1,7 @@
-import { IDictionary } from "../core";
+import { IDictionary, IOneOrArray } from "../core";
 
 export interface ICommandTemplate {
-	template: string[];
-	words: IDictionary<string[]>;
-	items?: string[];
+	template: IOneOrArray<string>;
+	words: IDictionary<IOneOrArray<string>>;
+	items?: IOneOrArray<string>;
 }

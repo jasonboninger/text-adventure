@@ -101,7 +101,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			return partSymbols;
 		}
 
-		private static Dictionary<Symbol, Names> _CreateWordSymbolToWordNamesMappings(Dictionary<string, List<string>> words)
+		private static Dictionary<Symbol, Names> _CreateWordSymbolToWordNamesMappings(Dictionary<string, OneOrManyList<string>> words)
 		{
 			// Check if words does not exist
 			if (words == null)
