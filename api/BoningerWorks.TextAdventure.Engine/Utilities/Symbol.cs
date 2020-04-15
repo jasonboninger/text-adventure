@@ -5,7 +5,18 @@ namespace BoningerWorks.TextAdventure.Engine.Utilities
 {
 	public sealed class Symbol : IEquatable<Symbol>
 	{
+		public static Symbol Global { get; }
+		public static Symbol Player { get; }
+
 		private static readonly Regex _regularExpressionValid = new Regex(@"^[A-Z0-9_]+$", RegexOptions.Singleline);
+
+		static Symbol()
+		{
+			// Create global
+			Global = new Symbol("GAME");
+			// Create player
+			Player = new Symbol("PLAYER");
+		}
 
 		public static bool operator ==(Symbol left, Symbol right) => Equals(left, null) ? Equals(right, null) : left.Equals(right);
 		public static bool operator !=(Symbol left, Symbol right) => !(left == right);

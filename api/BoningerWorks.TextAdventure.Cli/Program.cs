@@ -11,10 +11,12 @@ namespace BoningerWorks.TextAdventure.Cli
 	{
 		static void Main()
 		{
-			// Create game blueprint
-			var gameBlueprint = JsonSerializer.Deserialize<GameBlueprint>(CrazyEx.JSON, JsonConfigurations.CreateOptions());
+			// Create blueprint
+			var blueprint = JsonSerializer.Deserialize<GameBlueprint>(CrazyEx.JSON, JsonConfigurations.CreateOptions());
 			// Create game
-			var game = new Game(gameBlueprint);
+			var game = new Game(blueprint);
+			// Create state
+			var state = game.New();
 			// Loop forever
 			while (true)
 			{
@@ -23,7 +25,7 @@ namespace BoningerWorks.TextAdventure.Cli
 				// Get input
 				var input = Console.ReadLine();
 				// Execute input
-				var responses = game.Execute(input);
+				var responses = game.Execute(state, input);
 				// Run through responses
 				foreach (var response in responses)
 				{

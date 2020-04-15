@@ -12,16 +12,19 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 	public class Item
 	{
 		public Symbol Symbol { get; }
+		public Symbol Location { get; }
 		public Name Name { get; }
 		public Names Names { get; }
 		public string RegularExpression { get; }
 		public bool Active { get; }
 		public ImmutableArray<CommandMap> CommandMaps { get; }
 
-		public Item(Symbol symbol, ItemBlueprint itemBlueprint)
+		public Item(Symbol symbol, Symbol location, ItemBlueprint itemBlueprint)
 		{
 			// Set symbol
-			Symbol = symbol ?? throw new ArgumentException("Symbol cannot be null.", nameof(symbol));
+			Symbol = symbol;
+			// Set location
+			Location = location;
 			// Check if item blueprint does not exist
 			if (itemBlueprint == null)
 			{

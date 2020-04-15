@@ -1,5 +1,6 @@
 ﻿using BoningerWorks.TextAdventure.Engine.Blueprints;
 using BoningerWorks.TextAdventure.Engine.Blueprints.Templates;
+using BoningerWorks.TextAdventure.Engine.States;
 using BoningerWorks.TextAdventure.Engine.Utilities;
 using System;
 using System.Collections.Generic;
@@ -34,7 +35,28 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			Commands = _CreateCommands(Items, templateBlueprints.Commands);
 		}
 
-		public List<string> Execute(string input)
+		public GameState New()
+		{
+			// Create game state
+			var gameState = GameState.Create();
+			// Add global state
+			gameState.EntityStates.Add(Symbol.Global, EntityState.CreateGlobal());
+			// Add player state
+			gameState.EntityStates.Add(Symbol.Player, EntityState.CreatePlayer());
+			// Run through items
+			for (int i = 0; i < Items.Count; i++)
+			{
+				var item = Items[i];
+				// Create item state
+				var itemState = EntityState.CreateItem(item.Location, item.Active);
+				// Add item state
+				gameState.EntityStates.Add(item.Symbol, itemState);
+			}
+			// Return game state
+			return gameState;
+		}
+
+		public List<string> Execute(GameState state, string input)
 		{
 			// Create responses
 			var responses = new List<string>();
@@ -74,7 +96,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			}
 			// Create items
 			var items = Enumerable.Empty<Item>()
-				.Concat(playerBlueprint.Items?.Select(kv => new Item(new Symbol(kv.Key), kv.Value)) ?? Enumerable.Empty<Item>());
+				.Concat(playerBlueprint.Items?.Select(kv => new Item(new Symbol(kv.Key), Symbol.Player, kv.Value)) ?? Enumerable.Empty<Item>());
 			// Return items
 			return new Items(items);
 		}
