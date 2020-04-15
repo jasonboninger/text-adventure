@@ -1,33 +1,30 @@
 import { IGame } from "./game";
 
-// Use axe on tree
-// [Some word before] [the item to use] [some other joining words] [the item to be interacted with using the first item]
-
 export const CRAZY_EX: IGame = {
 	templates: {
 		commands: {
 			INSPECT: {
-				template: ["COMMAND", "ITEM"],
+				parts: ["COMMAND", "ITEM"],
 				words: {
 					COMMAND: ["Inspect", "Ins", "Look at", "Lookat", "Look", "Observe", "Check"],
 				},
 				items: ["ITEM"]
 			},
 			SURVEY: {
-				template: ["COMMAND"],
+				parts: ["COMMAND"],
 				words: {
 					COMMAND: ["Survey", "Look around", "Lookaround", "Look", "Observe"]
 				}
 			},
 			USE: {
-				template: ["COMMAND", "ITEM"],
+				parts: ["COMMAND", "ITEM"],
 				words: {
 					COMMAND: ["Use"]
 				},
 				items: ["ITEM"]
 			},
 			USE_ON: {
-				template: ["COMMAND_START", "ITEM_TO_USE", "COMMAND_JOIN", "ITEM_TO_USE_ON"],
+				parts: ["COMMAND_START", "ITEM_TO_USE", "COMMAND_JOIN", "ITEM_TO_USE_ON"],
 				words: {
 					COMMAND_START: ["Use", "Utilize", "Put", "Hold"],
 					COMMAND_JOIN: ["On", "With"]
@@ -82,18 +79,14 @@ export const CRAZY_EX: IGame = {
 		messages: [
 			{
 				template: "NOTE",
-				inputs: {
-					lines: {
-						BODY: "Boninger Works presents"
-					}
+				lines: {
+					BODY: "Boninger Works presents"
 				}
 			},
 			{
 				template: "NOTE",
-				inputs: {
-					lines: {
-						BODY: "Crazy Ex"
-					}
+				lines: {
+					BODY: "Crazy Ex"
 				}
 			},
 			{
@@ -191,10 +184,8 @@ export const CRAZY_EX: IGame = {
 			},
 			{
 				template: "NOTE",
-				inputs: {
-					lines: {
-						BODY: "Inject directly into buttocks."
-					}
+				lines: {
+					BODY: "Inject directly into buttocks."
 				}
 			},
 			{

@@ -7,7 +7,7 @@ namespace BoningerWorks.TextAdventure.Engine.Generated
 	""templates"": {
 		""commands"": {
 			""INSPECT"": {
-				""template"": [
+				""parts"": [
 					""COMMAND"",
 					""ITEM""
 				],
@@ -27,7 +27,7 @@ namespace BoningerWorks.TextAdventure.Engine.Generated
 				]
 			},
 			""SURVEY"": {
-				""template"": [
+				""parts"": [
 					""COMMAND""
 				],
 				""words"": {
@@ -41,7 +41,7 @@ namespace BoningerWorks.TextAdventure.Engine.Generated
 				}
 			},
 			""USE"": {
-				""template"": [
+				""parts"": [
 					""COMMAND"",
 					""ITEM""
 				],
@@ -55,7 +55,7 @@ namespace BoningerWorks.TextAdventure.Engine.Generated
 				]
 			},
 			""USE_ON"": {
-				""template"": [
+				""parts"": [
 					""COMMAND_START"",
 					""ITEM_TO_USE"",
 					""COMMAND_JOIN"",
@@ -144,18 +144,14 @@ namespace BoningerWorks.TextAdventure.Engine.Generated
 		""messages"": [
 			{
 				""template"": ""NOTE"",
-				""inputs"": {
-					""lines"": {
-						""BODY"": ""Boninger Works presents""
-					}
+				""lines"": {
+					""BODY"": ""Boninger Works presents""
 				}
 			},
 			{
 				""template"": ""NOTE"",
-				""inputs"": {
-					""lines"": {
-						""BODY"": ""Crazy Ex""
-					}
+				""lines"": {
+					""BODY"": ""Crazy Ex""
 				}
 			},
 			{
@@ -170,7 +166,7 @@ namespace BoningerWorks.TextAdventure.Engine.Generated
 		""HOTEL_ROOM"": {
 			""tests"": {
 				""DOOR_USED"": [
-					""${HOTEL_ROOM.DOOR.USED}"",
+					""${DOOR.USED}"",
 					""=="",
 					""yes""
 				]
@@ -191,13 +187,13 @@ namespace BoningerWorks.TextAdventure.Engine.Generated
 										},
 										{
 											""changes"": {
-												""HOTEL_ROOM.DOOR.USED"": ""yes""
+												""DOOR.USED"": ""yes""
 											}
 										},
 										{
 											""triggers"": {
 												""USE"": {
-													""ITEM"": ""HOTEL_ROOM.DOOR""
+													""ITEM"": ""DOOR""
 												}
 											}
 										}
@@ -228,14 +224,14 @@ namespace BoningerWorks.TextAdventure.Engine.Generated
 				""SURVEY"": {
 					""actions"": {
 						""if"": {
-							""condition"": ""!HOTEL_ROOM.DOOR_USED"",
+							""condition"": ""!DOOR_USED"",
 							""true"": {
 								""messages"": ""This room looks pretty cool, but you just want to get out of here and go about your day. You should probably head for the door.""
 							},
 							""false"": {
 								""if"": {
 									""condition"": [
-										""${HOTEL_ROOM.NOTE_WOODEN.VIEWED}"",
+										""${NOTE_WOODEN.VIEWED}"",
 										""=="",
 										""yes""
 									],
@@ -273,10 +269,8 @@ namespace BoningerWorks.TextAdventure.Engine.Generated
 			},
 			{
 				""template"": ""NOTE"",
-				""inputs"": {
-					""lines"": {
-						""BODY"": ""Inject directly into buttocks.""
-					}
+				""lines"": {
+					""BODY"": ""Inject directly into buttocks.""
 				}
 			},
 			{

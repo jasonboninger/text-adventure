@@ -9,11 +9,9 @@ export interface IMessageInlined {
 
 export interface IMessageTemplated {
 	template: string;
-	inputs?: {
-		messages?: IDictionary<IOneOrArray<XMessage>>;
-		lines?: IDictionary<IOneOrArray<XLine>>;
-		texts?: IDictionary<string>;
-	}
+	messages?: IDictionary<IOneOrArray<XMessage>>;
+	lines?: IDictionary<IOneOrArray<XLine>>;
+	texts?: IDictionary<string>;
 }
 
 export interface ILine {

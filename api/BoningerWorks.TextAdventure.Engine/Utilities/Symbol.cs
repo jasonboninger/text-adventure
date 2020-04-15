@@ -5,7 +5,7 @@ namespace BoningerWorks.TextAdventure.Engine.Utilities
 {
 	public sealed class Symbol : IEquatable<Symbol>
 	{
-		private static readonly Regex _regularExpressionValid = new Regex(@"^[a-zA-Z0-9_]+$", RegexOptions.Singleline);
+		private static readonly Regex _regularExpressionValid = new Regex(@"^[A-Z0-9_]+$", RegexOptions.Singleline);
 
 		public static bool operator ==(Symbol left, Symbol right) => Equals(left, null) ? Equals(right, null) : left.Equals(right);
 		public static bool operator !=(Symbol left, Symbol right) => !(left == right);
@@ -16,12 +16,6 @@ namespace BoningerWorks.TextAdventure.Engine.Utilities
 		public Symbol(string symbol)
 		{
 			// Check if symbol does not exist
-			if (symbol == null)
-			{
-				// Throw error
-				throw new ArgumentException("Symbol cannot be null.", nameof(symbol));
-			}
-			// Check if symbol is empty or whitespace
 			if (string.IsNullOrWhiteSpace(symbol))
 			{
 				// Throw error
@@ -31,10 +25,10 @@ namespace BoningerWorks.TextAdventure.Engine.Utilities
 			if (!_regularExpressionValid.IsMatch(symbol))
 			{
 				// Throw error
-				throw new ArgumentException($"Symbol ({symbol}) can only contain underscores and alphanumeric characters.", nameof(symbol));
+				throw new ArgumentException($"Symbol ({symbol}) can only contain underscores, numbers, and capital letters.", nameof(symbol));
 			}
 			// Set value
-			_value = symbol.ToUpperInvariant();
+			_value = symbol;
 			// Set hash code
 			_hashCode = _value.GetHashCode();
 		}
