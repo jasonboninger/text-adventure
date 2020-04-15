@@ -54,7 +54,7 @@ namespace BoningerWorks.TextAdventure.Engine.Json.Converters.Factories
 
 		public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
 		{
-			// Return one or many list converter
+			// Return one or many list JSON converter
 			return (JsonConverter)Activator.CreateInstance(_typeOneOrManyListJsonConverter.MakeGenericType(typeToConvert.GetGenericArguments()));
 		}
 	}

@@ -47,11 +47,11 @@ namespace BoningerWorks.TextAdventure.Engine.Static
 			jsonSerializerOptions.ReadCommentHandling = JsonCommentHandling.Disallow;
 			// Add converter factories
 			jsonSerializerOptions.Converters.Add(new OneOrManyListJsonConverterFactory());
+			jsonSerializerOptions.Converters.Add(new SymbolDictionaryJsonConverterFactory());
 			// Add converters
 			jsonSerializerOptions.Converters.Add(new LineBlueprintJsonConverter());
 			jsonSerializerOptions.Converters.Add(new MessageBlueprintJsonConverter());
 			jsonSerializerOptions.Converters.Add(new SymbolJsonConverter());
-			jsonSerializerOptions.Converters.Add(new SymbolToEntityStateMappingsJsonConverter());
 		}
 	}
 }
