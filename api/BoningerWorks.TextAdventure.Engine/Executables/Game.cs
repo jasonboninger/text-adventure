@@ -72,30 +72,61 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				{
 					// Get command
 					var command = commandMatch.Command;
+
+
+
+					responses.Add($"Command = {command}");
+
+
+
 					// Get command handler
 					var commandHandler = Commands.GetHandler(command);
 					// Run through item symbols
 					for (int i = 0; i < command.ItemSymbols.Length; i++)
 					{
+						var itemSymbol = command.ItemSymbols[i];
+						// Get item
+						var item = commandMatch.ItemSymbolToItemMappings[command.ItemSymbols[i]];
+
+
+
+						responses.Add($"{itemSymbol} = {item}");
+
+
+
+						// Try to get next command handler
+						if (!commandHandler.Next.TryGetValue(item.Symbol, out var commandHandlerNext))
+						{
+							// Set no command handler
+							commandHandler = null;
+							// Stop loop
+							break;
+						}
 						// Set command handler
-						commandHandler = commandHandler.Next[commandMatch.ItemSymbolToItemMappings[command.ItemSymbols[i]].Symbol];
+						commandHandler = commandHandlerNext;
 					}
-					// Get action
-					var action = commandHandler.Actions;
-
-
-
-					responses.Add($"The {commandMatch.Command} command was triggered!");
-					if (commandMatch.ItemSymbolToItemMappings.Count == 0)
+					// Check if command handler does not exist
+					if (commandHandler == null)
 					{
-						responses.Add("No item symbols were returned.");
+
+
+
+						responses.Add("No actions were returned.");
+
+
+
 					}
 					else
 					{
-						foreach (var keyValue in commandMatch.ItemSymbolToItemMappings)
-						{
-							responses.Add($"The {keyValue.Key} item symbol returned the {keyValue.Value} item.");
-						}
+						// Get action
+						var action = commandHandler.Actions;
+
+
+
+						responses.Add("Actions were returned, cannot be handled yet!");
+
+
+
 					}
 				}
 				// Return responses
