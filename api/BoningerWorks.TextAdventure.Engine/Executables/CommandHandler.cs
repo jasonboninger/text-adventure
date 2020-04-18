@@ -9,63 +9,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 {
 	public class CommandHandler
 	{
-		private class CommandMapValidated
-		{
-			public ImmutableDictionary<Symbol, Item> CommandItemSymbolToItemMappings { get; }
-			public ImmutableArray<Action> Actions { get; }
-
-			public CommandMapValidated(Items items, Command command, CommandMap commandMap)
-			{
-				// Check if command map has no command item symbol to item symbol mappings
-				if (commandMap.CommandItemSymbolToItemSymbolMappings.Count == 0)
-				{
-					// Check if command has more than one item symbol
-					if (command.ItemSymbols.Length > 1)
-					{
-						// Throw error
-						throw new ArgumentException("Command map is not valid with command.", nameof(commandMap));
-					}
-					// Check if command has one item symbol and command map does not have a default item symbol
-					if (command.ItemSymbols.Length == 1 && commandMap.ItemSymbolDefault == null)
-					{
-						// Throw error
-						throw new ArgumentException("Command map is not valid with command.", nameof(commandMap));
-					}
-				}
-				// Set command item symbol to item symbol mappings
-				CommandItemSymbolToItemMappings = command.ItemSymbols
-					.Select
-						(cis =>
-						{
-							// Try to get item symbol for command item symbol
-							if (!commandMap.CommandItemSymbolToItemSymbolMappings.TryGetValue(cis, out var itemSymbol))
-							{
-								// Set item symbol
-								itemSymbol = commandMap.ItemSymbolDefault;
-							}
-							// Check if item symbol does not exist
-							if (itemSymbol == null)
-							{
-								// Create message
-								var message = $"No mapping could be found in command map for command item symbol ({cis}) of command ({command}).";
-								// Throw error
-								throw new InvalidOperationException(message);
-							}
-							// Check if item does not exist
-							if (!items.Contains(itemSymbol))
-							{
-								// Throw error
-								throw new InvalidOperationException($"No item with symbol ({itemSymbol}) could be found.");
-							}
-							// Return command item symbol to item mapping
-							return KeyValuePair.Create(cis, items.Get(itemSymbol));
-						})
-					.ToImmutableDictionary();
-				// Set actions
-				Actions = commandMap.ActionMaps.Select(am => new Action(items, command, CommandItemSymbolToItemMappings, am)).ToImmutableArray();
-			}
-		}
-
+		public Command Command { get; }
 		public ImmutableDictionary<Symbol, CommandHandler> Next { get; }
 		public ImmutableArray<Action> Actions { get; }
 
@@ -73,58 +17,62 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		: this
 		(
 			command, 
-			commandMaps.Select(cm => new CommandMapValidated(items, command, cm)), 
-			depth: 0
+			commandMaps
+				.Select
+					(cm =>
+					{
+						// Check if command does not match command map
+						if (command.Symbol != cm.CommandSymbol)
+						{
+							// Throw error
+							throw new ArgumentException($"Command ({command}) does not match command ({cm.CommandSymbol}) of command map.");
+						}
+						// Create action
+						var action = new Action(items, command, cm);
+						// Return action
+						return action;
+					})
+				.ToImmutableArray(),
+			index: 0
 		) 
 		{ }
-		private CommandHandler(Command command, IEnumerable<CommandMapValidated> commandMapsValidated, int depth)
+		private CommandHandler(Command command, ImmutableArray<Action> actions, int index)
 		{
-			// Check if item symbols exist at depth
-			if (command.ItemSymbols.Length > depth)
+			// Set command
+			Command = command;
+			// Check if no more command item symbols
+			if (index == Command.ItemSymbols.Length)
 			{
-				// Set next
-				Next = _CreateNext(command, commandMapsValidated, depth);
+				// Set actions
+				Actions = actions.ToImmutableArray();
 			}
 			else
 			{
-				// Set actions
-				Actions = _CreateActions(commandMapsValidated);
+				// Set next
+				Next = _CreateNext(Command, actions, index);
 			}
 		}
 
-		private static ImmutableDictionary<Symbol, CommandHandler> _CreateNext
-		(
-			Command command,
-			IEnumerable<CommandMapValidated> commandMapsValidated,
-			int depth
-		)
+		private static ImmutableDictionary<Symbol, CommandHandler> _CreateNext(Command command, ImmutableArray<Action> actions, int index)
 		{
-			// Get next depth
-			var depthNext = depth + 1;
+			// Get next index
+			var indexNext = index + 1;
 			// Create next
-			var next = commandMapsValidated
+			var next = actions
 				.GroupBy
 					(
-						cmv =>
+						a =>
 						{
 							// Get item
-							var item = cmv.CommandItemSymbolToItemMappings[command.ItemSymbols[depth]];
+							var item = a.CommandItemSymbolToItemMappings[command.ItemSymbols[index]];
 							// Return item symbol
 							return item.Symbol;
 						},
-						(s, cmvs) => KeyValuePair.Create(s, new CommandHandler(command, cmvs, depthNext))
+						(@is, @as) => KeyValuePair.Create(@is, new CommandHandler(command, @as.ToImmutableArray(), indexNext))
 					)
 				.ToImmutableDictionary();
 			// Return next
 			return next;
-		}
-
-		private static ImmutableArray<Action> _CreateActions(IEnumerable<CommandMapValidated> commandMapsValidated)
-		{
-			// Create actions
-			var actions = commandMapsValidated.SelectMany(cmv => cmv.Actions).ToImmutableArray();
-			// Return actions
-			return actions;
 		}
 	}
 }
