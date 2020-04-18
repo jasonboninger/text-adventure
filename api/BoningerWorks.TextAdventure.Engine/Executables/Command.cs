@@ -54,11 +54,11 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				// Throw error
 				throw new InvalidOperationException($"Command ({Symbol}) has duplicate word and item symbols.");
 			}
-			// Check if number of part symbols is less than the number of word and item symbols
-			if (PartSymbols.Length < wordAndItemSymbols.Count)
+			// Check if number of part symbols does not equal the number of word and item symbols
+			if (PartSymbols.Length != wordAndItemSymbols.Count)
 			{
 				// Throw error
-				throw new InvalidOperationException($"Command ({Symbol}) has word or item symbols which are not included in part symbols.");
+				throw new InvalidOperationException($"Command ({Symbol}) part symbols must match word and item symbols exactly.");
 			}
 			// Set regular expression
 			_regularExpression = _CreateRegularExpression(wordSymbolToWordNamesMappings);
@@ -181,7 +181,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 							return regularExpressionItem;
 						}
 						// Throw error
-						throw new InvalidOperationException($"Command ({Symbol}) part symbol ({ps}) could not be found in words or items.");
+						throw new InvalidOperationException($"Command ({Symbol}) part symbol ({ps}) could not be found in word or item symbols.");
 					});
 			// Create regular expression options
 			var regularExpressionOptions = RegexOptions.IgnoreCase | RegexOptions.Singleline;
