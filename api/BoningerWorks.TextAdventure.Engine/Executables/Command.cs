@@ -100,7 +100,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				// Create item name
 				var itemName = new Name(group.Value);
 				// Get item
-				var item = _items[itemName];
+				var item = _items.Get(itemName);
 				// Add item symbol to item mapping
 				itemSymbolToItemMappingsBuilder.Add(itemSymbol, item);
 			}

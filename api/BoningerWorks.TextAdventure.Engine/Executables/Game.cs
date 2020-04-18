@@ -1,9 +1,13 @@
 ﻿using BoningerWorks.TextAdventure.Engine.Blueprints;
 using BoningerWorks.TextAdventure.Engine.Blueprints.Templates;
+using BoningerWorks.TextAdventure.Engine.Exceptions;
+using BoningerWorks.TextAdventure.Engine.Exceptions.Data;
+using BoningerWorks.TextAdventure.Engine.Executables.Maps;
 using BoningerWorks.TextAdventure.Engine.States;
 using BoningerWorks.TextAdventure.Engine.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 
 namespace BoningerWorks.TextAdventure.Engine.Executables
@@ -60,30 +64,48 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		{
 			// Create responses
 			var responses = new List<string>();
-			// Try to match command
-			if (Commands.TryMatchCommand(input, out var commandMatch))
+			// Try to create command match
+			try
 			{
-
-
-
-
-
-
-				responses.Add($"The {commandMatch.Command} command was triggered!");
-				if (commandMatch.ItemSymbolToItemsMappings.Count == 0)
+				// Try to create command match
+				if (Commands.TryCreateMatch(input, out var commandMatch))
 				{
-					responses.Add("No item symbols were returned.");
-				}
-				else
-				{
-					foreach (var keyValue in commandMatch.ItemSymbolToItemsMappings)
+					// Get command
+					var command = commandMatch.Command;
+					// Get command handler
+					var commandHandler = Commands.GetHandler(command);
+					// Run through item symbols
+					for (int i = 0; i < command.ItemSymbols.Length; i++)
 					{
-						responses.Add($"The {keyValue.Key} item symbol returned the {keyValue.Value.Single()} item.");
+						// Set command handler
+						commandHandler = commandHandler.Next[commandMatch.ItemSymbolToItemMappings[command.ItemSymbols[i]].Symbol];
+					}
+					// Get action
+					var action = commandHandler.Actions;
+
+
+
+					responses.Add($"The {commandMatch.Command} command was triggered!");
+					if (commandMatch.ItemSymbolToItemMappings.Count == 0)
+					{
+						responses.Add("No item symbols were returned.");
+					}
+					else
+					{
+						foreach (var keyValue in commandMatch.ItemSymbolToItemMappings)
+						{
+							responses.Add($"The {keyValue.Key} item symbol returned the {keyValue.Value} item.");
+						}
 					}
 				}
+				// Return responses
+				return responses;
 			}
-			// Return responses
-			return responses;
+			catch (GenericException<AmbiguousCommandItemMatchData> exception)
+			{
+				// Throw error
+				throw;
+			}
 		}
 
 		private static Items _CreateItems(PlayerBlueprint playerBlueprint)
@@ -103,16 +125,12 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 
 		private static Commands _CreateCommands(Items items, Dictionary<string, CommandTemplate> commandTemplates)
 		{
-			// Check if command templates does not exist
-			if (commandTemplates == null)
-			{
-				// Throw error
-				throw new ArgumentException("Command templates cannot be null.", nameof(commandTemplates));
-			}
-			// Create commands
-			var commands = commandTemplates.Select(kv => new Command(new Symbol(kv.Key), items, kv.Value)).OrderBy(c => c.Symbol.ToString());
+			// Create command maps
+			var commandMaps = Enumerable.Empty<CommandMap>()
+				.Concat(items.SelectMany(i => i.CommandMaps))
+				.ToImmutableList();
 			// Return commands
-			return new Commands(commands);
+			return new Commands(items, commandTemplates, commandMaps);
 		}
 	}
 }

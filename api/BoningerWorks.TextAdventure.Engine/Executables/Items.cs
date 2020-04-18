@@ -14,40 +14,6 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 	{
 		public int Count => _items.Length;
 		public Item this[int index] => _items[index];
-		public Item this[Symbol symbol]
-		{
-			get
-			{
-				// Try to get item
-				if (symbol == null || !_itemSymbolToItemMappings.TryGetValue(symbol, out var item))
-				{
-					// Throw error
-					throw new ArgumentException($"No item with symbol ({symbol}) could be found.");
-				}
-				// Return item
-				return item;
-			}
-		}
-		public Item this[Name name]
-		{
-			get
-			{
-				// Try to get items
-				if (name == null || !_itemNameToItemsMappings.TryGetValue(name, out var items))
-				{
-					// Throw error
-					throw new ArgumentException($"No item with name ({name}) could be found.");
-				}
-				// Check if more than one item exists
-				if (items.Length > 1)
-				{
-					// Throw error
-					throw GenericException.Create(new AmbiguousItemMatchData(name, items));
-				}
-				// Return item
-				return items[0];
-			}
-		}
 
 		public string RegularExpression { get; }
 
@@ -92,20 +58,60 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			RegularExpression = _CreateRegularExpression(_items);
 		}
 
-		public bool ExistsItem(Symbol symbol)
-		{
-			// Return if item symbol exists
-			return _itemSymbolToItemMappings.ContainsKey(symbol);
-		}
-
-		public bool ExistsName(Name name)
-		{
-			// Return if item name exists
-			return _itemNameToItemsMappings.ContainsKey(name);
-		}
-
 		public IEnumerator<Item> GetEnumerator() => _itemsEnumerable.GetEnumerator();
 		IEnumerator IEnumerable.GetEnumerator() => _itemsEnumerable.GetEnumerator();
+
+		public Item Get(Symbol symbol)
+		{
+			// Try to get item
+			if (symbol == null || !_itemSymbolToItemMappings.TryGetValue(symbol, out var item))
+			{
+				// Throw error
+				throw new ArgumentException($"No item with symbol ({symbol}) could be found.");
+			}
+			// Return item
+			return item;
+		}
+		public Item Get(Name name)
+		{
+			// Try to get items
+			if (name == null || !_itemNameToItemsMappings.TryGetValue(name, out var items))
+			{
+				// Throw error
+				throw new ArgumentException($"No item with name ({name}) could be found.");
+			}
+			// Check if more than one item exists
+			if (items.Length > 1)
+			{
+				// Throw error
+				throw GenericException.Create(new AmbiguousItemMatchData(name, items));
+			}
+			// Return item
+			return items[0];
+		}
+
+		public bool Contains(Symbol symbol)
+		{
+			// Check if symbol does not exist
+			if (symbol == null)
+			{
+				// Return item does not exist
+				return false;
+			}
+			// Return if item exists
+			return _itemSymbolToItemMappings.ContainsKey(symbol);
+		}
+		public bool Contains(Name name)
+		{
+			// Check if name does not exist
+			if (name == null)
+			{
+				// Return items do not exist
+				return false;
+			}
+			// Return if items exist
+			return _itemNameToItemsMappings.ContainsKey(name);
+		}
 
 		private static string _CreateRegularExpression(ImmutableArray<Item> items)
 		{
