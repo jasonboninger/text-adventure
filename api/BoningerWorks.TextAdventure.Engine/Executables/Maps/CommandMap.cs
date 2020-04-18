@@ -52,7 +52,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables.Maps
 			if (actions == null || actions.Count == 0)
 			{
 				// Throw error
-				throw new InvalidOperationException("Command actions cannot be null or emtpy.");
+				throw new InvalidOperationException("Action blueprints cannot be null or emtpy.");
 			}
 			// Create action maps
 			var actionMaps = actions.Select(a => new ActionMap(a)).ToImmutableArray();
