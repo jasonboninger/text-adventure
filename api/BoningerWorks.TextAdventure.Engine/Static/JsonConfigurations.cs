@@ -1,11 +1,14 @@
 ﻿using BoningerWorks.TextAdventure.Engine.Json.Converters;
 using BoningerWorks.TextAdventure.Engine.Json.Converters.Factories;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace BoningerWorks.TextAdventure.Engine.Static
 {
 	public static class JsonConfigurations
 	{
+		private readonly static PassThroughJsonNamingPolicy _passThroughJsonNamingPolicy = new PassThroughJsonNamingPolicy();
+
 		private class PassThroughJsonNamingPolicy : JsonNamingPolicy
 		{
 			public override string ConvertName(string name)
@@ -30,9 +33,9 @@ namespace BoningerWorks.TextAdventure.Engine.Static
 			// Set not property name case insensitive
 			jsonSerializerOptions.PropertyNameCaseInsensitive = false;
 			// Set property naming policy
-			jsonSerializerOptions.PropertyNamingPolicy = new PassThroughJsonNamingPolicy();
+			jsonSerializerOptions.PropertyNamingPolicy = _passThroughJsonNamingPolicy;
 			// Set dictionary key naming policy
-			jsonSerializerOptions.DictionaryKeyPolicy = new PassThroughJsonNamingPolicy();
+			jsonSerializerOptions.DictionaryKeyPolicy = _passThroughJsonNamingPolicy;
 			// Set not ignore null values
 			jsonSerializerOptions.IgnoreNullValues = false;
 			// Set not ignore read only properties
@@ -45,6 +48,8 @@ namespace BoningerWorks.TextAdventure.Engine.Static
 			jsonSerializerOptions.MaxDepth = 128;
 			// Disallow comments
 			jsonSerializerOptions.ReadCommentHandling = JsonCommentHandling.Disallow;
+			// Add string enum converter
+			jsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(_passThroughJsonNamingPolicy, allowIntegerValues: false));
 			// Add converter factories
 			jsonSerializerOptions.Converters.Add(new OneOrManyListJsonConverterFactory());
 			jsonSerializerOptions.Converters.Add(new SymbolDictionaryJsonConverterFactory());

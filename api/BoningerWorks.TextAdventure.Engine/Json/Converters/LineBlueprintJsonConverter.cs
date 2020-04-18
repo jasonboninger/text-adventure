@@ -50,7 +50,7 @@ namespace BoningerWorks.TextAdventure.Engine.Json.Converters
 						// Return inlined line blueprint
 						return new LineBlueprint
 						{
-							Inlined = JsonSerializer.Deserialize<LineInlinedBlueprint>(jsonElement.ToString(), options)
+							Inlined = JsonSerializer.Deserialize<LineInlinedBlueprint>(jsonElement.GetRawText(), options)
 						};
 					}
 					break;

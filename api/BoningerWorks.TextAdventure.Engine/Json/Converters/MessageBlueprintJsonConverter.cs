@@ -24,7 +24,7 @@ namespace BoningerWorks.TextAdventure.Engine.Json.Converters
 					{
 						Inlined = new MessageInlinedBlueprint
 						{
-							Lines = JsonSerializer.Deserialize<OneOrManyList<LineBlueprint>>(jsonElement.ToString())
+							Lines = JsonSerializer.Deserialize<OneOrManyList<LineBlueprint>>(jsonElement.GetRawText(), options)
 						}
 					};
 				case JsonValueKind.Object:
@@ -43,7 +43,7 @@ namespace BoningerWorks.TextAdventure.Engine.Json.Converters
 						// Return templated message blueprint
 						return new MessageBlueprint
 						{
-							Templated = JsonSerializer.Deserialize<MessageTemplatedBlueprint>(jsonElement.ToString(), options)
+							Templated = JsonSerializer.Deserialize<MessageTemplatedBlueprint>(jsonElement.GetRawText(), options)
 						};
 					}
 					// Check if lines exist
@@ -52,7 +52,7 @@ namespace BoningerWorks.TextAdventure.Engine.Json.Converters
 						// Return inlined message blueprint
 						return new MessageBlueprint
 						{
-							Inlined = JsonSerializer.Deserialize<MessageInlinedBlueprint>(jsonElement.ToString(), options)
+							Inlined = JsonSerializer.Deserialize<MessageInlinedBlueprint>(jsonElement.GetRawText(), options)
 						};
 					}
 					break;
