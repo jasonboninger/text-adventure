@@ -1,5 +1,8 @@
 ﻿using BoningerWorks.TextAdventure.Engine.Executables.Maps;
+using BoningerWorks.TextAdventure.Engine.Executables.Maps.Enums;
 using BoningerWorks.TextAdventure.Engine.States;
+using BoningerWorks.TextAdventure.Engine.States.Messages;
+using BoningerWorks.TextAdventure.Engine.States.Messages.Lines;
 using BoningerWorks.TextAdventure.Engine.Utilities;
 using System;
 using System.Collections.Generic;
@@ -12,6 +15,8 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 	{
 		public Command Command { get; }
 		public ImmutableDictionary<Symbol, Item> CommandItemSymbolToItemMappings { get; }
+
+		private readonly ImmutableArray<Func<GameState, List<MessageState>>> _executes;
 
 		public Action(Items items, Command command, CommandMap commandMap)
 		{
@@ -71,13 +76,115 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 						return KeyValuePair.Create(cis, items.Get(itemSymbol));
 					})
 				.ToImmutableDictionary();
+			// Set executes
+			_executes = commandMap.ActionMaps.Select(_CreateExecute).ToImmutableArray();
 		}
 
-		public void Execute(GameState gameState)
+		public List<MessageState> Execute(GameState gameState)
 		{
+			// Create messages
+			var messages = new List<MessageState>();
+			// Run through executes
+			for (int i = 0; i < _executes.Length; i++)
+			{
+				// Execute execute
+				messages.AddRange(_executes[i](gameState));
+			}
+			// Return messages
+			return messages;
+		}
 
+		private Func<GameState, List<MessageState>> _CreateExecute(ActionMap actionMap)
+		{
+			// Check action type
+			switch (actionMap.Type)
+			{
+				case EActionMapType.If: throw new NotImplementedException();
+				case EActionMapType.Messages:
+					// Create message executes
+					var executesMessage = actionMap.MessageMaps.Select(_CreateExecuteMessage).ToImmutableArray();
+					// Return execute
+					return gameState =>
+					{
+						// Create messages
+						var messages = new List<MessageState>();
+						// Run through message executes
+						for (int i = 0; i < executesMessage.Length; i++)
+						{
+							// Add message
+							messages.Add(executesMessage[i](gameState));
+						}
+						// Return messages
+						return messages;
+					};
+				case EActionMapType.Changes: throw new NotImplementedException();
+				case EActionMapType.Triggers: throw new NotImplementedException();
+				default: throw new ArgumentException($"Action map type ({actionMap.Type}) could not be handled.");
+			}
+		}
 
+		private Func<GameState, MessageState> _CreateExecuteMessage(MessageMap messageMap)
+		{
+			// Check message type
+			switch (messageMap.Type)
+			{
+				case EMessageMapType.Inlined:
+					// Create line executes
+					var executesLine = messageMap.Inlined.LineMaps.Select(_CreateExecuteLine).ToImmutableArray();
+					// Return execute
+					return gameState =>
+					{
+						// Create lines
+						var lines = new List<LineState>();
+						// Run through line executes
+						for (int i = 0; i < executesLine.Length; i++)
+						{
+							// Add line
+							lines.Add(executesLine[i](gameState));
+						}
+						// Return message
+						return MessageState.Create(lines);
+					};
+				case EMessageMapType.Templated: throw new NotImplementedException();
+				case EMessageMapType.Input: throw new NotImplementedException();
+				default: throw new ArgumentException($"Message map type ({messageMap.Type}) could not be handled.");
+			}
+		}
 
+		private Func<GameState, LineState> _CreateExecuteLine(LineMap lineMap)
+		{
+			// Check line type
+			switch (lineMap.Type)
+			{
+				case ELineMapType.Inlined:
+					// Create line content execute
+					var executeLineContent = _CreateExecuteLineContent(lineMap.Inlined);
+					// Return execute
+					return gameState =>
+					{
+						// Return line
+						return LineState.CreateContent(executeLineContent(gameState));
+					};
+				case ELineMapType.Special: throw new NotImplementedException();
+				case ELineMapType.Input: throw new NotImplementedException();
+				default: throw new ArgumentException($"Line map type ({lineMap.Type}) could not be handled.");
+			}
+		}
+
+		private Func<GameState, LineContentState> _CreateExecuteLineContent(LineInlinedMap lineInlinedMap)
+		{
+			// Check if text does not exist
+			if (string.IsNullOrWhiteSpace(lineInlinedMap.Text))
+			{
+				// Throw error
+				throw new ArgumentException("Line text cannot be null, empty, or whitespace.", nameof(lineInlinedMap));
+			}
+			// Return execute
+			return gameState =>
+			{
+				// Return content
+				return LineContentState.Create(lineInlinedMap.Text);
+			};
 		}
 	}
 }

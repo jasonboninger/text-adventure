@@ -4,6 +4,7 @@ using BoningerWorks.TextAdventure.Engine.Exceptions;
 using BoningerWorks.TextAdventure.Engine.Exceptions.Data;
 using BoningerWorks.TextAdventure.Engine.Executables.Maps;
 using BoningerWorks.TextAdventure.Engine.States;
+using BoningerWorks.TextAdventure.Engine.States.Data;
 using BoningerWorks.TextAdventure.Engine.Utilities;
 using System;
 using System.Collections.Generic;
@@ -51,8 +52,10 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			for (int i = 0; i < Items.Count; i++)
 			{
 				var item = Items[i];
+				// Create item data
+				var itemData = ItemData.Create(item.Location, item.Active);
 				// Create item state
-				var itemState = EntityState.CreateItem(item.Location, item.Active);
+				var itemState = EntityState.CreateItem(itemData);
 				// Add item state
 				gameState.EntityStates.Add(item.Symbol, itemState);
 			}
@@ -130,7 +133,24 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 						{
 							var action = commandHandler.Actions[i];
 							// Execute action
-							action.Execute(state);
+							var messages = action.Execute(state);
+							// Run through messages
+							for (int k = 0; k < messages.Count; k++)
+							{
+								var message = messages[k];
+								// Run through lines
+								for (int m = 0; m < message.Lines.Count; m++)
+								{
+									var line = message.Lines[m];
+
+
+
+									responses.Add(line.Content.Text);
+
+
+
+								}
+							}
 						}
 					}
 				}

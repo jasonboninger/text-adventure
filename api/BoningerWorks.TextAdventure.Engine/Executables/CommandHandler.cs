@@ -16,7 +16,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		public CommandHandler(Items items, Command command, IEnumerable<CommandMap> commandMaps) 
 		: this
 		(
-			command, 
+			command,
 			commandMaps
 				.Select
 					(cm =>

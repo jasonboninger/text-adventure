@@ -11,7 +11,5 @@ namespace BoningerWorks.TextAdventure.Engine.States.Data
 			// Return player data
 			return playerData;
 		}
-
-		public Symbol Location { get; set; }
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using BoningerWorks.TextAdventure.Engine.Utilities;
+using System;
 
 namespace BoningerWorks.TextAdventure.Engine.States.Data
 {
@@ -9,7 +10,7 @@ namespace BoningerWorks.TextAdventure.Engine.States.Data
 			// Create item data
 			var itemData = new ItemData
 			{
-				Location = location,
+				Location = location ?? throw new ArgumentException("Location cannot be null.", nameof(location)),
 				Active = active
 			};
 			// Return item data

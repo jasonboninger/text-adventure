@@ -1,5 +1,5 @@
 ﻿using BoningerWorks.TextAdventure.Engine.States.Data;
-using BoningerWorks.TextAdventure.Engine.Utilities;
+using System;
 using System.Collections.Generic;
 
 namespace BoningerWorks.TextAdventure.Engine.States
@@ -26,12 +26,12 @@ namespace BoningerWorks.TextAdventure.Engine.States
 			return playerState;
 		}
 
-		public static EntityState CreateItem(Symbol location, bool active)
+		public static EntityState CreateItem(ItemData itemData)
 		{
 			// Create item state
 			var itemState = _Create();
 			// Set item data
-			itemState.ItemData = ItemData.Create(location, active);
+			itemState.ItemData = itemData ?? throw new ArgumentException("Item data cannot be null.", nameof(itemData));
 			// Return item state
 			return itemState;
 		}
