@@ -75,22 +75,22 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 
 
 
-					responses.Add($"Command = {command}");
+					responses.Add("Command = " + command);
 
 
 
 					// Get command handler
 					var commandHandler = Commands.GetHandler(command);
-					// Run through item symbols
+					// Run through command item symbols
 					for (int i = 0; i < command.ItemSymbols.Length; i++)
 					{
-						var itemSymbol = command.ItemSymbols[i];
+						var commandItemSymbol = command.ItemSymbols[i];
 						// Get item
 						var item = commandMatch.ItemSymbolToItemMappings[command.ItemSymbols[i]];
 
 
 
-						responses.Add($"{itemSymbol} = {item}");
+						responses.Add(commandItemSymbol + " = " + item);
 
 
 
@@ -118,25 +118,37 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 					}
 					else
 					{
-						// Get action
-						var action = commandHandler.Actions;
 
 
 
-						responses.Add("Actions were returned, cannot be handled yet!");
+						responses.Add("Actions were returned!");
 
 
 
+						// Run through actions
+						for (int i = 0; i < commandHandler.Actions.Length; i++)
+						{
+							var action = commandHandler.Actions[i];
+							// Execute action
+							action.Execute(state);
+						}
 					}
 				}
-				// Return responses
-				return responses;
 			}
 			catch (GenericException<AmbiguousCommandItemMatchData> exception)
 			{
-				// Throw error
-				throw;
+				// Get data
+				var data = exception.Data;
+
+
+				
+				responses.Add($"Command ({data.Command}) was matched but name ({data.Name}) matched more than one item!");
+
+
+
 			}
+			// Return responses
+			return responses;
 		}
 
 		private static Items _CreateItems(PlayerBlueprint playerBlueprint)

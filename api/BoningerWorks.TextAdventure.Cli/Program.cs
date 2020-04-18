@@ -20,6 +20,8 @@ namespace BoningerWorks.TextAdventure.Cli
 			// Loop forever
 			while (true)
 			{
+				// Write line
+				Console.WriteLine();
 				// Ask for input
 				Console.WriteLine("Give me some input...");
 				// Get input

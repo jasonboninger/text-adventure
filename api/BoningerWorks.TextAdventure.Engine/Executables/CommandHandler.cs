@@ -12,7 +12,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		private class CommandMapValidated
 		{
 			public ImmutableDictionary<Symbol, Item> CommandItemSymbolToItemMappings { get; }
-			public ImmutableArray<ActionMap> ActionMaps { get; }
+			public ImmutableArray<Action> Actions { get; }
 
 			public CommandMapValidated(Items items, Command command, CommandMap commandMap)
 			{
@@ -61,8 +61,8 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 							return KeyValuePair.Create(cis, items.Get(itemSymbol));
 						})
 					.ToImmutableDictionary();
-				// Set action maps
-				ActionMaps = commandMap.ActionMaps;
+				// Set actions
+				Actions = commandMap.ActionMaps.Select(am => new Action(items, command, CommandItemSymbolToItemMappings, am)).ToImmutableArray();
 			}
 		}
 
@@ -122,7 +122,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		private static ImmutableArray<Action> _CreateActions(IEnumerable<CommandMapValidated> commandMapsValidated)
 		{
 			// Create actions
-			var actions = commandMapsValidated.SelectMany(cmv => cmv.ActionMaps, (cmv, am) => new Action(am)).ToImmutableArray();
+			var actions = commandMapsValidated.SelectMany(cmv => cmv.Actions).ToImmutableArray();
 			// Return actions
 			return actions;
 		}
