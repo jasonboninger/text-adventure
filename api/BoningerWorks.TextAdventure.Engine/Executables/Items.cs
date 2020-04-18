@@ -1,4 +1,6 @@
-﻿using BoningerWorks.TextAdventure.Engine.Static;
+﻿using BoningerWorks.TextAdventure.Engine.Exceptions;
+using BoningerWorks.TextAdventure.Engine.Exceptions.Data;
+using BoningerWorks.TextAdventure.Engine.Static;
 using BoningerWorks.TextAdventure.Engine.Utilities;
 using System;
 using System.Collections;
@@ -26,7 +28,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				return item;
 			}
 		}
-		public ImmutableArray<Item> this[Name name]
+		public Item this[Name name]
 		{
 			get
 			{
@@ -34,10 +36,16 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				if (name == null || !_itemNameToItemsMappings.TryGetValue(name, out var items))
 				{
 					// Throw error
-					throw new ArgumentException($"No items with name ({name}) could be found.");
+					throw new ArgumentException($"No item with name ({name}) could be found.");
 				}
-				// Return items
-				return items;
+				// Check if more than one item exists
+				if (items.Length > 1)
+				{
+					// Throw error
+					throw GenericException.Create(new AmbiguousItemMatchData(name, items));
+				}
+				// Return item
+				return items[0];
 			}
 		}
 
