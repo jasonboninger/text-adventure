@@ -6,14 +6,14 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 	public class CommandMatch
 	{
 		public Command Command { get; }
-		public ImmutableDictionary<Symbol, ImmutableArray<Item>> ItemSymbolToItemsMappings { get; }
+		public ImmutableDictionary<Symbol, Item> ItemSymbolToItemMappings { get; }
 
-		public CommandMatch(Command command, ImmutableDictionary<Symbol, ImmutableArray<Item>> itemSymbolToItemsMappings)
+		public CommandMatch(Command command, ImmutableDictionary<Symbol, Item> itemSymbolToItemMappings)
 		{
 			// Set command
 			Command = command;
-			// Set item symbol to items mappings
-			ItemSymbolToItemsMappings = itemSymbolToItemsMappings;
+			// Set item symbol to item mappings
+			ItemSymbolToItemMappings = itemSymbolToItemMappings;
 		}
 	}
 }

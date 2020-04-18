@@ -75,20 +75,20 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			return Symbol.ToString();
 		}
 
-		public bool TryMatchCommand(string input, out ImmutableDictionary<Symbol, ImmutableArray<Item>> itemSymbolToItemsMappings)
+		public bool TryMatchCommand(string input, out ImmutableDictionary<Symbol, Item> itemSymbolToItemMappings)
 		{
 			// Get match
 			var match = _regularExpression.Match(input);
 			// Check if match was not successful
 			if (!match.Success)
 			{
-				// Set item symbol to items mappings
-				itemSymbolToItemsMappings = null;
+				// Set item symbol to item mappings
+				itemSymbolToItemMappings = null;
 				// Return failed
 				return false;
 			}
-			// Create item symbol to items mappings builder
-			var itemSymbolToItemsMappingsBuilder = ImmutableDictionary.CreateBuilder<Symbol, ImmutableArray<Item>>();
+			// Create item symbol to item mappings builder
+			var itemSymbolToItemMappingsBuilder = ImmutableDictionary.CreateBuilder<Symbol, Item>();
 			// Run through item symbols
 			for (int i = 0; i < ItemSymbols.Length; i++)
 			{
@@ -99,13 +99,13 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				var group = match.Groups[itemGroup];
 				// Create item name
 				var itemName = new Name(group.Value);
-				// Get items
-				var items = _items[itemName];
-				// Add item symbol to items mapping
-				itemSymbolToItemsMappingsBuilder.Add(itemSymbol, items);
+				// Get item
+				var item = _items[itemName];
+				// Add item symbol to item mapping
+				itemSymbolToItemMappingsBuilder.Add(itemSymbol, item);
 			}
-			// Set item symbol to items mappings
-			itemSymbolToItemsMappings = itemSymbolToItemsMappingsBuilder.ToImmutable();
+			// Set item symbol to item mappings
+			itemSymbolToItemMappings = itemSymbolToItemMappingsBuilder.ToImmutable();
 			// Return succeeded
 			return true;
 		}
