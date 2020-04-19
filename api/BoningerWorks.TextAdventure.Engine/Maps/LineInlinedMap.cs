@@ -1,7 +1,7 @@
 ﻿using BoningerWorks.TextAdventure.Engine.Blueprints.Messages.Lines;
 using System;
 
-namespace BoningerWorks.TextAdventure.Engine.Executables.Maps
+namespace BoningerWorks.TextAdventure.Engine.Maps
 {
 	public class LineInlinedMap
 	{

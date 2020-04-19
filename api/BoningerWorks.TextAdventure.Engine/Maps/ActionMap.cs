@@ -1,10 +1,10 @@
 ﻿using BoningerWorks.TextAdventure.Engine.Blueprints;
-using BoningerWorks.TextAdventure.Engine.Executables.Maps.Enums;
+using BoningerWorks.TextAdventure.Engine.Maps.Enums;
 using System;
 using System.Collections.Immutable;
 using System.Linq;
 
-namespace BoningerWorks.TextAdventure.Engine.Executables.Maps
+namespace BoningerWorks.TextAdventure.Engine.Maps
 {
 	public class ActionMap
 	{

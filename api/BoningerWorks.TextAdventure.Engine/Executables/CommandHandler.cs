@@ -1,4 +1,4 @@
-﻿using BoningerWorks.TextAdventure.Engine.Executables.Maps;
+﻿using BoningerWorks.TextAdventure.Engine.Maps;
 using BoningerWorks.TextAdventure.Engine.Utilities;
 using System;
 using System.Collections.Generic;

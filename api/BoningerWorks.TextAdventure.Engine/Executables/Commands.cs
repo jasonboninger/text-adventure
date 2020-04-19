@@ -1,7 +1,7 @@
 ﻿using BoningerWorks.TextAdventure.Engine.Blueprints.Templates;
 using BoningerWorks.TextAdventure.Engine.Exceptions;
 using BoningerWorks.TextAdventure.Engine.Exceptions.Data;
-using BoningerWorks.TextAdventure.Engine.Executables.Maps;
+using BoningerWorks.TextAdventure.Engine.Maps;
 using BoningerWorks.TextAdventure.Engine.Utilities;
 using System;
 using System.Collections;

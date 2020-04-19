@@ -1,9 +1,9 @@
 ﻿using BoningerWorks.TextAdventure.Engine.Blueprints.Messages;
-using BoningerWorks.TextAdventure.Engine.Executables.Maps.Enums;
+using BoningerWorks.TextAdventure.Engine.Maps.Enums;
 using BoningerWorks.TextAdventure.Engine.Utilities;
 using System;
 
-namespace BoningerWorks.TextAdventure.Engine.Executables.Maps
+namespace BoningerWorks.TextAdventure.Engine.Maps
 {
 	public class MessageMap
 	{

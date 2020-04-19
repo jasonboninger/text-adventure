@@ -3,7 +3,7 @@ using System;
 using System.Collections.Immutable;
 using System.Linq;
 
-namespace BoningerWorks.TextAdventure.Engine.Executables.Maps
+namespace BoningerWorks.TextAdventure.Engine.Maps
 {
 	public class MessageInlinedMap
 	{

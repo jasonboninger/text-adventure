@@ -1,4 +1,4 @@
-﻿namespace BoningerWorks.TextAdventure.Engine.Executables.Maps.Enums
+﻿namespace BoningerWorks.TextAdventure.Engine.Maps.Enums
 {
 	public enum EMessageMapType
 	{

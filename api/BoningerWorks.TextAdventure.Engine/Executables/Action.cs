@@ -1,5 +1,5 @@
-﻿using BoningerWorks.TextAdventure.Engine.Executables.Maps;
-using BoningerWorks.TextAdventure.Engine.Executables.Maps.Enums;
+﻿using BoningerWorks.TextAdventure.Engine.Maps;
+using BoningerWorks.TextAdventure.Engine.Maps.Enums;
 using BoningerWorks.TextAdventure.Engine.States;
 using BoningerWorks.TextAdventure.Engine.States.Messages;
 using BoningerWorks.TextAdventure.Engine.States.Messages.Lines;
