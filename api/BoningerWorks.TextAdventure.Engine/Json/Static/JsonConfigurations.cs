@@ -2,7 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace BoningerWorks.TextAdventure.Engine.Static
+namespace BoningerWorks.TextAdventure.Engine.Json.Static
 {
 	public static class JsonConfigurations
 	{

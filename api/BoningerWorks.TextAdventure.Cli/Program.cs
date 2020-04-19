@@ -1,7 +1,7 @@
 ﻿using BoningerWorks.TextAdventure.Engine.Blueprints;
 using BoningerWorks.TextAdventure.Engine.Executables;
 using BoningerWorks.TextAdventure.Engine.Generated;
-using BoningerWorks.TextAdventure.Engine.Static;
+using BoningerWorks.TextAdventure.Engine.Json.Static;
 using System;
 using System.Text.Json;
 
