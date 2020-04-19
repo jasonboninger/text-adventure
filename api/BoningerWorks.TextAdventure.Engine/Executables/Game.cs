@@ -5,6 +5,7 @@ using BoningerWorks.TextAdventure.Engine.Exceptions.Data;
 using BoningerWorks.TextAdventure.Engine.Maps;
 using BoningerWorks.TextAdventure.Engine.States;
 using BoningerWorks.TextAdventure.Engine.States.Data;
+using BoningerWorks.TextAdventure.Engine.States.Messages;
 using BoningerWorks.TextAdventure.Engine.Utilities;
 using System;
 using System.Collections.Generic;
@@ -63,10 +64,10 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			return gameState;
 		}
 
-		public List<string> Execute(GameState state, string input)
+		public List<MessageState> Execute(GameState state, string input)
 		{
-			// Create responses
-			var responses = new List<string>();
+			// Create messages
+			var messages = new List<MessageState>();
 			// Try to create command match
 			try
 			{
@@ -75,13 +76,6 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				{
 					// Get command
 					var command = commandMatch.Command;
-
-
-
-					responses.Add("Command = " + command);
-
-
-
 					// Get command handler
 					var commandHandler = Commands.GetHandler(command);
 					// Run through command item symbols
@@ -90,13 +84,6 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 						var commandItemSymbol = command.ItemSymbols[i];
 						// Get item
 						var item = commandMatch.ItemSymbolToItemMappings[command.ItemSymbols[i]];
-
-
-
-						responses.Add(commandItemSymbol + " = " + item);
-
-
-
 						// Try to get next command handler
 						if (!commandHandler.Next.TryGetValue(item.Symbol, out var commandHandlerNext))
 						{
@@ -108,67 +95,34 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 						// Set command handler
 						commandHandler = commandHandlerNext;
 					}
-					// Check if command handler does not exist
-					if (commandHandler == null)
+					// Check if command handler exists
+					if (commandHandler != null)
 					{
-
-
-
-						responses.Add("No actions were returned.");
-
-
-
-					}
-					else
-					{
-
-
-
-						responses.Add("Actions were returned!");
-
-
-
 						// Run through actions
 						for (int i = 0; i < commandHandler.Actions.Length; i++)
 						{
 							var action = commandHandler.Actions[i];
 							// Execute action
-							var messages = action.Execute(state);
-							// Run through messages
-							for (int k = 0; k < messages.Count; k++)
-							{
-								var message = messages[k];
-								// Run through lines
-								for (int m = 0; m < message.Lines.Count; m++)
-								{
-									var line = message.Lines[m];
-
-
-
-									responses.Add(line.Content.Text);
-
-
-
-								}
-							}
+							messages.AddRange(action.Execute(state));
 						}
 					}
 				}
 			}
 			catch (GenericException<AmbiguousCommandItemMatchData> exception)
 			{
-				// Get data
-				var data = exception.Data;
 
 
-				
-				responses.Add($"Command ({data.Command}) was matched but name ({data.Name}) matched more than one item!");
+
+				// Discard exception
+				_ = exception;
+				// Throw error
+				throw;
 
 
 
 			}
-			// Return responses
-			return responses;
+			// Return messages
+			return messages;
 		}
 
 		private static Items _CreateItems(PlayerBlueprint playerBlueprint)

@@ -84,13 +84,13 @@ namespace BoningerWorks.TextAdventure.Engine.Generated
 				""template"": {
 					""lines"": [
 						{
-							""special"": ""horizontal-rule""
+							""special"": ""HorizontalRule""
 						},
 						{
 							""input"": ""BODY""
 						},
 						{
-							""special"": ""horizontal-rule""
+							""special"": ""HorizontalRule""
 						}
 					]
 				},
@@ -115,12 +115,38 @@ namespace BoningerWorks.TextAdventure.Engine.Generated
 				""commands"": {
 					""INSPECT"": {
 						""actions"": {
-							""messages"": ""Looks fine. No surface damage.""
+							""messages"": {
+								""lines"": [
+									{
+										""special"": ""HorizontalRule""
+									},
+									{
+										""special"": ""Blank""
+									},
+									{
+										""special"": ""Blank""
+									},
+									""Looks fine. No surface damage."",
+									{
+										""special"": ""Blank""
+									},
+									{
+										""special"": ""Blank""
+									},
+									{
+										""special"": ""HorizontalRule""
+									}
+								]
+							}
 						}
 					},
 					""USE"": {
 						""actions"": {
-							""messages"": ""You click the power button but nothing happens. Darn, definitely dead.""
+							""messages"": [
+								""You click the power button but nothing happens. Darn, definitely dead."",
+								""You hit it against the wall."",
+								""Weird that didn't help. Sometimes that works...""
+							]
 						}
 					}
 				}

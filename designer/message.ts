@@ -19,7 +19,7 @@ export interface ILine {
 }
 
 export interface ISpecial {
-	special: "horizontal-rule" | "blank";
+	special: "HorizontalRule" | "Blank";
 }
 
 export interface IInput {
