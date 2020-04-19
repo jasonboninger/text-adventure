@@ -1,4 +1,4 @@
-﻿namespace BoningerWorks.TextAdventure.Engine.States.Lines
+﻿namespace BoningerWorks.TextAdventure.Engine.Maps
 {
 	public enum ELineSpecialType
 	{

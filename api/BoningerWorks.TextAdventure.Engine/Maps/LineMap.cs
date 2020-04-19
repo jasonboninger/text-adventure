@@ -8,6 +8,7 @@ namespace BoningerWorks.TextAdventure.Engine.Maps
 	{
 		public ELineMapType Type { get; }
 		public LineInlinedMap Inlined { get; }
+		public LineSpecialMap Special { get; }
 		public Symbol Input { get; }
 
 		public LineMap(LineBlueprint lineBlueprint)
@@ -29,6 +30,16 @@ namespace BoningerWorks.TextAdventure.Engine.Maps
 				Type = ELineMapType.Inlined;
 				// Set inlined
 				Inlined = new LineInlinedMap(lineBlueprint.Inlined);
+			}
+			// Check if special
+			if (lineBlueprint.Special != null)
+			{
+				// Increase count
+				count++;
+				// Set type
+				Type = ELineMapType.Special;
+				// Set special
+				Special = new LineSpecialMap(lineBlueprint.Special);
 			}
 			// Check if input
 			if (lineBlueprint.Input != null)

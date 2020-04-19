@@ -156,15 +156,23 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			switch (lineMap.Type)
 			{
 				case ELineMapType.Inlined:
-					// Create line content execute
+					// Create content line execute
 					var executeLineContent = _CreateExecuteLineContent(lineMap.Inlined);
 					// Return execute
 					return gameState =>
 					{
-						// Return line
+						// Return content line
 						return LineState.CreateContent(executeLineContent(gameState));
 					};
-				case ELineMapType.Special: throw new NotImplementedException();
+				case ELineMapType.Special:
+					// Create special line execute
+					var executeLineSpecial = _CreateExecuteLineSpecial(lineMap.Special);
+					// Return execute
+					return gameState =>
+					{
+						// Return special line
+						return LineState.CreateSpecial(executeLineSpecial(gameState));
+					};
 				case ELineMapType.Input: throw new NotImplementedException();
 				default: throw new ArgumentException($"Line map type ({lineMap.Type}) could not be handled.");
 			}
@@ -183,6 +191,16 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			{
 				// Return content
 				return LineContentState.Create(lineInlinedMap.Text);
+			};
+		}
+
+		private Func<GameState, LineSpecialState> _CreateExecuteLineSpecial(LineSpecialMap lineSpecialMap)
+		{
+			// Return execute
+			return gameState =>
+			{
+				// Return special
+				return LineSpecialState.Create(lineSpecialMap.Type);
 			};
 		}
 	}

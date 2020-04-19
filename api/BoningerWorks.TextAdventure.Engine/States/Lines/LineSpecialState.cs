@@ -1,4 +1,6 @@
-﻿namespace BoningerWorks.TextAdventure.Engine.States.Lines
+﻿using BoningerWorks.TextAdventure.Engine.Maps;
+
+namespace BoningerWorks.TextAdventure.Engine.States.Lines
 {
 	public class LineSpecialState
 	{
