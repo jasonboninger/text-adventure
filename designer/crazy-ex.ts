@@ -1,4 +1,5 @@
 import { IGame } from "./game";
+import { HORIZONTAL_RULE, BLANK, INPUT } from "./message";
 
 export const CRAZY_EX: IGame = {
 	templates: {
@@ -36,9 +37,9 @@ export const CRAZY_EX: IGame = {
 			NOTE: {
 				template: {
 					lines: [
-						{ special: "HorizontalRule" },
-						{ input: "BODY" },
-						{ special: "HorizontalRule" }
+						HORIZONTAL_RULE(),
+						INPUT("BODY"),
+						HORIZONTAL_RULE()
 					]
 				},
 				lines: ["BODY"]
@@ -55,13 +56,13 @@ export const CRAZY_EX: IGame = {
 						actions: {
 							messages: {
 								lines: [
-									{ special: "HorizontalRule" },
-									{ special: "Blank" },
-									{ special: "Blank" },
+									HORIZONTAL_RULE(),
+									BLANK(),
+									BLANK(),
 									"Looks fine. No surface damage.",
-									{ special: "Blank" },
-									{ special: "Blank" },
-									{ special: "HorizontalRule" }
+									BLANK(),
+									BLANK(),
+									HORIZONTAL_RULE()
 								]
 							}
 						}

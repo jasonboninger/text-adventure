@@ -84,13 +84,13 @@ namespace BoningerWorks.TextAdventure.Engine.Generated
 				""template"": {
 					""lines"": [
 						{
-							""special"": ""HorizontalRule""
+							""special"": ""HORIZONTAL_RULE""
 						},
 						{
 							""input"": ""BODY""
 						},
 						{
-							""special"": ""HorizontalRule""
+							""special"": ""HORIZONTAL_RULE""
 						}
 					]
 				},
@@ -118,23 +118,23 @@ namespace BoningerWorks.TextAdventure.Engine.Generated
 							""messages"": {
 								""lines"": [
 									{
-										""special"": ""HorizontalRule""
+										""special"": ""HORIZONTAL_RULE""
 									},
 									{
-										""special"": ""Blank""
+										""special"": ""BLANK""
 									},
 									{
-										""special"": ""Blank""
+										""special"": ""BLANK""
 									},
 									""Looks fine. No surface damage."",
 									{
-										""special"": ""Blank""
+										""special"": ""BLANK""
 									},
 									{
-										""special"": ""Blank""
+										""special"": ""BLANK""
 									},
 									{
-										""special"": ""HorizontalRule""
+										""special"": ""HORIZONTAL_RULE""
 									}
 								]
 							}
