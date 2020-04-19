@@ -1,4 +1,4 @@
-﻿namespace BoningerWorks.TextAdventure.Engine.Maps.Enums
+﻿namespace BoningerWorks.TextAdventure.Engine.Maps
 {
 	public enum ELineMapType
 	{

@@ -1,5 +1,4 @@
 ﻿using BoningerWorks.TextAdventure.Engine.Blueprints.Messages;
-using BoningerWorks.TextAdventure.Engine.Maps.Enums;
 using BoningerWorks.TextAdventure.Engine.Utilities;
 using System;
 

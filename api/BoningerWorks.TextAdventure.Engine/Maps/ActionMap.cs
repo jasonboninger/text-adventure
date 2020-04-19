@@ -1,5 +1,4 @@
 ﻿using BoningerWorks.TextAdventure.Engine.Blueprints;
-using BoningerWorks.TextAdventure.Engine.Maps.Enums;
 using System;
 using System.Collections.Immutable;
 using System.Linq;
