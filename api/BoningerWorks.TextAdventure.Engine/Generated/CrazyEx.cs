@@ -4,100 +4,78 @@ namespace BoningerWorks.TextAdventure.Engine.Generated
 	{
 		public const string JSON = 
 @"{
-	""templates"": {
-		""commands"": {
-			""INSPECT"": {
-				""parts"": [
-					""COMMAND"",
-					""ITEM""
-				],
-				""words"": {
-					""COMMAND"": [
-						""Inspect"",
-						""Ins"",
-						""Look at"",
-						""Lookat"",
-						""Look"",
-						""Observe"",
-						""Check""
-					]
-				},
-				""items"": [
-					""ITEM""
+	""commands"": {
+		""INSPECT"": {
+			""parts"": [
+				""COMMAND"",
+				""ITEM""
+			],
+			""words"": {
+				""COMMAND"": [
+					""Inspect"",
+					""Ins"",
+					""Look at"",
+					""Lookat"",
+					""Look"",
+					""Observe"",
+					""Check""
 				]
 			},
-			""SURVEY"": {
-				""parts"": [
-					""COMMAND""
-				],
-				""words"": {
-					""COMMAND"": [
-						""Survey"",
-						""Look around"",
-						""Lookaround"",
-						""Look"",
-						""Observe""
-					]
-				}
-			},
-			""USE"": {
-				""parts"": [
-					""COMMAND"",
-					""ITEM""
-				],
-				""words"": {
-					""COMMAND"": [
-						""Use""
-					]
-				},
-				""items"": [
-					""ITEM""
-				]
-			},
-			""USE_ON"": {
-				""parts"": [
-					""COMMAND_START"",
-					""ITEM_TO_USE"",
-					""COMMAND_JOIN"",
-					""ITEM_TO_USE_ON""
-				],
-				""words"": {
-					""COMMAND_START"": [
-						""Use"",
-						""Utilize"",
-						""Put"",
-						""Hold""
-					],
-					""COMMAND_JOIN"": [
-						""On"",
-						""With""
-					]
-				},
-				""items"": [
-					""ITEM_TO_USE"",
-					""ITEM_TO_USE_ON""
+			""items"": [
+				""ITEM""
+			]
+		},
+		""SURVEY"": {
+			""parts"": [
+				""COMMAND""
+			],
+			""words"": {
+				""COMMAND"": [
+					""Survey"",
+					""Look around"",
+					""Lookaround"",
+					""Look"",
+					""Observe""
 				]
 			}
 		},
-		""messages"": {
-			""NOTE"": {
-				""template"": {
-					""lines"": [
-						{
-							""special"": ""HORIZONTAL_RULE""
-						},
-						{
-							""input"": ""BODY""
-						},
-						{
-							""special"": ""HORIZONTAL_RULE""
-						}
-					]
-				},
-				""lines"": [
-					""BODY""
+		""USE"": {
+			""parts"": [
+				""COMMAND"",
+				""ITEM""
+			],
+			""words"": {
+				""COMMAND"": [
+					""Use""
 				]
-			}
+			},
+			""items"": [
+				""ITEM""
+			]
+		},
+		""USE_ON"": {
+			""parts"": [
+				""COMMAND_START"",
+				""ITEM_TO_USE"",
+				""COMMAND_JOIN"",
+				""ITEM_TO_USE_ON""
+			],
+			""words"": {
+				""COMMAND_START"": [
+					""Use"",
+					""Utilize"",
+					""Put"",
+					""Hold""
+				],
+				""COMMAND_JOIN"": [
+					""On"",
+					""With""
+				]
+			},
+			""items"": [
+				""ITEM_TO_USE"",
+				""ITEM_TO_USE_ON""
+			]
 		}
 	},
 	""player"": {
@@ -112,7 +90,7 @@ namespace BoningerWorks.TextAdventure.Engine.Generated
 					""Cell phone"",
 					""My cell phone""
 				],
-				""commands"": {
+				""reactions"": {
 					""INSPECT"": {
 						""actions"": {
 							""messages"": {
@@ -156,7 +134,7 @@ namespace BoningerWorks.TextAdventure.Engine.Generated
 					""Wallet"",
 					""My wallet""
 				],
-				""commands"": {
+				""reactions"": {
 					""INSPECT"": {
 						""actions"": {
 							""messages"": ""You review the contents of your wallet, and it looks like everything is in order. Nothing is missing as far as you can tell.""
@@ -169,16 +147,10 @@ namespace BoningerWorks.TextAdventure.Engine.Generated
 	""start"": {
 		""messages"": [
 			{
-				""template"": ""NOTE"",
-				""lines"": {
-					""BODY"": ""Boninger Works presents""
-				}
+				""lines"": ""Boninger Works presents""
 			},
 			{
-				""template"": ""NOTE"",
-				""lines"": {
-					""BODY"": ""Crazy Ex""
-				}
+				""lines"": ""Crazy Ex""
 			},
 			{
 				""lines"": ""You're lying fully-clothed on a bed. You're not exactly waking up so much as regaining consciousness. You've always enjoyed a good drink, or ten, but sometimes things get out of hand. So where did last night lead you today? Thankfully, you don't detect a hangover. That's a great start, but there isn't anyone next to you either, which means that last night probably didn't have a perfect ending.""
@@ -190,23 +162,20 @@ namespace BoningerWorks.TextAdventure.Engine.Generated
 	},
 	""areas"": {
 		""HOTEL_ROOM"": {
-			""tests"": {
-				""DOOR_USED"": [
-					""${DOOR.USED}"",
-					""=="",
-					""yes""
-				]
-			},
 			""items"": {
 				""DOOR"": {
 					""names"": [
 						""Door""
 					],
-					""commands"": {
+					""reactions"": {
 						""INSPECT"": {
 							""actions"": {
 								""if"": {
-									""condition"": ""!HOTEL_ROOM.DOOR_USED"",
+									""condition"": [
+										""${DOOR.USED}"",
+										""IS"",
+										""yes""
+									],
 									""true"": [
 										{
 											""messages"": ""You glance at the door. Something looks a bit strange.""
@@ -246,11 +215,15 @@ namespace BoningerWorks.TextAdventure.Engine.Generated
 					]
 				}
 			},
-			""commands"": {
+			""reactions"": {
 				""SURVEY"": {
 					""actions"": {
 						""if"": {
-							""condition"": ""!DOOR_USED"",
+							""condition"": [
+								""${DOOR.USED}"",
+								""IS"",
+								""yes""
+							],
 							""true"": {
 								""messages"": ""This room looks pretty cool, but you just want to get out of here and go about your day. You should probably head for the door.""
 							},
@@ -258,7 +231,7 @@ namespace BoningerWorks.TextAdventure.Engine.Generated
 								""if"": {
 									""condition"": [
 										""${NOTE_WOODEN.VIEWED}"",
-										""=="",
+										""IS"",
 										""yes""
 									],
 									""true"": {
@@ -294,10 +267,7 @@ namespace BoningerWorks.TextAdventure.Engine.Generated
 				""lines"": ""You use the titanium key to open the safe, and not a moment too soon. It's difficult to tell if your trembling is from nervous excitement that your trial may finally be over, or if it's because whatever you drank last night is starting to kill you. Either way, you grab the antidote, which looks like an EpiPen but has no distinguishing markings, and quickly read the side.""
 			},
 			{
-				""template"": ""NOTE"",
-				""lines"": {
-					""BODY"": ""Inject directly into buttocks.""
-				}
+				""lines"": ""Inject directly into buttocks.""
 			},
 			{
 				""lines"": ""Decency will not cost you your life, so you quickly pull down your pants and jam the needle into your butt. As you wait a few seconds for the injection to finish, you mentally reconfirm your preference for a morning routine that results in a cup of coffee. Still, you are thankful to be alive.""

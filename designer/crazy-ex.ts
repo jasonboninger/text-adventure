@@ -1,49 +1,35 @@
-import { IGame } from "./game";
-import { HORIZONTAL_RULE, BLANK, INPUT } from "./message";
+import { IGame } from "./types/game";
+import { horizontalRule, blank, is } from "./utilities/helpers";
 
 export const CRAZY_EX: IGame = {
-	templates: {
-		commands: {
-			INSPECT: {
-				parts: ["COMMAND", "ITEM"],
-				words: {
-					COMMAND: ["Inspect", "Ins", "Look at", "Lookat", "Look", "Observe", "Check"],
-				},
-				items: ["ITEM"]
+	commands: {
+		INSPECT: {
+			parts: ["COMMAND", "ITEM"],
+			words: {
+				COMMAND: ["Inspect", "Ins", "Look at", "Lookat", "Look", "Observe", "Check"],
 			},
-			SURVEY: {
-				parts: ["COMMAND"],
-				words: {
-					COMMAND: ["Survey", "Look around", "Lookaround", "Look", "Observe"]
-				}
-			},
-			USE: {
-				parts: ["COMMAND", "ITEM"],
-				words: {
-					COMMAND: ["Use"]
-				},
-				items: ["ITEM"]
-			},
-			USE_ON: {
-				parts: ["COMMAND_START", "ITEM_TO_USE", "COMMAND_JOIN", "ITEM_TO_USE_ON"],
-				words: {
-					COMMAND_START: ["Use", "Utilize", "Put", "Hold"],
-					COMMAND_JOIN: ["On", "With"]
-				},
-				items: ["ITEM_TO_USE", "ITEM_TO_USE_ON"]
+			items: ["ITEM"]
+		},
+		SURVEY: {
+			parts: ["COMMAND"],
+			words: {
+				COMMAND: ["Survey", "Look around", "Lookaround", "Look", "Observe"]
 			}
 		},
-		messages: {
-			NOTE: {
-				template: {
-					lines: [
-						HORIZONTAL_RULE(),
-						INPUT("BODY"),
-						HORIZONTAL_RULE()
-					]
-				},
-				lines: ["BODY"]
-			}
+		USE: {
+			parts: ["COMMAND", "ITEM"],
+			words: {
+				COMMAND: ["Use"]
+			},
+			items: ["ITEM"]
+		},
+		USE_ON: {
+			parts: ["COMMAND_START", "ITEM_TO_USE", "COMMAND_JOIN", "ITEM_TO_USE_ON"],
+			words: {
+				COMMAND_START: ["Use", "Utilize", "Put", "Hold"],
+				COMMAND_JOIN: ["On", "With"]
+			},
+			items: ["ITEM_TO_USE", "ITEM_TO_USE_ON"]
 		}
 	},
 	player: {
@@ -51,18 +37,18 @@ export const CRAZY_EX: IGame = {
 		items: {
 			PHONE: {
 				names: ["Phone", "My phone", "Cellphone", "My cellphone", "Cell phone", "My cell phone"],
-				commands: {
+				reactions: {
 					INSPECT: {
 						actions: {
 							messages: {
 								lines: [
-									HORIZONTAL_RULE(),
-									BLANK(),
-									BLANK(),
+									horizontalRule(),
+									blank(),
+									blank(),
 									"Looks fine. No surface damage.",
-									BLANK(),
-									BLANK(),
-									HORIZONTAL_RULE()
+									blank(),
+									blank(),
+									horizontalRule()
 								]
 							}
 						}
@@ -80,7 +66,7 @@ export const CRAZY_EX: IGame = {
 			},
 			WALLET: {
 				names: ["Wallet", "My wallet"],
-				commands: {
+				reactions: {
 					INSPECT: {
 						actions: {
 							messages: "You review the contents of your wallet, and it looks like everything is in order. Nothing is missing as far as you can tell."
@@ -93,16 +79,10 @@ export const CRAZY_EX: IGame = {
 	start: {
 		messages: [
 			{
-				template: "NOTE",
-				lines: {
-					BODY: "Boninger Works presents"
-				}
+				lines: "Boninger Works presents"
 			},
 			{
-				template: "NOTE",
-				lines: {
-					BODY: "Crazy Ex"
-				}
+				lines: "Crazy Ex"
 			},
 			{
 				lines: "You're lying fully-clothed on a bed. You're not exactly waking up so much as regaining consciousness. You've always enjoyed a good drink, or ten, but sometimes things get out of hand. So where did last night lead you today? Thankfully, you don't detect a hangover. That's a great start, but there isn't anyone next to you either, which means that last night probably didn't have a perfect ending."
@@ -114,17 +94,14 @@ export const CRAZY_EX: IGame = {
 	},
 	areas: {
 		HOTEL_ROOM: {
-			tests: {
-				DOOR_USED: ["${DOOR.USED}", "==", "yes"]
-			},
 			items: {
 				DOOR: {
 					names: ["Door"],
-					commands: {
+					reactions: {
 						INSPECT: {
 							actions: {
 								if: {
-									condition: "!HOTEL_ROOM.DOOR_USED",
+									condition: is("${DOOR.USED}", "yes"),
 									true: [
 										{
 											messages: "You glance at the door. Something looks a bit strange."
@@ -154,17 +131,17 @@ export const CRAZY_EX: IGame = {
 					names: ["Wood Sign", "Sign", "Door Sign", "Wooden Note", "Wood Note", "Door Note", "Board", "Wooden Board", "Wood Board"]
 				}
 			},
-			commands: {
+			reactions: {
 				SURVEY: {
 					actions: {
 						if: {
-							condition: "!DOOR_USED",
+							condition: is("${DOOR.USED}", "yes"),
 							true: {
 								messages: "This room looks pretty cool, but you just want to get out of here and go about your day. You should probably head for the door."
 							},
 							false: {
 								if: {
-									condition: ["${NOTE_WOODEN.VIEWED}", "==", "yes"],
+									condition: is("${NOTE_WOODEN.VIEWED}", "yes"),
 									true: {
 										messages: "You glance around the room, and it all looks pretty normal. You still can't believe that the door is locked. Maybe there's something to be done if you take a closer look."
 									},
@@ -198,10 +175,7 @@ export const CRAZY_EX: IGame = {
 				lines: "You use the titanium key to open the safe, and not a moment too soon. It's difficult to tell if your trembling is from nervous excitement that your trial may finally be over, or if it's because whatever you drank last night is starting to kill you. Either way, you grab the antidote, which looks like an EpiPen but has no distinguishing markings, and quickly read the side."
 			},
 			{
-				template: "NOTE",
-				lines: {
-					BODY: "Inject directly into buttocks."
-				}
+				lines: "Inject directly into buttocks."
 			},
 			{
 				lines: "Decency will not cost you your life, so you quickly pull down your pants and jam the needle into your butt. As you wait a few seconds for the injection to finish, you mentally reconfirm your preference for a morning routine that results in a cup of coffee. Still, you are thankful to be alive."

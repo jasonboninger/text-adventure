@@ -1,11 +1,9 @@
 import { IDictionary, IOneOrArray } from "./core";
-import { IConditions } from "./condition";
-import { ICommand } from "./command";
+import { IReaction } from "./reaction";
 
 export interface IItem {
 	names: IOneOrArray<string>;
 	active?: boolean;
-	tests?: IDictionary<IConditions>;
-	commands?: IDictionary<ICommand>;
+	reactions?: IDictionary<IReaction>;
 	items?: IOneOrArray<IItem>;
 }
