@@ -1,4 +1,4 @@
-﻿namespace BoningerWorks.TextAdventure.Engine.Blueprints.Messages.Lines
+﻿namespace BoningerWorks.TextAdventure.Engine.Blueprints.Lines
 {
 	public class LineBlueprint
 	{

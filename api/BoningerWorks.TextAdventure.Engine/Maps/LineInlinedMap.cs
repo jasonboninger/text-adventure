@@ -1,4 +1,4 @@
-﻿using BoningerWorks.TextAdventure.Engine.Blueprints.Messages.Lines;
+﻿using BoningerWorks.TextAdventure.Engine.Blueprints.Lines;
 using System;
 
 namespace BoningerWorks.TextAdventure.Engine.Maps
