@@ -1,7 +1,7 @@
 ﻿using BoningerWorks.TextAdventure.Engine.Maps;
 using BoningerWorks.TextAdventure.Engine.States;
+using BoningerWorks.TextAdventure.Engine.States.Lines;
 using BoningerWorks.TextAdventure.Engine.States.Messages;
-using BoningerWorks.TextAdventure.Engine.States.Messages.Lines;
 using BoningerWorks.TextAdventure.Engine.Utilities;
 using System;
 using System.Collections.Generic;

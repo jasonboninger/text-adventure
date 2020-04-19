@@ -1,4 +1,4 @@
-﻿namespace BoningerWorks.TextAdventure.Engine.States.Messages.Lines
+﻿namespace BoningerWorks.TextAdventure.Engine.States.Lines
 {
 	public class LineSpecialState
 	{

@@ -1,4 +1,4 @@
-﻿using BoningerWorks.TextAdventure.Engine.States.Messages.Lines;
+﻿using BoningerWorks.TextAdventure.Engine.States.Lines;
 using System;
 using System.Collections.Generic;
 
