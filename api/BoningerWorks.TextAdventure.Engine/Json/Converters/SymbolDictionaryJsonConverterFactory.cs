@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace BoningerWorks.TextAdventure.Engine.Json.Converters.Factories
+namespace BoningerWorks.TextAdventure.Engine.Json.Converters
 {
 	public class SymbolDictionaryJsonConverterFactory : JsonConverterFactory
 	{
