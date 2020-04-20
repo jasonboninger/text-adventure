@@ -19,7 +19,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		private readonly Items _items;
 		private readonly Regex _regularExpression;
 
-		public Command(Symbol symbol, Items items, CommandTemplate commandTemplate)
+		public Command(Symbol symbol, Items items, CommandBlueprint commandTemplate)
 		{
 			// Set symbol
 			Symbol = symbol;

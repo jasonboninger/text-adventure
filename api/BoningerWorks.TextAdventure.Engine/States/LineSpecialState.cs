@@ -1,6 +1,6 @@
 ﻿using BoningerWorks.TextAdventure.Engine.Maps;
 
-namespace BoningerWorks.TextAdventure.Engine.States.Lines
+namespace BoningerWorks.TextAdventure.Engine.States
 {
 	public class LineSpecialState
 	{

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BoningerWorks.TextAdventure.Engine.States.Lines
+namespace BoningerWorks.TextAdventure.Engine.States
 {
 	public class LineContentState
 	{

@@ -1,8 +1,7 @@
-﻿using BoningerWorks.TextAdventure.Engine.States.Lines;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace BoningerWorks.TextAdventure.Engine.States.Messages
+namespace BoningerWorks.TextAdventure.Engine.States
 {
 	public class MessageState
 	{

@@ -55,7 +55,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			return Symbol.ToString();
 		}
 
-		private ImmutableArray<CommandMap> _CreateCommandMaps(Dictionary<string, CommandBlueprint> commandBlueprints)
+		private ImmutableArray<CommandMap> _CreateCommandMaps(Dictionary<string, ReactionBlueprint> commandBlueprints)
 		{
 			// Check if command blueprints does not exist
 			if (commandBlueprints == null)

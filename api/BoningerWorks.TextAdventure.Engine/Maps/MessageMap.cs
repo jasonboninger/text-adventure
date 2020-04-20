@@ -1,4 +1,4 @@
-﻿using BoningerWorks.TextAdventure.Engine.Blueprints.Messages;
+﻿using BoningerWorks.TextAdventure.Engine.Json.Serializable;
 using BoningerWorks.TextAdventure.Engine.Utilities;
 using System;
 

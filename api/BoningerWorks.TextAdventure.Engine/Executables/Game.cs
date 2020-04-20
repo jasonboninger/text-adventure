@@ -27,18 +27,10 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				// Throw error
 				throw new ArgumentException("Game blueprint cannot be null.", nameof(gameBlueprint));
 			}
-			// Get template blueprints
-			var templateBlueprints = gameBlueprint.Templates;
-			// Check if template blueprints does not exist
-			if (templateBlueprints == null)
-			{
-				// Throw error
-				throw new ArgumentException("Templates cannot be null.", nameof(gameBlueprint));
-			}
 			// Set items
 			Items = _CreateItems(gameBlueprint.Player);
 			// Set commands
-			Commands = _CreateCommands(Items, templateBlueprints.Commands);
+			Commands = _CreateCommands(Items, gameBlueprint.Commands);
 		}
 
 		public GameState New()
@@ -140,14 +132,20 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			return new Items(items);
 		}
 
-		private static Commands _CreateCommands(Items items, Dictionary<string, CommandTemplate> commandTemplates)
+		private static Commands _CreateCommands(Items items, Dictionary<string, CommandBlueprint> commandBlueprints)
 		{
+			// Check if command blueprints does not exist
+			if (commandBlueprints == null)
+			{
+				// Throw error
+				throw new ArgumentException("Command blueprints cannot be null.", nameof(commandBlueprints));
+			}
 			// Create command maps
 			var commandMaps = Enumerable.Empty<CommandMap>()
 				.Concat(items.SelectMany(i => i.CommandMaps))
 				.ToImmutableList();
 			// Return commands
-			return new Commands(items, commandTemplates, commandMaps);
+			return new Commands(items, commandBlueprints, commandMaps);
 		}
 	}
 }

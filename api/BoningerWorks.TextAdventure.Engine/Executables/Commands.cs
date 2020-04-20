@@ -21,7 +21,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		private readonly ImmutableDictionary<Symbol, Command> _commandSymbolToCommandMappings;
 		private readonly ImmutableDictionary<Symbol, CommandHandler> _commandSymbolToCommandHandlerMappings;
 
-		public Commands(Items items, Dictionary<string, CommandTemplate> commandTemplates, ImmutableList<CommandMap> commandMaps)
+		public Commands(Items items, Dictionary<string, CommandBlueprint> commandTemplates, ImmutableList<CommandMap> commandMaps)
 		{
 			// Check if command templates does not exist
 			if (commandTemplates == null)

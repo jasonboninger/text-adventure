@@ -1,8 +1,7 @@
-﻿using BoningerWorks.TextAdventure.Engine.Blueprints.Items;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace BoningerWorks.TextAdventure.Engine.Blueprints
+namespace BoningerWorks.TextAdventure.Engine.Json.Serializable
 {
 	public class PlayerBlueprint
 	{

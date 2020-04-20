@@ -3,7 +3,6 @@
 	public enum ELineMapType
 	{
 		Inlined,
-		Special,
-		Input
+		Special
 	}
 }

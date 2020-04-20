@@ -14,7 +14,7 @@ namespace BoningerWorks.TextAdventure.Engine.Maps
 		public Symbol ItemSymbolDefault { get; }
 		public ImmutableArray<ActionMap> ActionMaps { get; }
 
-		public CommandMap(Symbol commandSymbol, CommandBlueprint commandBlueprint, Symbol itemSymbolDefault = null)
+		public CommandMap(Symbol commandSymbol, ReactionBlueprint commandBlueprint, Symbol itemSymbolDefault = null)
 		{
 			// Set command symbol
 			CommandSymbol = commandSymbol;
