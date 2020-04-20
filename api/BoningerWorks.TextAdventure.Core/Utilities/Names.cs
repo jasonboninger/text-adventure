@@ -1,11 +1,11 @@
-﻿using BoningerWorks.TextAdventure.Engine.Static;
+﻿using BoningerWorks.TextAdventure.Core.Static;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
-namespace BoningerWorks.TextAdventure.Engine.Utilities
+namespace BoningerWorks.TextAdventure.Core.Utilities
 {
 	public class Names : IReadOnlyList<Name>
 	{

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 
-namespace BoningerWorks.TextAdventure.Engine.Utilities
+namespace BoningerWorks.TextAdventure.Core.Utilities
 {
 	public sealed class Name : IEquatable<Name>
 	{

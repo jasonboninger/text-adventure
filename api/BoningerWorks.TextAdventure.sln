@@ -10,7 +10,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitignore = .gitignore
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoningerWorks.TextAdventure.Cli", "BoningerWorks.TextAdventure.Cli\BoningerWorks.TextAdventure.Cli.csproj", "{DA27FD77-9C21-4C39-B2C0-FBBE772268AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BoningerWorks.TextAdventure.Cli", "BoningerWorks.TextAdventure.Cli\BoningerWorks.TextAdventure.Cli.csproj", "{DA27FD77-9C21-4C39-B2C0-FBBE772268AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoningerWorks.TextAdventure.Core", "BoningerWorks.TextAdventure.Core\BoningerWorks.TextAdventure.Core.csproj", "{BA720FC2-EE0D-427B-B4C8-20E5251A81AB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,6 +28,10 @@ Global
 		{DA27FD77-9C21-4C39-B2C0-FBBE772268AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA27FD77-9C21-4C39-B2C0-FBBE772268AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA27FD77-9C21-4C39-B2C0-FBBE772268AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA720FC2-EE0D-427B-B4C8-20E5251A81AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA720FC2-EE0D-427B-B4C8-20E5251A81AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA720FC2-EE0D-427B-B4C8-20E5251A81AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA720FC2-EE0D-427B-B4C8-20E5251A81AB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

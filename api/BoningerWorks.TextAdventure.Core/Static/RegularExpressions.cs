@@ -1,4 +1,4 @@
-﻿namespace BoningerWorks.TextAdventure.Engine.Static
+﻿namespace BoningerWorks.TextAdventure.Core.Static
 {
 	public static class RegularExpressions
 	{
