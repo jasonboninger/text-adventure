@@ -1,4 +1,4 @@
-﻿using BoningerWorks.TextAdventure.Engine.Blueprints.Lines;
+﻿using BoningerWorks.TextAdventure.Engine.Json.Serializable;
 using System;
 
 namespace BoningerWorks.TextAdventure.Engine.Maps
@@ -19,15 +19,15 @@ namespace BoningerWorks.TextAdventure.Engine.Maps
 			}
 			// Create count
 			var count = 0;
-			// Check if inlined
-			if (lineBlueprint.Inlined != null)
+			// Check if text exists
+			if (lineBlueprint.Text != null)
 			{
 				// Increase count
 				count++;
 				// Set type
 				Type = ELineMapType.Inlined;
 				// Set inlined
-				Inlined = new LineInlinedMap(lineBlueprint.Inlined);
+				Inlined = new LineInlinedMap(lineBlueprint.Text);
 			}
 			// Check if special
 			if (lineBlueprint.Special != null)

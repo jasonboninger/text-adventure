@@ -1,4 +1,4 @@
-﻿using BoningerWorks.TextAdventure.Engine.Utilities;
+﻿using BoningerWorks.TextAdventure.Engine.Json.Utilities;
 using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;

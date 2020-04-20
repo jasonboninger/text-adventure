@@ -1,5 +1,4 @@
-﻿using BoningerWorks.TextAdventure.Engine.Blueprints;
-using BoningerWorks.TextAdventure.Engine.Blueprints.Items;
+﻿using BoningerWorks.TextAdventure.Engine.Json.Serializable;
 using BoningerWorks.TextAdventure.Engine.Maps;
 using BoningerWorks.TextAdventure.Engine.Utilities;
 using System;

@@ -1,7 +1,5 @@
 ﻿using BoningerWorks.TextAdventure.Engine.Maps;
 using BoningerWorks.TextAdventure.Engine.States;
-using BoningerWorks.TextAdventure.Engine.States.Lines;
-using BoningerWorks.TextAdventure.Engine.States.Messages;
 using BoningerWorks.TextAdventure.Engine.Utilities;
 using System;
 using System.Collections.Generic;
@@ -124,30 +122,22 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 
 		private Func<GameState, MessageState> _CreateExecuteMessage(MessageMap messageMap)
 		{
-			// Check message type
-			switch (messageMap.Type)
+			// Create line executes
+			var executesLine = messageMap.LineMaps.Select(_CreateExecuteLine).ToImmutableArray();
+			// Return execute
+			return gameState =>
 			{
-				case EMessageMapType.Inlined:
-					// Create line executes
-					var executesLine = messageMap.Inlined.LineMaps.Select(_CreateExecuteLine).ToImmutableArray();
-					// Return execute
-					return gameState =>
-					{
-						// Create lines
-						var lines = new List<LineState>();
-						// Run through line executes
-						for (int i = 0; i < executesLine.Length; i++)
-						{
-							// Add line
-							lines.Add(executesLine[i](gameState));
-						}
-						// Return message
-						return MessageState.Create(lines);
-					};
-				case EMessageMapType.Templated: throw new NotImplementedException();
-				case EMessageMapType.Input: throw new NotImplementedException();
-				default: throw new ArgumentException($"Message map type ({messageMap.Type}) could not be handled.");
-			}
+				// Create lines
+				var lines = new List<LineState>();
+				// Run through line executes
+				for (int i = 0; i < executesLine.Length; i++)
+				{
+					// Add line
+					lines.Add(executesLine[i](gameState));
+				}
+				// Return message
+				return MessageState.Create(lines);
+			};
 		}
 
 		private Func<GameState, LineState> _CreateExecuteLine(LineMap lineMap)
@@ -173,7 +163,6 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 						// Return special line
 						return LineState.CreateSpecial(executeLineSpecial(gameState));
 					};
-				case ELineMapType.Input: throw new NotImplementedException();
 				default: throw new ArgumentException($"Line map type ({lineMap.Type}) could not be handled.");
 			}
 		}

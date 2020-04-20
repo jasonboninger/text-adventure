@@ -1,4 +1,4 @@
-﻿using BoningerWorks.TextAdventure.Engine.Blueprints;
+﻿using BoningerWorks.TextAdventure.Engine.Json.Serializable;
 using System;
 using System.Collections.Immutable;
 using System.Linq;
