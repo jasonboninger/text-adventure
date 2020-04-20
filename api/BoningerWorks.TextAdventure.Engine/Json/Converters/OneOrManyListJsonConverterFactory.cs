@@ -1,5 +1,6 @@
 ﻿using BoningerWorks.TextAdventure.Engine.Utilities;
 using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -41,8 +42,8 @@ namespace BoningerWorks.TextAdventure.Engine.Json.Converters
 
 			public override void Write(Utf8JsonWriter writer, OneOrManyList<TValue> value, JsonSerializerOptions options)
 			{
-				// Throw error
-				throw new NotImplementedException();
+				// Write list
+				JsonSerializer.Serialize(writer, value == null ? null : new List<TValue>(value), options);
 			}
 		}
 

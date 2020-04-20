@@ -1,4 +1,7 @@
-﻿using BoningerWorks.TextAdventure.Engine.Json.Converters;
+﻿using BoningerWorks.TextAdventure.Engine.Blueprints.Lines;
+using BoningerWorks.TextAdventure.Engine.Blueprints.Messages;
+using BoningerWorks.TextAdventure.Engine.Json.Converters;
+using BoningerWorks.TextAdventure.Engine.Json.Extensions;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -6,56 +9,58 @@ namespace BoningerWorks.TextAdventure.Engine.Json.Static
 {
 	public static class JsonConfigurations
 	{
-		private readonly static PassThroughJsonNamingPolicy _passThroughJsonNamingPolicy = new PassThroughJsonNamingPolicy();
-
 		private class PassThroughJsonNamingPolicy : JsonNamingPolicy
 		{
+			public static PassThroughJsonNamingPolicy Instance { get; } = new PassThroughJsonNamingPolicy();
+
 			public override string ConvertName(string name)
 			{
 				// Return name
 				return name;
 			}
+
+			private PassThroughJsonNamingPolicy() { }
 		}
 
 		public static JsonSerializerOptions CreateOptions()
 		{
-			// Create JSON serializer options
-			var jsonSerializerOptions = new JsonSerializerOptions();
-			// Configure JSON serializer options
-			ConfigureOptions(jsonSerializerOptions);
-			// Return JSON serializer options
-			return jsonSerializerOptions;
+			// Create options
+			var options = new JsonSerializerOptions();
+			// Configure options
+			ConfigureOptions(options);
+			// Return options
+			return options;
 		}
 
-		public static void ConfigureOptions(JsonSerializerOptions jsonSerializerOptions)
+		public static void ConfigureOptions(JsonSerializerOptions options)
 		{
 			// Set not property name case insensitive
-			jsonSerializerOptions.PropertyNameCaseInsensitive = false;
+			options.PropertyNameCaseInsensitive = false;
 			// Set property naming policy
-			jsonSerializerOptions.PropertyNamingPolicy = _passThroughJsonNamingPolicy;
+			options.PropertyNamingPolicy = PassThroughJsonNamingPolicy.Instance;
 			// Set dictionary key naming policy
-			jsonSerializerOptions.DictionaryKeyPolicy = _passThroughJsonNamingPolicy;
+			options.DictionaryKeyPolicy = PassThroughJsonNamingPolicy.Instance;
 			// Set not ignore null values
-			jsonSerializerOptions.IgnoreNullValues = false;
+			options.IgnoreNullValues = false;
 			// Set not ignore read only properties
-			jsonSerializerOptions.IgnoreReadOnlyProperties = false;
+			options.IgnoreReadOnlyProperties = false;
 			// Set not allow trailing commas
-			jsonSerializerOptions.AllowTrailingCommas = false;
+			options.AllowTrailingCommas = false;
 			// Set not write indented
-			jsonSerializerOptions.WriteIndented = false;
+			options.WriteIndented = false;
 			// Set max depth
-			jsonSerializerOptions.MaxDepth = 128;
+			options.MaxDepth = 128;
 			// Disallow comments
-			jsonSerializerOptions.ReadCommentHandling = JsonCommentHandling.Disallow;
-			// Add string enum converter
-			jsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(_passThroughJsonNamingPolicy, allowIntegerValues: false));
-			// Add converter factories
-			jsonSerializerOptions.Converters.Add(new OneOrManyListJsonConverterFactory());
-			jsonSerializerOptions.Converters.Add(new SymbolDictionaryJsonConverterFactory());
+			options.ReadCommentHandling = JsonCommentHandling.Disallow;
 			// Add converters
-			jsonSerializerOptions.Converters.Add(new LineBlueprintJsonConverter());
-			jsonSerializerOptions.Converters.Add(new MessageBlueprintJsonConverter());
-			jsonSerializerOptions.Converters.Add(new SymbolJsonConverter());
+			options.Converters.AddRange
+				(
+					new JsonStringEnumConverter(PassThroughJsonNamingPolicy.Instance, allowIntegerValues: false),
+					new OneOrManyListJsonConverterFactory(),
+					new SymbolDictionaryJsonConverterFactory(),
+					new FlexibleObjectJsonConverter<LineBlueprint>(LineBlueprint.CreateFromString),
+					new FlexibleObjectJsonConverter<MessageBlueprint>(MessageBlueprint.CreateFromString)
+				);
 		}
 	}
 }
