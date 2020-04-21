@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { CRAZY_EX } from "../crazy-ex";
+import { CRAZY_EX } from "./crazy-ex";
 
 const folderPath = process.argv[2];
 
