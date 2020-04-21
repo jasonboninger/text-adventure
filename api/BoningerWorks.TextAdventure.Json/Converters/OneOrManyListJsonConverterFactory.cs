@@ -1,10 +1,10 @@
-﻿using BoningerWorks.TextAdventure.Engine.Json.Utilities;
+﻿using BoningerWorks.TextAdventure.Json.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace BoningerWorks.TextAdventure.Engine.Json.Converters
+namespace BoningerWorks.TextAdventure.Json.Converters
 {
 	public class OneOrManyListJsonConverterFactory : JsonConverterFactory
 	{

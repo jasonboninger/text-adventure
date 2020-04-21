@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace BoningerWorks.TextAdventure.Engine.Json.Extensions
+namespace BoningerWorks.TextAdventure.Json.Extensions
 {
 	public static class ConverterExtensions
 	{

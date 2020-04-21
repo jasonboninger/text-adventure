@@ -1,11 +1,11 @@
-﻿using BoningerWorks.TextAdventure.Engine.Utilities;
+﻿using BoningerWorks.TextAdventure.Core.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace BoningerWorks.TextAdventure.Engine.Json.Converters
+namespace BoningerWorks.TextAdventure.Json.Converters
 {
 	public class SymbolDictionaryJsonConverterFactory : JsonConverterFactory
 	{

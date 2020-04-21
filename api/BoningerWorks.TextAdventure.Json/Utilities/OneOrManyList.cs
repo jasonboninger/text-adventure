@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace BoningerWorks.TextAdventure.Engine.Json.Utilities
+namespace BoningerWorks.TextAdventure.Json.Utilities
 {
 	public class OneOrManyList<TValue> : List<TValue>
 	{

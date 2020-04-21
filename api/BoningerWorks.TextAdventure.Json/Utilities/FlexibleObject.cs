@@ -1,4 +1,4 @@
-﻿namespace BoningerWorks.TextAdventure.Engine.Json.Utilities
+﻿namespace BoningerWorks.TextAdventure.Json.Utilities
 {
 	public class FlexibleObject<TValue>
 	{

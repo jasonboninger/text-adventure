@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace BoningerWorks.TextAdventure.Engine.Json.Serializable
+namespace BoningerWorks.TextAdventure.Json.Models
 {
 	public class GameBlueprint
 	{
