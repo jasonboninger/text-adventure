@@ -5,23 +5,23 @@ namespace BoningerWorks.TextAdventure.Json.Static
 {
 	public static class JsonSerializerExecutor
 	{
-		public static GameBlueprint DeserializeGame(string json)
+		public static Game DeserializeGame(string json)
 		{
 			// Return game
-			return _Deserialize<GameBlueprint>(json); ;
+			return _Deserialize<Game>(json); ;
 		}
-		public static GameBlueprint DeserializeGame(ref Utf8JsonReader reader)
+		public static Game DeserializeGame(ref Utf8JsonReader reader)
 		{
 			// Return game
-			return _Deserialize<GameBlueprint>(ref reader); ;
+			return _Deserialize<Game>(ref reader); ;
 		}
 
-		public static string SerializeGame(GameBlueprint game)
+		public static string SerializeGame(Game game)
 		{
 			// Return JSON
 			return _Serialize(game);
 		}
-		public static void SerializeGame(Utf8JsonWriter writer, GameBlueprint game)
+		public static void SerializeGame(Utf8JsonWriter writer, Game game)
 		{
 			// Write JSON
 			_Serialize(writer, game);
