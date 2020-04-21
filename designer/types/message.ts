@@ -12,13 +12,13 @@ export interface IMessage {
 export interface ILineIf {
 	if: IIf<XLine>;
 	special?: never;
-	texts: never;
+	texts?: never;
 }
 
 export interface ILineSpecial {
 	if?: never;
 	special: SSpecial;
-	texts: never;
+	texts?: never;
 }
 
 export interface ILine {
@@ -29,7 +29,7 @@ export interface ILine {
 
 export interface ITextIf {
 	if: IIf<XText>;
-	value: never;
+	value?: never;
 }
 
 export interface IText {

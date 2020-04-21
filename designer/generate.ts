@@ -6,7 +6,7 @@ const folderPath = process.argv[2];
 const crazyEx = CRAZY_EX;
 const crazyExJson = JSON.stringify(crazyEx, undefined, "\t");
 const crazyExCs = 
-`namespace BoningerWorks.TextAdventure.Engine.Generated
+`namespace BoningerWorks.TextAdventure.Cli
 {
 	public static class CrazyEx
 	{

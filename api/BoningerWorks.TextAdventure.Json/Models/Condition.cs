@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BoningerWorks.TextAdventure.Json.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -12,18 +13,14 @@ namespace BoningerWorks.TextAdventure.Json.Models
 			// Create single condition
 			var conditionSingle = new Condition();
 			// Create many condition
-			var conditionMany = new Condition { Conditions = new List<Condition>() };
-			// Create index
-			var index = -1;
+			var conditionMany = new Condition { Conditions = new List<FlexibleObject<Condition>>() };
 			// Create many
 			var many = false;
 			// Run through array
-			while (reader.Read() && reader.TokenType != JsonTokenType.EndArray)
+			for (int i = 0; reader.Read() && reader.TokenType != JsonTokenType.EndArray; i++)
 			{
-				// Increment index
-				index++;
 				// Check if first
-				if (index == 0)
+				if (i == 0)
 				{
 					// Set left
 					conditionSingle.Left = reader.GetString();
@@ -33,17 +30,26 @@ namespace BoningerWorks.TextAdventure.Json.Models
 				else
 				{
 					// Check if second
-					if (index == 1)
+					if (i == 1)
 					{
 						// Set many
 						many = reader.TokenType == JsonTokenType.StartObject || reader.TokenType == JsonTokenType.StartArray;
 					}
 					// Check index based on many
-					switch (many ? 0 : index)
+					switch (many ? 0 : i)
 					{
-						case 0: conditionMany.Conditions.Add(JsonSerializer.Deserialize<Condition>(ref reader, options)); break;
-						case 1: conditionSingle.Comparison = reader.GetString(); break;
-						case 2: conditionSingle.Right = reader.GetString(); break;
+						case 0: 
+							// Add condition
+							conditionMany.Conditions.Add(JsonSerializer.Deserialize<Condition>(ref reader, options));
+							break;
+						case 1: 
+							// Set comparison
+							conditionSingle.Comparison = reader.GetString(); 
+							break;
+						case 2: 
+							// Set right
+							conditionSingle.Right = reader.GetString(); 
+							break;
 						default: throw new InvalidOperationException("Condition JSON array has too many items.");
 					}
 				}
@@ -56,6 +62,6 @@ namespace BoningerWorks.TextAdventure.Json.Models
 		[JsonPropertyName("comparison")] public string Comparison { get; set; }
 		[JsonPropertyName("right")] public string Right { get; set; }
 		[JsonPropertyName("operator")] public string Operator { get; set; }
-		[JsonPropertyName("conditions")] public List<Condition> Conditions { get; set; }
+		[JsonPropertyName("conditions")] public List<FlexibleObject<Condition>> Conditions { get; set; }
 	}
 }

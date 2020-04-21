@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using BoningerWorks.TextAdventure.Json.Utilities;
+using System.Text.Json.Serialization;
 
 namespace BoningerWorks.TextAdventure.Json.Models
 {
@@ -10,7 +11,7 @@ namespace BoningerWorks.TextAdventure.Json.Models
 			return new Text { Value = @string };
 		}
 
-		[JsonPropertyName("if")] public If<Text> If { get; set; }
+		[JsonPropertyName("if")] public If<FlexibleObject<Text>> If { get; set; }
 		[JsonPropertyName("value")] public string Value { get; set; }
 	}
 }

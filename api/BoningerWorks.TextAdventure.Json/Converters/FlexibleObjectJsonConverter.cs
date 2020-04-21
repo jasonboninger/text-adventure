@@ -42,16 +42,13 @@ namespace BoningerWorks.TextAdventure.Json.Converters
 				_ => _readFromDefault(ref reader, options)
 			};
 			// Return flexible object
-			return new FlexibleObject<TValue>
-			{
-				Value = value
-			};
+			return new FlexibleObject<TValue> { Value = value };
 		}
 
 		public override void Write(Utf8JsonWriter writer, FlexibleObject<TValue> value, JsonSerializerOptions options)
 		{
 			// Write value
-			JsonSerializer.Serialize(writer, value?.Value, options);
+			JsonSerializer.Serialize(writer, value.Value, options);
 		}
 
 		private Reader _CreateReaderOrDefault<TCreate>(TCreate create, Func<TCreate, Reader> createReader)

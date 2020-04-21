@@ -1,4 +1,4 @@
-namespace BoningerWorks.TextAdventure.Engine.Generated
+namespace BoningerWorks.TextAdventure.Cli
 {
 	public static class CrazyEx
 	{
@@ -90,8 +90,9 @@ namespace BoningerWorks.TextAdventure.Engine.Generated
 					""Cell phone"",
 					""My cell phone""
 				],
-				""reactions"": {
-					""INSPECT"": {
+				""reactions"": [
+					{
+						""command"": ""INSPECT"",
 						""actions"": {
 							""messages"": {
 								""lines"": [
@@ -118,7 +119,8 @@ namespace BoningerWorks.TextAdventure.Engine.Generated
 							}
 						}
 					},
-					""USE"": {
+					{
+						""command"": ""USE"",
 						""actions"": {
 							""messages"": [
 								""You click the power button but nothing happens. Darn, definitely dead."",
@@ -127,20 +129,21 @@ namespace BoningerWorks.TextAdventure.Engine.Generated
 							]
 						}
 					}
-				}
+				]
 			},
 			""WALLET"": {
 				""names"": [
 					""Wallet"",
 					""My wallet""
 				],
-				""reactions"": {
-					""INSPECT"": {
+				""reactions"": [
+					{
+						""command"": ""INSPECT"",
 						""actions"": {
 							""messages"": ""You review the contents of your wallet, and it looks like everything is in order. Nothing is missing as far as you can tell.""
 						}
 					}
-				}
+				]
 			}
 		}
 	},
@@ -167,8 +170,9 @@ namespace BoningerWorks.TextAdventure.Engine.Generated
 					""names"": [
 						""Door""
 					],
-					""reactions"": {
-						""INSPECT"": {
+					""reactions"": [
+						{
+							""command"": ""INSPECT"",
 							""actions"": {
 								""if"": {
 									""condition"": [
@@ -187,7 +191,8 @@ namespace BoningerWorks.TextAdventure.Engine.Generated
 										},
 										{
 											""triggers"": {
-												""USE"": {
+												""command"": ""USE"",
+												""items"": {
 													""ITEM"": ""DOOR""
 												}
 											}
@@ -199,7 +204,7 @@ namespace BoningerWorks.TextAdventure.Engine.Generated
 								}
 							}
 						}
-					}
+					]
 				},
 				""NOTE_WOODEN"": {
 					""names"": [
@@ -215,8 +220,9 @@ namespace BoningerWorks.TextAdventure.Engine.Generated
 					]
 				}
 			},
-			""reactions"": {
-				""SURVEY"": {
+			""reactions"": [
+				{
+					""command"": ""SURVEY"",
 					""actions"": {
 						""if"": {
 							""condition"": [
@@ -258,7 +264,7 @@ namespace BoningerWorks.TextAdventure.Engine.Generated
 						}
 					}
 				}
-			}
+			]
 		}
 	},
 	""end"": {

@@ -117,7 +117,8 @@ export const CRAZY_EX: IGame = {
 										},
 										{
 											triggers: {
-												USE: {
+												command: "USE",
+												items: {
 													ITEM: "DOOR"
 												}
 											}
