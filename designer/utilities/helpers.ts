@@ -13,8 +13,8 @@ export function is(left: string, right: string): ICondition {
 	return _condition(left, "IS", right);
 }
 
-export function isNot(left: string, right: string): ICondition {
-	return _condition(left, "IS_NOT", right);
+export function not(left: string, right: string): ICondition {
+	return _condition(left, "NOT", right);
 }
 
 export function all(

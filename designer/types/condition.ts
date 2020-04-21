@@ -1,4 +1,4 @@
-export type SComparison = "IS" | "IS_NOT";
+export type SComparison = "IS" | "NOT";
 export type ICondition = [string, SComparison, string];
 export type SOperator = "ALL" | "ANY";
 export type IConditions = 
