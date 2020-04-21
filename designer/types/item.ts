@@ -1,9 +1,9 @@
-import { IDictionary, IOneOrArray } from "./core";
+import { IOneOrArray } from "./core";
 import { IReaction } from "./reaction";
 
 export interface IItem {
 	names: IOneOrArray<string>;
 	active?: boolean;
-	reactions?: IDictionary<IReaction>;
+	reactions?: IOneOrArray<IReaction>;
 	items?: IOneOrArray<IItem>;
 }

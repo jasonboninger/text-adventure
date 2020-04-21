@@ -11,7 +11,8 @@ namespace BoningerWorks.TextAdventure.Json.Models
 			return new Line { Texts = new OneOrManyList<Text> { Text.CreateFromString(@string) } };
 		}
 
-		[JsonPropertyName("texts")] public OneOrManyList<Text> Texts { get; set; }
+		[JsonPropertyName("if")] public If<Line> If { get; set; }
 		[JsonPropertyName("special")] public string Special { get; set; }
+		[JsonPropertyName("texts")] public OneOrManyList<Text> Texts { get; set; }
 	}
 }

@@ -4,5 +4,5 @@ import { IReaction } from "./reaction";
 
 export interface IArea {
 	items?: IDictionary<IItem>;
-	reactions?: IDictionary<IOneOrArray<IReaction>>;
+	reactions?: IOneOrArray<IReaction>;
 }

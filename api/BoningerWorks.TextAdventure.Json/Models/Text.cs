@@ -10,6 +10,7 @@ namespace BoningerWorks.TextAdventure.Json.Models
 			return new Text { Value = @string };
 		}
 
+		[JsonPropertyName("if")] public If<Text> If { get; set; }
 		[JsonPropertyName("value")] public string Value { get; set; }
 	}
 }

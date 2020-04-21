@@ -37,8 +37,9 @@ export const CRAZY_EX: IGame = {
 		items: {
 			PHONE: {
 				names: ["Phone", "My phone", "Cellphone", "My cellphone", "Cell phone", "My cell phone"],
-				reactions: {
-					INSPECT: {
+				reactions: [
+					{
+						command: "INSPECT",
 						actions: {
 							messages: {
 								lines: [
@@ -53,7 +54,8 @@ export const CRAZY_EX: IGame = {
 							}
 						}
 					},
-					USE: {
+					{
+						command: "USE",
 						actions: {
 							messages: [
 								"You click the power button but nothing happens. Darn, definitely dead.",
@@ -62,17 +64,18 @@ export const CRAZY_EX: IGame = {
 							]
 						}
 					}
-				}
+				]
 			},
 			WALLET: {
 				names: ["Wallet", "My wallet"],
-				reactions: {
-					INSPECT: {
+				reactions: [
+					{
+						command: "INSPECT",
 						actions: {
 							messages: "You review the contents of your wallet, and it looks like everything is in order. Nothing is missing as far as you can tell."
 						}
 					}
-				}
+				]
 			}
 		}
 	},
@@ -97,8 +100,9 @@ export const CRAZY_EX: IGame = {
 			items: {
 				DOOR: {
 					names: ["Door"],
-					reactions: {
-						INSPECT: {
+					reactions: [
+						{
+							command: "INSPECT",
 							actions: {
 								if: {
 									condition: is("${DOOR.USED}", "yes"),
@@ -125,14 +129,15 @@ export const CRAZY_EX: IGame = {
 								}
 							}
 						}
-					}
+					]
 				},
 				NOTE_WOODEN: {
 					names: ["Wood Sign", "Sign", "Door Sign", "Wooden Note", "Wood Note", "Door Note", "Board", "Wooden Board", "Wood Board"]
 				}
 			},
-			reactions: {
-				SURVEY: {
+			reactions: [
+				{
+					command: "SURVEY",
 					actions: {
 						if: {
 							condition: is("${DOOR.USED}", "yes"),
@@ -166,7 +171,7 @@ export const CRAZY_EX: IGame = {
 						}
 					}
 				}
-			}
+			]
 		}
 	},
 	end: {
