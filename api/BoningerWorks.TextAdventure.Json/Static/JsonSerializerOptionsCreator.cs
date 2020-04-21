@@ -26,8 +26,9 @@ namespace BoningerWorks.TextAdventure.Json.Static
 				new JsonStringEnumConverter(PassThroughJsonNamingPolicy.Instance, allowIntegerValues: false),
 				new OneOrManyListJsonConverterFactory(),
 				new SymbolDictionaryJsonConverterFactory(),
-				new FlexibleObjectJsonConverter<Line>(createFromString: Line.CreateFromString),
 				new FlexibleObjectJsonConverter<Message>(createFromString: Message.CreateFromString),
+				new FlexibleObjectJsonConverter<Line>(createFromString: Line.CreateFromString),
+				new FlexibleObjectJsonConverter<Text>(createFromString: Text.CreateFromString),
 				new FlexibleObjectJsonConverter<Condition>(readFromArray: Condition.ReadFromArray)
 			);
 
