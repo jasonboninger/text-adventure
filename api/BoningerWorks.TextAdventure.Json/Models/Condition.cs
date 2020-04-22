@@ -1,5 +1,5 @@
-﻿using BoningerWorks.TextAdventure.Json.Utilities;
-using System;
+﻿using BoningerWorks.TextAdventure.Json.Static;
+using BoningerWorks.TextAdventure.Json.Utilities;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -50,7 +50,7 @@ namespace BoningerWorks.TextAdventure.Json.Models
 							// Set right
 							conditionSingle.Right = reader.GetString(); 
 							break;
-						default: throw new InvalidOperationException("Condition JSON array has too many items.");
+						default: throw JsonExceptionCreator.Create(ref reader, options, "Condition array has too many items.");
 					}
 				}
 			}
