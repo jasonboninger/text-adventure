@@ -1,10 +1,8 @@
-﻿using BoningerWorks.TextAdventure.Engine.Maps;
-
-namespace BoningerWorks.TextAdventure.Engine.States
+﻿namespace BoningerWorks.TextAdventure.Json.States
 {
 	public class LineSpecialState
 	{
-		public static LineSpecialState Create(ELineSpecialType type)
+		public static LineSpecialState Create(string type)
 		{
 			// Create special line state
 			var lineSpecialState = new LineSpecialState
@@ -15,6 +13,6 @@ namespace BoningerWorks.TextAdventure.Engine.States
 			return lineSpecialState;
 		}
 
-		public ELineSpecialType Type { get; set; }
+		public string Type { get; set; }
 	}
 }

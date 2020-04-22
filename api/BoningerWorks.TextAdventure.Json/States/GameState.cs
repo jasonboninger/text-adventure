@@ -1,7 +1,7 @@
-﻿using BoningerWorks.TextAdventure.Engine.Utilities;
+﻿using BoningerWorks.TextAdventure.Core.Utilities;
 using System.Collections.Generic;
 
-namespace BoningerWorks.TextAdventure.Engine.States
+namespace BoningerWorks.TextAdventure.Json.States
 {
 	public class GameState
 	{

@@ -1,7 +1,7 @@
-﻿using BoningerWorks.TextAdventure.Engine.Utilities;
+﻿using BoningerWorks.TextAdventure.Core.Utilities;
 using System;
 
-namespace BoningerWorks.TextAdventure.Engine.States.Data
+namespace BoningerWorks.TextAdventure.Json.States.Data
 {
 	public class ItemData
 	{

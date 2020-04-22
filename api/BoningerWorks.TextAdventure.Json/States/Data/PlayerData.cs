@@ -1,6 +1,4 @@
-﻿using BoningerWorks.TextAdventure.Engine.Utilities;
-
-namespace BoningerWorks.TextAdventure.Engine.States.Data
+﻿namespace BoningerWorks.TextAdventure.Json.States.Data
 {
 	public class PlayerData
 	{

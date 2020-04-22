@@ -1,8 +1,8 @@
-﻿using BoningerWorks.TextAdventure.Engine.States.Data;
+﻿using BoningerWorks.TextAdventure.Json.States.Data;
 using System;
 using System.Collections.Generic;
 
-namespace BoningerWorks.TextAdventure.Engine.States
+namespace BoningerWorks.TextAdventure.Json.States
 {
 	public class EntityState
 	{

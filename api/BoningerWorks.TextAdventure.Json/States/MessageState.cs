@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BoningerWorks.TextAdventure.Engine.States
+namespace BoningerWorks.TextAdventure.Json.States
 {
 	public class MessageState
 	{
@@ -10,7 +10,7 @@ namespace BoningerWorks.TextAdventure.Engine.States
 			// Create message state
 			var messageState = new MessageState
 			{
-				Lines = lines == null || lines.Count == 0 ? throw new ArgumentException("Lines cannot be null.", nameof(lines)) : lines
+				Lines = lines == null || lines.Count == 0 ? throw new ArgumentException("Lines cannot be null or empty.", nameof(lines)) : lines
 			};
 			// Return message state
 			return messageState;
