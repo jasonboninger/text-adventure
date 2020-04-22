@@ -1,5 +1,5 @@
 ﻿using BoningerWorks.TextAdventure.Json.Converters;
-using BoningerWorks.TextAdventure.Json.Models;
+using BoningerWorks.TextAdventure.Json.Inputs;
 using System.Collections.Immutable;
 using System.Text.Json;
 using System.Text.Json.Serialization;

@@ -1,4 +1,4 @@
-﻿using BoningerWorks.TextAdventure.Json.Models;
+﻿using BoningerWorks.TextAdventure.Json.Inputs;
 using System.Text.Json;
 
 namespace BoningerWorks.TextAdventure.Json.Static

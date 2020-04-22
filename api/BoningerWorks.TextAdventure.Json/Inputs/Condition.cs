@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace BoningerWorks.TextAdventure.Json.Models
+namespace BoningerWorks.TextAdventure.Json.Inputs
 {
 	public class Condition
 	{
