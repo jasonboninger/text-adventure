@@ -8,12 +8,12 @@ namespace BoningerWorks.TextAdventure.Json.Static
 		public static Game DeserializeGame(string json)
 		{
 			// Return game
-			return _Deserialize<Game>(json); ;
+			return _Deserialize<Game>(json);
 		}
 		public static Game DeserializeGame(ref Utf8JsonReader reader)
 		{
 			// Return game
-			return _Deserialize<Game>(ref reader); ;
+			return _Deserialize<Game>(ref reader);
 		}
 
 		public static string SerializeGame(Game game)
