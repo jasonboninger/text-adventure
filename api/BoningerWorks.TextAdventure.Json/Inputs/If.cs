@@ -4,10 +4,9 @@ using System.Text.Json.Serialization;
 namespace BoningerWorks.TextAdventure.Json.Inputs
 {
 	public class If<TValue>
-	where TValue : class
 	{
 		[JsonPropertyName("condition")] public SFlexibleObject<Condition> Condition { get; set; }
-		[JsonPropertyName("true")] public OneOrManyList<TValue?>? ValuesTrue { get; set; }
-		[JsonPropertyName("false")] public OneOrManyList<TValue?>? ValuesFalse { get; set; }
+		[JsonPropertyName("true")] public OneOrManyList<TValue>? ValuesTrue { get; set; }
+		[JsonPropertyName("false")] public OneOrManyList<TValue>? ValuesFalse { get; set; }
 	}
 }
