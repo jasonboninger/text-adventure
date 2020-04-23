@@ -8,8 +8,8 @@ namespace BoningerWorks.TextAdventure.Core.Utilities
 		private static readonly Regex _regularExpressionSpaces = new Regex(@" {2,}", RegexOptions.Singleline);
 		private static readonly Regex _regularExpressionValid = new Regex(@"^[a-zA-Z0-9 ]*[a-zA-Z0-9]+[a-zA-Z0-9 ]*$", RegexOptions.Singleline);
 
-		public static bool operator ==(Name left, Name right) => Equals(left, null) ? Equals(right, null) : left.Equals(right);
-		public static bool operator !=(Name left, Name right) => !(left == right);
+		public static bool operator ==(Name? left, Name? right) => Equals(left, null) ? Equals(right, null) : left.Equals(right);
+		public static bool operator !=(Name? left, Name? right) => !(left == right);
 
 		public string RegularExpression { get; }
 
@@ -58,7 +58,7 @@ namespace BoningerWorks.TextAdventure.Core.Utilities
 		public override int GetHashCode() => _hashCode;
 
 		public override bool Equals(object? obj) => obj is Name name && Equals(name);
-		public bool Equals(Name other) => !Equals(other, null) && other._value.Equals(_value);
+		public bool Equals(Name? other) => !Equals(other, null) && other._value.Equals(_value);
 
 		private static string _CreateRegularExpression(string value)
 		{

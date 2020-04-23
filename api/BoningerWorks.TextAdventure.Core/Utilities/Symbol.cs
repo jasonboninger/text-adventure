@@ -18,8 +18,8 @@ namespace BoningerWorks.TextAdventure.Core.Utilities
 			Player = new Symbol("PLAYER");
 		}
 
-		public static bool operator ==(Symbol left, Symbol right) => Equals(left, null) ? Equals(right, null) : left.Equals(right);
-		public static bool operator !=(Symbol left, Symbol right) => !(left == right);
+		public static bool operator ==(Symbol? left, Symbol? right) => Equals(left, null) ? Equals(right, null) : left.Equals(right);
+		public static bool operator !=(Symbol? left, Symbol? right) => !(left == right);
 
 		private readonly string _value;
 		private readonly int _hashCode;
@@ -49,6 +49,6 @@ namespace BoningerWorks.TextAdventure.Core.Utilities
 		public override int GetHashCode() => _hashCode;
 
 		public override bool Equals(object? obj) => obj is Symbol symbol && Equals(symbol);
-		public bool Equals(Symbol other) => !Equals(other, null) && other._value.Equals(_value);
+		public bool Equals(Symbol? other) => !Equals(other, null) && other._value.Equals(_value);
 	}
 }
