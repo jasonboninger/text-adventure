@@ -8,11 +8,11 @@ namespace BoningerWorks.TextAdventure.Json.Inputs
 		public static Line CreateFromString(string @string)
 		{
 			// Return line
-			return new Line { Texts = new OneOrManyList<FlexibleObject<Text>> { Text.CreateFromString(@string) } };
+			return new Line { Texts = new OneOrManyList<SFlexibleObject<Text>> { Text.CreateFromString(@string) } };
 		}
 
-		[JsonPropertyName("if")] public If<FlexibleObject<Line>>? If { get; set; }
+		[JsonPropertyName("if")] public If<SFlexibleObject<Line>>? If { get; set; }
 		[JsonPropertyName("special")] public string? Special { get; set; }
-		[JsonPropertyName("texts")] public OneOrManyList<FlexibleObject<Text>>? Texts { get; set; }
+		[JsonPropertyName("texts")] public OneOrManyList<SFlexibleObject<Text>>? Texts { get; set; }
 	}
 }

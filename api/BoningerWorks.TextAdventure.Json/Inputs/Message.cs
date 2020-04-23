@@ -8,9 +8,9 @@ namespace BoningerWorks.TextAdventure.Json.Inputs
 		public static Message CreateFromString(string @string)
 		{
 			// Return message
-			return new Message { Lines = new OneOrManyList<FlexibleObject<Line>> { Line.CreateFromString(@string) } };
+			return new Message { Lines = new OneOrManyList<SFlexibleObject<Line>> { Line.CreateFromString(@string) } };
 		}
 
-		[JsonPropertyName("lines")] public OneOrManyList<FlexibleObject<Line>>? Lines { get; set; }
+		[JsonPropertyName("lines")] public OneOrManyList<SFlexibleObject<Line>>? Lines { get; set; }
 	}
 }

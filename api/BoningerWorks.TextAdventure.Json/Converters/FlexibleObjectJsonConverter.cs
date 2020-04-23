@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 
 namespace BoningerWorks.TextAdventure.Json.Converters
 {
-	public class FlexibleObjectJsonConverter<TValue> : JsonConverter<FlexibleObject<TValue>>
+	public class FlexibleObjectJsonConverter<TValue> : JsonConverter<SFlexibleObject<TValue>>
 	where TValue : class
 	{
 		public delegate TValue Reader(ref Utf8JsonReader reader, JsonSerializerOptions options);
@@ -32,7 +32,7 @@ namespace BoningerWorks.TextAdventure.Json.Converters
 			_readFromArray = _CreateReaderOrDefault(readFromArray, rfa => rfa);
 		}
 
-		public override FlexibleObject<TValue> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+		public override SFlexibleObject<TValue> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 		{
 			// Get value
 			var value = reader.TokenType switch
@@ -42,10 +42,10 @@ namespace BoningerWorks.TextAdventure.Json.Converters
 				_ => _readFromDefault(ref reader, options)
 			};
 			// Return flexible object
-			return new FlexibleObject<TValue> { Value = value };
+			return new SFlexibleObject<TValue> { Value = value };
 		}
 
-		public override void Write(Utf8JsonWriter writer, FlexibleObject<TValue> value, JsonSerializerOptions options)
+		public override void Write(Utf8JsonWriter writer, SFlexibleObject<TValue> value, JsonSerializerOptions options)
 		{
 			// Write value
 			JsonSerializer.Serialize(writer, value.Value, options);

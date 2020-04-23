@@ -14,7 +14,7 @@ namespace BoningerWorks.TextAdventure.Json.Inputs
 			// Create single condition
 			var conditionSingle = new Condition();
 			// Create many condition
-			var conditionMany = new Condition { Conditions = new List<FlexibleObject<Condition>>() };
+			var conditionMany = new Condition { Conditions = new List<SFlexibleObject<Condition>>() };
 			// Create many
 			var many = false;
 			// Run through array
@@ -72,7 +72,7 @@ namespace BoningerWorks.TextAdventure.Json.Inputs
 		[JsonPropertyName("comparison")] public string? Comparison { get; set; }
 		[JsonPropertyName("right")] public string? Right { get; set; }
 		[JsonPropertyName("operator")] public string? Operator { get; set; }
-		[JsonPropertyName("conditions")] public List<FlexibleObject<Condition>>? Conditions { get; set; }
+		[JsonPropertyName("conditions")] public List<SFlexibleObject<Condition>>? Conditions { get; set; }
 
 		[JsonIgnore] public string? Error { get; set; }
 	}
