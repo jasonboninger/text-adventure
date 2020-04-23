@@ -6,6 +6,6 @@ namespace BoningerWorks.TextAdventure.Json.Inputs
 	public class Player
 	{
 		[JsonPropertyName("area")] public string? AreaSymbol { get; set; }
-		[JsonPropertyName("items")] public Dictionary<string, Item>? ItemSymbolToItemMappings { get; set; }
+		[JsonPropertyName("items")] public Dictionary<string, Item?>? ItemSymbolToItemMappings { get; set; }
 	}
 }

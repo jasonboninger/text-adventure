@@ -10,12 +10,12 @@ namespace BoningerWorks.TextAdventure.Json.States
 			// Create game state
 			var gameState = new GameState
 			{
-				EntityStates = new Dictionary<Symbol, EntityState>()
+				EntityStates = new Dictionary<Symbol, EntityState?>()
 			};
 			// Return game state
 			return gameState;
 		}
 
-		public Dictionary<Symbol, EntityState>? EntityStates { get; set; }
+		public Dictionary<Symbol, EntityState?>? EntityStates { get; set; }
 	}
 }

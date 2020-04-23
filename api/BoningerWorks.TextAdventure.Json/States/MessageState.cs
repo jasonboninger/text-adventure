@@ -7,15 +7,21 @@ namespace BoningerWorks.TextAdventure.Json.States
 	{
 		public static MessageState Create(List<LineState> lines)
 		{
+			// Check if lines does not exist
+			if (lines == null || lines.Count == 0)
+			{
+				// Throw error
+				throw new ArgumentException("Lines cannot be null or empty.", nameof(lines));
+			}
 			// Create message state
 			var messageState = new MessageState
 			{
-				Lines = lines == null || lines.Count == 0 ? throw new ArgumentException("Lines cannot be null or empty.", nameof(lines)) : lines
+				Lines = lines!
 			};
 			// Return message state
 			return messageState;
 		}
 
-		public List<LineState>? Lines { get; set; }
+		public List<LineState?>? Lines { get; set; }
 	}
 }

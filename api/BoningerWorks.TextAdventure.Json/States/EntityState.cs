@@ -41,7 +41,7 @@ namespace BoningerWorks.TextAdventure.Json.States
 			// Create entity state
 			var entityState = new EntityState
 			{
-				CustomData = new Dictionary<string, string>()
+				CustomData = new Dictionary<string, string?>()
 			};
 			// Return entity state
 			return entityState;
@@ -50,6 +50,6 @@ namespace BoningerWorks.TextAdventure.Json.States
 		public GlobalData? GlobalData { get; set; }
 		public PlayerData? PlayerData { get; set; }
 		public ItemData? ItemData { get; set; }
-		public Dictionary<string, string>? CustomData { get; set; }
+		public Dictionary<string, string?>? CustomData { get; set; }
 	}
 }
