@@ -16,6 +16,6 @@ namespace BoningerWorks.TextAdventure.Json.States
 			return messageState;
 		}
 
-		public List<LineState> Lines { get; set; }
+		public List<LineState>? Lines { get; set; }
 	}
 }

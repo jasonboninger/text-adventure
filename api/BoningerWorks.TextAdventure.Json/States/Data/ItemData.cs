@@ -17,7 +17,7 @@ namespace BoningerWorks.TextAdventure.Json.States.Data
 			return itemData;
 		}
 
-		public Symbol Location { get; set; }
-		public bool Active { get; set; }
+		public Symbol? Location { get; set; }
+		public bool? Active { get; set; }
 	}
 }

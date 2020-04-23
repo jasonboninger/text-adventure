@@ -47,9 +47,9 @@ namespace BoningerWorks.TextAdventure.Json.States
 			return entityState;
 		}
 
-		public GlobalData GlobalData { get; set; }
-		public PlayerData PlayerData { get; set; }
-		public ItemData ItemData { get; set; }
-		public Dictionary<string, string> CustomData { get; set; }
+		public GlobalData? GlobalData { get; set; }
+		public PlayerData? PlayerData { get; set; }
+		public ItemData? ItemData { get; set; }
+		public Dictionary<string, string>? CustomData { get; set; }
 	}
 }

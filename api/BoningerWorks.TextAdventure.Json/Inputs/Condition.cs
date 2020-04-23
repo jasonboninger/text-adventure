@@ -9,6 +9,8 @@ namespace BoningerWorks.TextAdventure.Json.Inputs
 	{
 		public static Condition ReadFromArray(ref Utf8JsonReader reader, JsonSerializerOptions options)
 		{
+			// Create error condition
+			Condition? conditionError = null;
 			// Create single condition
 			var conditionSingle = new Condition();
 			// Create many condition
@@ -50,22 +52,28 @@ namespace BoningerWorks.TextAdventure.Json.Inputs
 							conditionSingle.Right = reader.GetString(); 
 							break;
 						default:
-							// Set condition
-							conditionMany = conditionSingle = new Condition { Error = "Condition array has too many items." };
+							// Set error condition
+							conditionError ??= new Condition { Error = "Condition array has too many items." };
 							break;
 					}
 				}
+			}
+			// Check if error condition exists
+			if (conditionError != null)
+			{
+				// Return error condition
+				return conditionError;
 			}
 			// Return condition
 			return many ? conditionMany : conditionSingle;
 		}
 
-		[JsonPropertyName("left")] public string Left { get; set; }
-		[JsonPropertyName("comparison")] public string Comparison { get; set; }
-		[JsonPropertyName("right")] public string Right { get; set; }
-		[JsonPropertyName("operator")] public string Operator { get; set; }
-		[JsonPropertyName("conditions")] public List<FlexibleObject<Condition>> Conditions { get; set; }
+		[JsonPropertyName("left")] public string? Left { get; set; }
+		[JsonPropertyName("comparison")] public string? Comparison { get; set; }
+		[JsonPropertyName("right")] public string? Right { get; set; }
+		[JsonPropertyName("operator")] public string? Operator { get; set; }
+		[JsonPropertyName("conditions")] public List<FlexibleObject<Condition>>? Conditions { get; set; }
 
-		[JsonIgnore] public string Error { get; set; }
+		[JsonIgnore] public string? Error { get; set; }
 	}
 }

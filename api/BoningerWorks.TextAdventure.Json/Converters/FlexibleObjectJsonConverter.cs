@@ -16,8 +16,8 @@ namespace BoningerWorks.TextAdventure.Json.Converters
 
 		public FlexibleObjectJsonConverter
 		(
-			Func<string, TValue> createFromString = null,
-			Reader readFromArray = null
+			Func<string, TValue>? createFromString = null,
+			Reader? readFromArray = null
 		)
 		{
 			// Set read from default
@@ -51,7 +51,7 @@ namespace BoningerWorks.TextAdventure.Json.Converters
 			JsonSerializer.Serialize(writer, value.Value, options);
 		}
 
-		private Reader _CreateReaderOrDefault<TCreate>(TCreate create, Func<TCreate, Reader> createReader)
+		private Reader _CreateReaderOrDefault<TCreate>(TCreate? create, Func<TCreate, Reader> createReader)
 		where TCreate : class
 		{
 			// Check if create does not exist

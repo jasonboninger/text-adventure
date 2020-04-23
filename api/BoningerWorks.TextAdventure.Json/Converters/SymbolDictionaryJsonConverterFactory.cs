@@ -45,7 +45,7 @@ namespace BoningerWorks.TextAdventure.Json.Converters
 			// Get value type
 			var typeValue = typeToConvert.GetGenericArguments()[1];
 			// Return symbol dictionary JSON converter
-			return (JsonConverter)Activator.CreateInstance(_typeSymbolDictionaryJsonConverter.MakeGenericType(typeValue));
+			return (JsonConverter)Activator.CreateInstance(_typeSymbolDictionaryJsonConverter.MakeGenericType(typeValue))!;
 		}
 	}
 }

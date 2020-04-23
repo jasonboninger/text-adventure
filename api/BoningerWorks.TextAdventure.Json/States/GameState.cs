@@ -16,6 +16,6 @@ namespace BoningerWorks.TextAdventure.Json.States
 			return gameState;
 		}
 
-		public Dictionary<Symbol, EntityState> EntityStates { get; set; }
+		public Dictionary<Symbol, EntityState>? EntityStates { get; set; }
 	}
 }

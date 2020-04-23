@@ -26,7 +26,7 @@ namespace BoningerWorks.TextAdventure.Json.States
 			return specialState;
 		}
 
-		public LineContentState Content { get; set; }
-		public LineSpecialState Special { get; set; }
+		public LineContentState? Content { get; set; }
+		public LineSpecialState? Special { get; set; }
 	}
 }

@@ -11,7 +11,7 @@ namespace BoningerWorks.TextAdventure.Json.Inputs
 			return new Text { Value = @string };
 		}
 
-		[JsonPropertyName("if")] public If<FlexibleObject<Text>> If { get; set; }
-		[JsonPropertyName("value")] public string Value { get; set; }
+		[JsonPropertyName("if")] public If<FlexibleObject<Text>>? If { get; set; }
+		[JsonPropertyName("value")] public string? Value { get; set; }
 	}
 }

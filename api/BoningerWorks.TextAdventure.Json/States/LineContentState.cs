@@ -15,6 +15,6 @@ namespace BoningerWorks.TextAdventure.Json.States
 			return lineContentState;
 		}
 
-		public string Text { get; set; }
+		public string? Text { get; set; }
 	}
 }

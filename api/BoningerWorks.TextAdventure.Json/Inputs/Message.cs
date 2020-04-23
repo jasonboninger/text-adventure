@@ -11,6 +11,6 @@ namespace BoningerWorks.TextAdventure.Json.Inputs
 			return new Message { Lines = new OneOrManyList<FlexibleObject<Line>> { Line.CreateFromString(@string) } };
 		}
 
-		[JsonPropertyName("lines")] public OneOrManyList<FlexibleObject<Line>> Lines { get; set; }
+		[JsonPropertyName("lines")] public OneOrManyList<FlexibleObject<Line>>? Lines { get; set; }
 	}
 }
