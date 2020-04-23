@@ -1,10 +1,14 @@
-﻿using System;
+﻿using BoningerWorks.TextAdventure.Core.Extensions;
+using System;
 using System.Text.RegularExpressions;
 
 namespace BoningerWorks.TextAdventure.Core.Utilities
 {
 	public sealed class Symbol : IEquatable<Symbol>
 	{
+		public static bool operator ==(Symbol? left, Symbol? right) => Equals(left, null) ? Equals(right, null) : left.Equals(right);
+		public static bool operator !=(Symbol? left, Symbol? right) => !(left == right);
+
 		public static Symbol Global { get; }
 		public static Symbol Player { get; }
 
@@ -18,26 +22,47 @@ namespace BoningerWorks.TextAdventure.Core.Utilities
 			Player = new Symbol("PLAYER");
 		}
 
-		public static bool operator ==(Symbol? left, Symbol? right) => Equals(left, null) ? Equals(right, null) : left.Equals(right);
-		public static bool operator !=(Symbol? left, Symbol? right) => !(left == right);
+		public static bool TryCreate(string? @string, out Symbol symbol)
+		{
+			// Check if exception exists
+			if (_GetException(@string) != null)
+			{
+				// Set symbol
+				symbol = null!;
+				// Return failed
+				return false;
+			}
+			// Set symbol
+			symbol = new Symbol(@string!);
+			// Return succeeded
+			return true;
+		}
+
+		private static Exception? _GetException(string? symbol)
+		{
+			// Check if symbol does not exist
+			if (string.IsNullOrWhiteSpace(symbol))
+			{
+				// Return exception
+				return new ArgumentException("Symbol cannot be null, empty, or whitespace.", nameof(symbol));
+			}
+			// Check if not valid symbol
+			if (!_regularExpressionValid.IsMatch(symbol))
+			{
+				// Return exception
+				return new ArgumentException($"Symbol ({symbol}) can only contain underscores, numbers, and capital letters.", nameof(symbol));
+			}
+			// Return no exception
+			return null;
+		}
 
 		private readonly string _value;
 		private readonly int _hashCode;
 
 		public Symbol(string symbol)
 		{
-			// Check if symbol does not exist
-			if (string.IsNullOrWhiteSpace(symbol))
-			{
-				// Throw error
-				throw new ArgumentException("Symbol cannot be empty or whitespace.", nameof(symbol));
-			}
-			// Check if not valid symbol
-			if (!_regularExpressionValid.IsMatch(symbol))
-			{
-				// Throw error
-				throw new ArgumentException($"Symbol ({symbol}) can only contain underscores, numbers, and capital letters.", nameof(symbol));
-			}
+			// Throw error if exception exists
+			_GetException(symbol).ThrowIfExists();
 			// Set value
 			_value = symbol;
 			// Set hash code

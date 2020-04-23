@@ -1,15 +1,50 @@
-﻿using System;
+﻿using BoningerWorks.TextAdventure.Core.Extensions;
+using System;
 using System.Text.RegularExpressions;
 
 namespace BoningerWorks.TextAdventure.Core.Utilities
 {
 	public sealed class Name : IEquatable<Name>
 	{
+		public static bool operator ==(Name? left, Name? right) => Equals(left, null) ? Equals(right, null) : left.Equals(right);
+		public static bool operator !=(Name? left, Name? right) => !(left == right);
+
 		private static readonly Regex _regularExpressionSpaces = new Regex(@" {2,}", RegexOptions.Singleline);
 		private static readonly Regex _regularExpressionValid = new Regex(@"^[a-zA-Z0-9 ]*[a-zA-Z0-9]+[a-zA-Z0-9 ]*$", RegexOptions.Singleline);
 
-		public static bool operator ==(Name? left, Name? right) => Equals(left, null) ? Equals(right, null) : left.Equals(right);
-		public static bool operator !=(Name? left, Name? right) => !(left == right);
+		public static bool TryCreate(string? @string, out Name name)
+		{
+			// Check if exception exists
+			if (_GetException(@string) != null)
+			{
+				// Set name
+				name = null!;
+				// Return failed
+				return false;
+			}
+			// Set name
+			name = new Name(@string!);
+			// Return succeeded
+			return true;
+		}
+
+		private static Exception? _GetException(string? name)
+		{
+			// Check if name does not exist
+			if (string.IsNullOrWhiteSpace(name))
+			{
+				// Return exception
+				return new ArgumentException("Name cannot be null, empty, or whitespace.", nameof(name));
+			}
+			// Check if not valid name
+			if (!_regularExpressionValid.IsMatch(name))
+			{
+				// Return exception
+				return new ArgumentException($"Name ({name}) can only contain spaces and alphanumeric characters.", nameof(name));
+			}
+			// Return no exception
+			return null;
+		}
 
 		public string RegularExpression { get; }
 
@@ -19,24 +54,8 @@ namespace BoningerWorks.TextAdventure.Core.Utilities
 
 		public Name(string name)
 		{
-			// Check if name does not exist
-			if (name == null)
-			{
-				// Throw error
-				throw new ArgumentException("Name cannot be null.", nameof(name));
-			}
-			// Check if name is empty or whitespace
-			if (string.IsNullOrWhiteSpace(name))
-			{
-				// Throw error
-				throw new ArgumentException("Name cannot be empty or whitespace.", nameof(name));
-			}
-			// Check if not valid name
-			if (!_regularExpressionValid.IsMatch(name))
-			{
-				// Throw error
-				throw new ArgumentException($"Name ({name}) can only contain spaces and alphanumeric characters.", nameof(name));
-			}
+			// Throw error if exception exists
+			_GetException(name).ThrowIfExists();
 			// Set raw
 			_raw = name;
 			// Trim name
