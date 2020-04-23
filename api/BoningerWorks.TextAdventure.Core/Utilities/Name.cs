@@ -57,7 +57,7 @@ namespace BoningerWorks.TextAdventure.Core.Utilities
 
 		public override int GetHashCode() => _hashCode;
 
-		public override bool Equals(object obj) => obj is Name name && Equals(name);
+		public override bool Equals(object? obj) => obj is Name name && Equals(name);
 		public bool Equals(Name other) => !Equals(other, null) && other._value.Equals(_value);
 
 		private static string _CreateRegularExpression(string value)

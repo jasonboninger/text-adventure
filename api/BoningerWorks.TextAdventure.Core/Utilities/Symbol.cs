@@ -48,7 +48,7 @@ namespace BoningerWorks.TextAdventure.Core.Utilities
 
 		public override int GetHashCode() => _hashCode;
 
-		public override bool Equals(object obj) => obj is Symbol symbol && Equals(symbol);
+		public override bool Equals(object? obj) => obj is Symbol symbol && Equals(symbol);
 		public bool Equals(Symbol other) => !Equals(other, null) && other._value.Equals(_value);
 	}
 }
