@@ -1,16 +1,16 @@
-﻿using BoningerWorks.TextAdventure.Engine.Json.Serializable;
-using System;
+﻿using System;
 using System.Collections.Immutable;
 using System.Linq;
+using Action = BoningerWorks.TextAdventure.Json.Inputs.Action;
 
-namespace BoningerWorks.TextAdventure.Engine.Maps
+namespace BoningerWorks.TextAdventure.Maps.Maps
 {
 	public class ActionMap
 	{
 		public EActionMapType Type { get; }
 		public ImmutableArray<MessageMap> MessageMaps { get; }
 
-		public ActionMap(ActionBlueprint actionBlueprint)
+		public ActionMap(Action action)
 		{
 			// Check if action blueprint does not exist
 			if (actionBlueprint == null)
