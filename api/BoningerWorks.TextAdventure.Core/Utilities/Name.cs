@@ -12,20 +12,16 @@ namespace BoningerWorks.TextAdventure.Core.Utilities
 		private static readonly Regex _regularExpressionSpaces = new Regex(@" {2,}", RegexOptions.Singleline);
 		private static readonly Regex _regularExpressionValid = new Regex(@"^[a-zA-Z0-9 ]*[a-zA-Z0-9]+[a-zA-Z0-9 ]*$", RegexOptions.Singleline);
 
-		public static bool TryCreate(string? @string, out Name name)
+		public static Name? TryCreate(string? @string)
 		{
-			// Check if exception exists
-			if (_GetException(@string) != null)
+			// Check if string exists and exception does not exist
+			if (@string != null && _GetException(@string) == null)
 			{
-				// Set name
-				name = null!;
-				// Return failed
-				return false;
+				// Return name
+				return new Name(@string);
 			}
-			// Set name
-			name = new Name(@string!);
-			// Return succeeded
-			return true;
+			// Return no name
+			return null;
 		}
 
 		private static Exception? _GetException(string? name)

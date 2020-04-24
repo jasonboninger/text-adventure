@@ -22,20 +22,16 @@ namespace BoningerWorks.TextAdventure.Core.Utilities
 			Player = new Symbol("PLAYER");
 		}
 
-		public static bool TryCreate(string? @string, out Symbol symbol)
+		public static Symbol? TryCreate(string? @string)
 		{
-			// Check if exception exists
-			if (_GetException(@string) != null)
+			// Check if string exists and exception does not exist
+			if (@string != null && _GetException(@string) == null)
 			{
-				// Set symbol
-				symbol = null!;
-				// Return failed
-				return false;
+				// Return symbol
+				return new Symbol(@string);
 			}
-			// Set symbol
-			symbol = new Symbol(@string!);
-			// Return succeeded
-			return true;
+			// Return no symbol
+			return null;
 		}
 
 		private static Exception? _GetException(string? symbol)
