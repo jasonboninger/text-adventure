@@ -12,18 +12,23 @@ namespace BoningerWorks.TextAdventure.Core.Utilities
 	{
 		public static Names? TryCreate(IEnumerable<Name> names)
 		{
-			// Create immutable names
-			var namesImmutable = names?.ToImmutableArray();
-			// Check if immutable names exists and exception does not exist
-			if (namesImmutable.HasValue && _GetException(namesImmutable) == null)
+			// Create names object
+			Names? namesObject;
+			// Create names array
+			var namesArray = names?.ToImmutableArray();
+			// Check if names array exists and exception does not exist
+			if (namesArray.HasValue && _GetException(namesArray) == null)
 			{
-				// Return names
-				return new Names(namesImmutable.Value);
+				// Set names object
+				namesObject = new Names(namesArray.Value);
 			}
-#pragma warning disable S1168 // Empty arrays and collections should be returned instead of null
+			else
+			{
+				// Set no names object
+				namesObject = null;
+			}
 			// Return no names
-			return null;
-#pragma warning restore S1168 // Empty arrays and collections should be returned instead of null
+			return namesObject;
 		}
 
 		private static Exception? _GetException(ImmutableArray<Name>? names)
@@ -33,6 +38,12 @@ namespace BoningerWorks.TextAdventure.Core.Utilities
 			{
 				// Return error
 				return new ArgumentException("At least one name is required.", nameof(names));
+			}
+			// Check if any names do not exist
+			if (names.Value.Any(n => n == null))
+			{
+				// Return error
+				return new ArgumentException("No names can be null.", nameof(names));
 			}
 			// Return no exception
 			return null;
