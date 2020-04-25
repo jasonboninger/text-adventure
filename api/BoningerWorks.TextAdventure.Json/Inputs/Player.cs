@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using BoningerWorks.TextAdventure.Json.Utilities;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace BoningerWorks.TextAdventure.Json.Inputs
@@ -7,5 +8,6 @@ namespace BoningerWorks.TextAdventure.Json.Inputs
 	{
 		[JsonPropertyName("area")] public string? AreaSymbol { get; set; }
 		[JsonPropertyName("items")] public Dictionary<string, Item?>? ItemSymbolToItemMappings { get; set; }
+		[JsonPropertyName("reactions")] public OneOrManyList<Reaction?>? Reactions { get; set; }
 	}
 }
