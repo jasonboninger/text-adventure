@@ -1,6 +1,7 @@
-﻿using System;
+﻿using BoningerWorks.TextAdventure.Maps.Enums;
+using BoningerWorks.TextAdventure.Maps.Errors;
 
-namespace BoningerWorks.TextAdventure.Engine.Maps
+namespace BoningerWorks.TextAdventure.Maps.Models
 {
 	public class LineSpecialMap
 	{
@@ -13,7 +14,7 @@ namespace BoningerWorks.TextAdventure.Engine.Maps
 			{
 				"HORIZONTAL_RULE" => ELineSpecialType.HorizontalRule,
 				"BLANK" => ELineSpecialType.Blank,
-				_ => throw new ArgumentException($"Special line type ({type}) could not be found."),
+				_ => throw new ValidationError($"Special line type ({type}) could not be found."),
 			};
 		}
 	}

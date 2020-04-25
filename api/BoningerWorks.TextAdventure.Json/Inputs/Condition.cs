@@ -68,12 +68,11 @@ namespace BoningerWorks.TextAdventure.Json.Inputs
 			return many ? conditionMany : conditionSingle;
 		}
 
+		[JsonIgnore] public string? Error { get; set; }
 		[JsonPropertyName("left")] public string? Left { get; set; }
 		[JsonPropertyName("comparison")] public string? Comparison { get; set; }
 		[JsonPropertyName("right")] public string? Right { get; set; }
 		[JsonPropertyName("operator")] public string? Operator { get; set; }
 		[JsonPropertyName("conditions")] public List<SFlexibleObject<Condition>>? Conditions { get; set; }
-
-		[JsonIgnore] public string? Error { get; set; }
 	}
 }

@@ -5,7 +5,7 @@ using BoningerWorks.TextAdventure.Maps.Errors;
 using System.Collections.Immutable;
 using System.Linq;
 
-namespace BoningerWorks.TextAdventure.Maps.Maps
+namespace BoningerWorks.TextAdventure.Maps.Models
 {
 	public class CommandMap
 	{
