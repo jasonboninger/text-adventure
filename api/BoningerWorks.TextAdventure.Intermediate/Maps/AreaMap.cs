@@ -1,7 +1,7 @@
 ﻿using BoningerWorks.TextAdventure.Core.Exceptions;
 using BoningerWorks.TextAdventure.Core.Utilities;
-using BoningerWorks.TextAdventure.Json.Inputs;
 using BoningerWorks.TextAdventure.Intermediate.Errors;
+using BoningerWorks.TextAdventure.Json.Inputs;
 using System.Collections.Immutable;
 
 namespace BoningerWorks.TextAdventure.Intermediate.Maps
@@ -9,8 +9,9 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 	public class AreaMap
 	{
 		public Symbol AreaSymbol { get; }
-		public ImmutableArray<ItemMap> ItemMaps { get; }
 		public ImmutableArray<ReactionMap> ReactionMaps { get; }
+
+		internal ImmutableArray<ItemMap> ItemMaps { get; }
 
 		internal AreaMap(string areaSymbol, Area? area)
 		{
@@ -25,10 +26,10 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 					// Throw error
 					throw new ValidationError("Area body cannot be null.");
 				}
-				// Set item maps
-				ItemMaps = ItemMap.Create(area.ItemSymbolToItemMappings, AreaSymbol);
 				// Set reaction maps
 				ReactionMaps = ReactionMap.Create(area.Reactions, itemSymbolDefault: null);
+				// Set item maps
+				ItemMaps = ItemMap.Create(area.ItemSymbolToItemMappings, AreaSymbol);
 			}
 			catch (GenericException<ValidationError> exception)
 			{

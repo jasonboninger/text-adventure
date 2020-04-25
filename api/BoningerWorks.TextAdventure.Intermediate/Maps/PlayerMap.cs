@@ -1,7 +1,7 @@
 ﻿using BoningerWorks.TextAdventure.Core.Exceptions;
 using BoningerWorks.TextAdventure.Core.Utilities;
-using BoningerWorks.TextAdventure.Json.Inputs;
 using BoningerWorks.TextAdventure.Intermediate.Errors;
+using BoningerWorks.TextAdventure.Json.Inputs;
 using System.Collections.Immutable;
 
 namespace BoningerWorks.TextAdventure.Intermediate.Maps
@@ -10,8 +10,9 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 	{
 		public Symbol PlayerSymbol { get; }
 		public Symbol AreaSymbol { get; }
-		public ImmutableArray<ItemMap> ItemMaps { get; }
 		public ImmutableArray<ReactionMap> ReactionMaps { get; }
+
+		internal ImmutableArray<ItemMap> ItemMaps { get; }
 
 		internal PlayerMap(Player? player)
 		{
@@ -28,10 +29,10 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 			{
 				// Set area symbol
 				AreaSymbol = Symbol.TryCreate(player.AreaSymbol) ?? throw new ValidationError($"Area symbol ({player.AreaSymbol}) is not valid.");
-				// Set item maps
-				ItemMaps = ItemMap.Create(player.ItemSymbolToItemMappings, PlayerSymbol);
 				// Set reaction maps
 				ReactionMaps = ReactionMap.Create(player.Reactions, itemSymbolDefault: null);
+				// Set item maps
+				ItemMaps = ItemMap.Create(player.ItemSymbolToItemMappings, PlayerSymbol);
 			}
 			catch (GenericException<ValidationError> exception)
 			{

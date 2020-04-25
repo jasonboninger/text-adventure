@@ -1,7 +1,7 @@
 ﻿using BoningerWorks.TextAdventure.Core.Exceptions;
 using BoningerWorks.TextAdventure.Core.Utilities;
-using BoningerWorks.TextAdventure.Json.Inputs;
 using BoningerWorks.TextAdventure.Intermediate.Errors;
+using BoningerWorks.TextAdventure.Json.Inputs;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -27,9 +27,11 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 		public Symbol ItemSymbol { get; }
 		public Symbol LocationSymbol { get; }
 		public Names ItemNames { get; }
+		public Name ItemName { get; }
 		public bool? Active { get; }
 		public ImmutableArray<ReactionMap> ReactionMaps { get; }
-		public ImmutableArray<ItemMap> ItemMaps { get; }
+		
+		internal ImmutableArray<ItemMap> ItemMaps { get; }
 
 		internal ItemMap(string itemSymbol, Symbol locationSymbol, Item? item)
 		{
@@ -55,13 +57,17 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 				// Set item names
 				ItemNames = Names.TryCreate(item.Names.Select(n => Name.TryCreate(n) ?? throw new ValidationError($"Name ({n}) is not valid.")))
 					?? throw new ValidationError("Names is not valid.");
+				// Set item name
+				ItemName = ItemNames.First();
 				// Set active
 				Active = item.Active;
 				// Set reaction maps
 				ReactionMaps = item.Reactions?.Select(r => new ReactionMap(r, ItemSymbol)).ToImmutableArray() 
 					?? ImmutableArray<ReactionMap>.Empty;
+				// Create item maps
+				var itemMaps = Create(item.ItemSymbolToItemMappings, LocationSymbol);
 				// Set item maps
-				ItemMaps = Create(item.ItemSymbolToItemMappings, LocationSymbol);
+				ItemMaps = itemMaps.Concat(itemMaps.SelectMany(im => im.ItemMaps)).ToImmutableArray();
 			}
 			catch (GenericException<ValidationError> exception)
 			{
