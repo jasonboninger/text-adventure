@@ -1,33 +1,10 @@
-﻿using BoningerWorks.TextAdventure.Json.Inputs;
-using System.Text.Json;
+﻿using System.Text.Json;
 
 namespace BoningerWorks.TextAdventure.Json.Static
 {
-	public static class JsonSerializerExecutor
+	internal static class JsonSerializerExecutor
 	{
-		public static Game DeserializeGame(string json)
-		{
-			// Return game
-			return _Deserialize<Game>(json);
-		}
-		public static Game DeserializeGame(ref Utf8JsonReader reader)
-		{
-			// Return game
-			return _Deserialize<Game>(ref reader);
-		}
-
-		public static string SerializeGame(Game game)
-		{
-			// Return JSON
-			return _Serialize(game);
-		}
-		public static void SerializeGame(Utf8JsonWriter writer, Game game)
-		{
-			// Write JSON
-			_Serialize(writer, game);
-		}
-
-		private static TValue _Deserialize<TValue>(string json)
+		public static TValue Deserialize<TValue>(string json)
 		{
 			// Create options
 			var options = JsonSerializerOptionsCreator.Create();
@@ -36,7 +13,7 @@ namespace BoningerWorks.TextAdventure.Json.Static
 			// Return value
 			return value;
 		}
-		private static TValue _Deserialize<TValue>(ref Utf8JsonReader reader)
+		public static TValue Deserialize<TValue>(ref Utf8JsonReader reader)
 		{
 			// Create options
 			var options = JsonSerializerOptionsCreator.Create();
@@ -46,7 +23,7 @@ namespace BoningerWorks.TextAdventure.Json.Static
 			return value;
 		}
 
-		private static string _Serialize<TValue>(TValue value)
+		public static string Serialize<TValue>(TValue value)
 		{
 			// Create options
 			var options = JsonSerializerOptionsCreator.Create();
@@ -55,7 +32,7 @@ namespace BoningerWorks.TextAdventure.Json.Static
 			// Return JSON
 			return json;
 		}
-		private static void _Serialize<TValue>(Utf8JsonWriter writer, TValue value)
+		public static void Serialize<TValue>(Utf8JsonWriter writer, TValue value)
 		{
 			// Create options
 			var options = JsonSerializerOptionsCreator.Create();

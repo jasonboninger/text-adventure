@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 
 namespace BoningerWorks.TextAdventure.Json.Converters
 {
-	public class OneOrManyListJsonConverterFactory : JsonConverterFactory
+	internal class OneOrManyListJsonConverterFactory : JsonConverterFactory
 	{
 		private static readonly Type _typeOneOrManyList = typeof(OneOrManyList<>);
 		private static readonly Type _typeOneOrManyListJsonConverter = typeof(OneOrManyJsonConverter<>);

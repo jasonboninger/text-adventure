@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 
 namespace BoningerWorks.TextAdventure.Json.Static
 {
-	public static class JsonSerializerOptionsCreator
+	internal static class JsonSerializerOptionsCreator
 	{
 		private class PassThroughJsonNamingPolicy : JsonNamingPolicy
 		{

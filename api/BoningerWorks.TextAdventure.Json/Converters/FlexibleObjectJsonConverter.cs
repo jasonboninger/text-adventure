@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 
 namespace BoningerWorks.TextAdventure.Json.Converters
 {
-	public class FlexibleObjectJsonConverter<TValue> : JsonConverter<SFlexibleObject<TValue>>
+	internal class FlexibleObjectJsonConverter<TValue> : JsonConverter<SFlexibleObject<TValue>>
 	where TValue : class
 	{
 		public delegate TValue Reader(ref Utf8JsonReader reader, JsonSerializerOptions options);
