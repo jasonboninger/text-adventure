@@ -1,7 +1,7 @@
 ﻿using BoningerWorks.TextAdventure.Core.Exceptions;
 using BoningerWorks.TextAdventure.Core.Utilities;
-using BoningerWorks.TextAdventure.Json.Inputs;
 using BoningerWorks.TextAdventure.Intermediate.Errors;
+using BoningerWorks.TextAdventure.Json.Inputs;
 using System.Collections.Immutable;
 using System.Linq;
 

@@ -1,7 +1,7 @@
-﻿using BoningerWorks.TextAdventure.Json.Inputs;
-using BoningerWorks.TextAdventure.Json.Utilities;
-using BoningerWorks.TextAdventure.Intermediate.Enums;
+﻿using BoningerWorks.TextAdventure.Intermediate.Enums;
 using BoningerWorks.TextAdventure.Intermediate.Errors;
+using BoningerWorks.TextAdventure.Json.Inputs;
+using BoningerWorks.TextAdventure.Json.Utilities;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
