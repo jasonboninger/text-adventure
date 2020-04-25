@@ -1,10 +1,5 @@
-﻿using BoningerWorks.TextAdventure.Engine.Json.Serializable;
-using BoningerWorks.TextAdventure.Engine.Maps;
-using BoningerWorks.TextAdventure.Engine.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
+﻿using BoningerWorks.TextAdventure.Core.Utilities;
+using BoningerWorks.TextAdventure.Intermediate.Maps;
 
 namespace BoningerWorks.TextAdventure.Engine.Executables
 {
@@ -12,60 +7,31 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 	{
 		public Symbol Symbol { get; }
 		public Symbol Location { get; }
-		public Name Name { get; }
 		public Names Names { get; }
+		public Name Name { get; }
+		public bool? Active { get; }
 		public string RegularExpression { get; }
-		public bool Active { get; }
-		public ImmutableArray<CommandMap> CommandMaps { get; }
-
-		public Item(Symbol symbol, Symbol location, ItemBlueprint itemBlueprint)
+		
+		public Item(ItemMap itemMap)
 		{
 			// Set symbol
-			Symbol = symbol;
+			Symbol = itemMap.ItemSymbol;
 			// Set location
-			Location = location;
-			// Check if item blueprint does not exist
-			if (itemBlueprint == null)
-			{
-				// Throw error
-				throw new ArgumentException("Item blueprint cannot be null.");
-			}
-			// Check if item blueprint has no names
-			if (itemBlueprint.Names == null || itemBlueprint.Names.Count == 0)
-			{
-				// Throw error
-				throw new ArgumentException("Item blueprint must have at least one name.");
-			}
+			Location = itemMap.LocationSymbol;
 			// Set names
-			Names = new Names(itemBlueprint.Names.Select(n => new Name(n)));
+			Names = itemMap.ItemNames;
 			// Set name
-			Name = Names.First();
+			Name = itemMap.ItemName;
+			// Set active
+			Active = itemMap.Active;
 			// Set regular expression
 			RegularExpression = Names.RegularExpression;
-			// Set active
-			Active = itemBlueprint.Active ?? true;
-			// Set command maps
-			CommandMaps = _CreateCommandMaps(itemBlueprint.Commands);
 		}
 
 		public override string ToString()
 		{
-			// Return symbol
+			// Return string
 			return Symbol.ToString();
-		}
-
-		private ImmutableArray<CommandMap> _CreateCommandMaps(Dictionary<string, ReactionBlueprint> commandBlueprints)
-		{
-			// Check if command blueprints does not exist
-			if (commandBlueprints == null)
-			{
-				// Return no command maps
-				return ImmutableArray<CommandMap>.Empty;
-			}
-			// Create command maps
-			var commandMaps = commandBlueprints.Select(kv => new CommandMap(new Symbol(kv.Key), kv.Value, Symbol)).ToImmutableArray();
-			// Return command maps
-			return commandMaps;
 		}
 	}
 }

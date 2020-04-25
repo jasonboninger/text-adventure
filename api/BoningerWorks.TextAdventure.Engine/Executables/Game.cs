@@ -1,4 +1,4 @@
-﻿using BoningerWorks.TextAdventure.Maps.Models;
+﻿using BoningerWorks.TextAdventure.Intermediate.Maps;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -13,18 +13,12 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		public Items Items { get; }
 		public Commands Commands { get; }
 
-		internal Game(GameMap gameMap)
+		private Game(GameMap gameMap)
 		{
-			// Check if game blueprint does not exist
-			if (gameBlueprint == null)
-			{
-				// Throw error
-				throw new ArgumentException("Game blueprint cannot be null.", nameof(gameBlueprint));
-			}
 			// Set items
-			Items = _CreateItems(gameBlueprint.Player);
+			Items = new Items(gameMap.ItemMaps);
 			// Set commands
-			Commands = _CreateCommands(Items, gameBlueprint.Commands);
+			Commands = _CreateCommands(Items, gameMap.CommandMaps);
 		}
 
 		public GameState New()
@@ -109,21 +103,6 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			}
 			// Return messages
 			return messages;
-		}
-
-		private static Items _CreateItems(PlayerBlueprint playerBlueprint)
-		{
-			// Check if player blueprint does not exist
-			if (playerBlueprint == null)
-			{
-				// Throw error
-				throw new ArgumentException("Player blueprint cannot be null.", nameof(playerBlueprint));
-			}
-			// Create items
-			var items = Enumerable.Empty<Item>()
-				.Concat(playerBlueprint.Items?.Select(kv => new Item(new Symbol(kv.Key), Symbol.Player, kv.Value)) ?? Enumerable.Empty<Item>());
-			// Return items
-			return new Items(items);
 		}
 
 		private static Commands _CreateCommands(Items items, Dictionary<string, CommandBlueprint> commandBlueprints)
