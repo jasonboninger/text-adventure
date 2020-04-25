@@ -1,11 +1,11 @@
 ﻿using BoningerWorks.TextAdventure.Core.Exceptions;
-using BoningerWorks.TextAdventure.Maps.Enums;
-using BoningerWorks.TextAdventure.Maps.Errors;
+using BoningerWorks.TextAdventure.Intermediate.Enums;
+using BoningerWorks.TextAdventure.Intermediate.Errors;
 using System.Collections.Immutable;
 using System.Linq;
 using Action = BoningerWorks.TextAdventure.Json.Inputs.Action;
 
-namespace BoningerWorks.TextAdventure.Maps.Models
+namespace BoningerWorks.TextAdventure.Intermediate.Maps
 {
 	public class ActionMap
 	{

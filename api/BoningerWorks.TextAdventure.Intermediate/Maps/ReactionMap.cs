@@ -2,11 +2,11 @@
 using BoningerWorks.TextAdventure.Core.Utilities;
 using BoningerWorks.TextAdventure.Json.Inputs;
 using BoningerWorks.TextAdventure.Json.Utilities;
-using BoningerWorks.TextAdventure.Maps.Errors;
+using BoningerWorks.TextAdventure.Intermediate.Errors;
 using System.Collections.Immutable;
 using System.Linq;
 
-namespace BoningerWorks.TextAdventure.Maps.Models
+namespace BoningerWorks.TextAdventure.Intermediate.Maps
 {
 	public class ReactionMap
 	{

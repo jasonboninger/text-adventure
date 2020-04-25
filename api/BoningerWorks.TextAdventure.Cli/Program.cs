@@ -1,4 +1,4 @@
-﻿using BoningerWorks.TextAdventure.Maps.Models;
+﻿using BoningerWorks.TextAdventure.Engine.Executables;
 
 namespace BoningerWorks.TextAdventure.Cli
 {
@@ -6,12 +6,10 @@ namespace BoningerWorks.TextAdventure.Cli
 	{
 		static void Main()
 		{
-			// Create game map
-			var gameMap = GameMap.Deserialize(CrazyEx.JSON);
+			// Create engine
+			var engine = Game.Deserialize(CrazyEx.JSON);
 			//// Create game
-			//var game = new Game(blueprint);
-			//// Create state
-			//var state = game.New();
+			//var game = engine.New();
 			//// Loop forever
 			//while (true)
 			//{

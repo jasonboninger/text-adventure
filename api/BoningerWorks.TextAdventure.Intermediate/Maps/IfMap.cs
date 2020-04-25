@@ -1,7 +1,7 @@
-﻿using BoningerWorks.TextAdventure.Maps.Errors;
+﻿using BoningerWorks.TextAdventure.Intermediate.Errors;
 using System.Collections.Immutable;
 
-namespace BoningerWorks.TextAdventure.Maps.Models
+namespace BoningerWorks.TextAdventure.Intermediate.Maps
 {
 	public class IfMap<TMap>
 	{

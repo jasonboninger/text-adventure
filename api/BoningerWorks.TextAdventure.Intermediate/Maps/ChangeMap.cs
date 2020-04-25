@@ -1,7 +1,7 @@
 ﻿using BoningerWorks.TextAdventure.Core.Utilities;
-using BoningerWorks.TextAdventure.Maps.Errors;
+using BoningerWorks.TextAdventure.Intermediate.Errors;
 
-namespace BoningerWorks.TextAdventure.Maps.Models
+namespace BoningerWorks.TextAdventure.Intermediate.Maps
 {
 	public class ChangeMap
 	{

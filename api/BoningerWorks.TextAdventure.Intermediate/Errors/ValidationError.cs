@@ -2,7 +2,7 @@
 using BoningerWorks.TextAdventure.Core.Interfaces;
 using System;
 
-namespace BoningerWorks.TextAdventure.Maps.Errors
+namespace BoningerWorks.TextAdventure.Intermediate.Errors
 {
 	public class ValidationError : IError
 	{

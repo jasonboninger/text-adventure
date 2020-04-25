@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BoningerWorks.TextAdventure.Maps\BoningerWorks.TextAdventure.Maps.csproj" />
+    <ProjectReference Include="..\BoningerWorks.TextAdventure.Intermediate\BoningerWorks.TextAdventure.Intermediate.csproj" />
   </ItemGroup>
 
 </Project>

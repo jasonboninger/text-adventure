@@ -1,8 +1,8 @@
 ﻿using BoningerWorks.TextAdventure.Json.Inputs;
-using BoningerWorks.TextAdventure.Maps.Enums;
-using BoningerWorks.TextAdventure.Maps.Errors;
+using BoningerWorks.TextAdventure.Intermediate.Enums;
+using BoningerWorks.TextAdventure.Intermediate.Errors;
 
-namespace BoningerWorks.TextAdventure.Maps.Models
+namespace BoningerWorks.TextAdventure.Intermediate.Maps
 {
 	public class ConditionMap
 	{
