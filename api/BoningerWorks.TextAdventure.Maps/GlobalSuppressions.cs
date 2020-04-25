@@ -5,4 +5,9 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("Minor Code Smell", "S3626:Jump statements should not be redundant", Justification = "Not always right in lambda functions.")]
+[assembly: SuppressMessage
+(
+	"Minor Code Smell", 
+	"S3626:Jump statements should not be redundant", 
+	Justification = "Returns false positives in one-liner LINQ extension methods."
+)]
