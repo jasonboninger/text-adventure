@@ -10,7 +10,7 @@ namespace BoningerWorks.TextAdventure.Maps.Models
 {
 	public class ItemMap
 	{
-		public static ImmutableArray<ItemMap> Create(Dictionary<string, Item?>? itemSymbolToItemMappings, Symbol locationSymbol)
+		internal static ImmutableArray<ItemMap> Create(Dictionary<string, Item?>? itemSymbolToItemMappings, Symbol locationSymbol)
 		{
 			// Check if item symbol to item mappings does not exist
 			if (itemSymbolToItemMappings == null)
@@ -31,7 +31,7 @@ namespace BoningerWorks.TextAdventure.Maps.Models
 		public ImmutableArray<ReactionMap> ReactionMaps { get; }
 		public ImmutableArray<ItemMap> ItemMaps { get; }
 
-		public ItemMap(string itemSymbol, Symbol locationSymbol, Item? item)
+		internal ItemMap(string itemSymbol, Symbol locationSymbol, Item? item)
 		{
 			// Set item symbol
 			ItemSymbol = Symbol.TryCreate(itemSymbol) ?? throw new ValidationError($"Item symbol ({itemSymbol}) is not valid.");

@@ -10,7 +10,7 @@ namespace BoningerWorks.TextAdventure.Maps.Models
 	{
 		public ImmutableArray<TextMap> TextMaps { get; }
 
-		public LineInlinedMap(OneOrManyList<SFlexibleObject<Text>>? texts)
+		internal LineInlinedMap(OneOrManyList<SFlexibleObject<Text>>? texts)
 		{
 			// Check if texts does not exist
 			if (texts == null)

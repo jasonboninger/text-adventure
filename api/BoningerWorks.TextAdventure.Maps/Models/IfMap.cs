@@ -9,7 +9,7 @@ namespace BoningerWorks.TextAdventure.Maps.Models
 		public ImmutableArray<TMap>? MapsTrue { get; }
 		public ImmutableArray<TMap>? MapsFalse { get; }
 
-		public IfMap(ConditionMap conditionMap, ImmutableArray<TMap>? mapsTrue, ImmutableArray<TMap>? mapsFalse)
+		internal IfMap(ConditionMap conditionMap, ImmutableArray<TMap>? mapsTrue, ImmutableArray<TMap>? mapsFalse)
 		{
 			// Set condition map
 			ConditionMap = conditionMap;

@@ -13,7 +13,7 @@ namespace BoningerWorks.TextAdventure.Maps.Models
 		public EConditionOperator Operator { get; }
 		public ImmutableArray<ConditionMap> ConditionMaps { get; }
 
-		public ConditionManyMap(string @operator, List<SFlexibleObject<Condition>> conditions)
+		internal ConditionManyMap(string @operator, List<SFlexibleObject<Condition>> conditions)
 		{
 			// Set operator
 			Operator = @operator switch

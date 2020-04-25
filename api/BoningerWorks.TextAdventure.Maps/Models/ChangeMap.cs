@@ -9,7 +9,7 @@ namespace BoningerWorks.TextAdventure.Maps.Models
 		public Symbol TargetDatum { get; }
 		public string NewValue { get; }
 
-		public ChangeMap(string targetPath, string? newValue)
+		internal ChangeMap(string targetPath, string? newValue)
 		{
 			// Get target parts
 			var targetParts = targetPath.Split('.');

@@ -10,7 +10,7 @@ namespace BoningerWorks.TextAdventure.Maps.Models
 {
 	public class ReactionMap
 	{
-		public static ImmutableArray<ReactionMap> Create(OneOrManyList<Reaction?>? reactions, Symbol? itemSymbolDefault)
+		internal static ImmutableArray<ReactionMap> Create(OneOrManyList<Reaction?>? reactions, Symbol? itemSymbolDefault)
 		{
 			// Check if reactions does not exist
 			if (reactions == null)
@@ -29,7 +29,7 @@ namespace BoningerWorks.TextAdventure.Maps.Models
 		public Symbol? ItemSymbolDefault { get; }
 		public ImmutableArray<ActionMap> ActionMaps { get; }
 
-		public ReactionMap(Reaction? reaction, Symbol? itemSymbolDefault)
+		internal ReactionMap(Reaction? reaction, Symbol? itemSymbolDefault)
 		{
 			// Check if reaction does not exist
 			if (reaction == null)

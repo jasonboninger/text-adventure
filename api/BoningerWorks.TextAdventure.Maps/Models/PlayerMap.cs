@@ -13,7 +13,7 @@ namespace BoningerWorks.TextAdventure.Maps.Models
 		public ImmutableArray<ItemMap> ItemMaps { get; }
 		public ImmutableArray<ReactionMap> ReactionMaps { get; }
 
-		public PlayerMap(Player? player)
+		internal PlayerMap(Player? player)
 		{
 			// Set player symbol
 			PlayerSymbol = new Symbol("PLAYER");

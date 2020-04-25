@@ -9,7 +9,7 @@ namespace BoningerWorks.TextAdventure.Maps.Models
 		public EConditionComparison Comparison { get; }
 		public string Right { get; }
 
-		public ConditionSingleMap(string left, string comparison, string right)
+		internal ConditionSingleMap(string left, string comparison, string right)
 		{
 			// Set left
 			Left = left;

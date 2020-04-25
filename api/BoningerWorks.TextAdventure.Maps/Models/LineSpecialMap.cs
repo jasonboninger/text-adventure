@@ -7,7 +7,7 @@ namespace BoningerWorks.TextAdventure.Maps.Models
 	{
 		public ELineSpecialType Type { get; }
 
-		public LineSpecialMap(string type)
+		internal LineSpecialMap(string type)
 		{
 			// Set type
 			Type = type switch

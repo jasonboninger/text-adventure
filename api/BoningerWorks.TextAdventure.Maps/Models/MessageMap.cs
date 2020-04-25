@@ -11,7 +11,7 @@ namespace BoningerWorks.TextAdventure.Maps.Models
 	{
 		public ImmutableArray<LineMap> LineMaps { get; }
 
-		public MessageMap(Message? message)
+		internal MessageMap(Message? message)
 		{
 			// Check if message does not exist
 			if (message == null)

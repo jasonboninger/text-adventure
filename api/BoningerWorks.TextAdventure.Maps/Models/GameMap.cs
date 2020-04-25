@@ -17,7 +17,7 @@ namespace BoningerWorks.TextAdventure.Maps.Models
 		public ImmutableArray<ActionMap> ActionMapsStart { get; }
 		public ImmutableArray<ActionMap> ActionMapsEnd { get; }
 
-		public GameMap(Game? game)
+		internal GameMap(Game? game)
 		{
 			// Check if game does not exist
 			if (game == null)

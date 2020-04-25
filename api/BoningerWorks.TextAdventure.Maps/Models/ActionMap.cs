@@ -15,7 +15,7 @@ namespace BoningerWorks.TextAdventure.Maps.Models
 		public ImmutableArray<ChangeMap>? ChangeMaps { get; }
 		public ImmutableArray<TriggerMap>? TriggerMaps { get; }
 
-		public ActionMap(Action? action)
+		internal ActionMap(Action? action)
 		{
 			// Check if action does not exist
 			if (action == null)

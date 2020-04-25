@@ -14,7 +14,7 @@ namespace BoningerWorks.TextAdventure.Maps.Models
 		public ImmutableDictionary<Symbol, Names> WordSymbolToWordNamesMappings { get; }
 		public ImmutableArray<Symbol> CommandItemSymbols { get; }
 
-		public CommandMap(string commandSymbol, Command? command)
+		internal CommandMap(string commandSymbol, Command? command)
 		{
 			// Set command symbol
 			CommandSymbol = Symbol.TryCreate(commandSymbol) ?? throw new ValidationError($"Command symbol ({commandSymbol}) is not valid.");

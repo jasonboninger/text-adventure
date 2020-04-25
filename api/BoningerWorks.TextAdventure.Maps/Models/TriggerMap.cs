@@ -11,7 +11,7 @@ namespace BoningerWorks.TextAdventure.Maps.Models
 		public Symbol CommandSymbol { get; }
 		public ImmutableDictionary<Symbol, Symbol> CommandItemSymbolToItemSymbolMappings { get; }
 
-		public TriggerMap(Trigger? trigger)
+		internal TriggerMap(Trigger? trigger)
 		{
 			// Check if trigger does not exist
 			if (trigger == null)

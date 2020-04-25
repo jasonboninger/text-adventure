@@ -10,7 +10,7 @@ namespace BoningerWorks.TextAdventure.Maps.Models
 		public ConditionSingleMap? SingleMap { get; }
 		public ConditionManyMap? ManyMap { get; }
 
-		public ConditionMap(Condition? condition)
+		internal ConditionMap(Condition? condition)
 		{
 			// Check if condition does not exist
 			if (condition == null)

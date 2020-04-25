@@ -13,7 +13,7 @@ namespace BoningerWorks.TextAdventure.Maps.Models
 		public LineSpecialMap? SpecialMap { get; }
 		public LineInlinedMap? InlinedMap { get; }
 
-		public LineMap(Line? line)
+		internal LineMap(Line? line)
 		{
 			// Check if line does not exist
 			if (line == null)

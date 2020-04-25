@@ -6,7 +6,7 @@ namespace BoningerWorks.TextAdventure.Maps.Models
 	{
 		public string Value { get; }
 
-		public TextInlinedMap(string? value)
+		internal TextInlinedMap(string? value)
 		{
 			// Check if value does not exist
 			if (string.IsNullOrWhiteSpace(value))

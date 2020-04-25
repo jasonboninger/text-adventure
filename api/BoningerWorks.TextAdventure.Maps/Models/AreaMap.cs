@@ -12,7 +12,7 @@ namespace BoningerWorks.TextAdventure.Maps.Models
 		public ImmutableArray<ItemMap> ItemMaps { get; }
 		public ImmutableArray<ReactionMap> ReactionMaps { get; }
 
-		public AreaMap(string areaSymbol, Area? area)
+		internal AreaMap(string areaSymbol, Area? area)
 		{
 			// Set area symbol
 			AreaSymbol = Symbol.TryCreate(areaSymbol) ?? throw new ValidationError($"Area symbol ({areaSymbol}) is not valid.");

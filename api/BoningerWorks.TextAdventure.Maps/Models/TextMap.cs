@@ -12,7 +12,7 @@ namespace BoningerWorks.TextAdventure.Maps.Models
 		public IfMap<TextMap>? IfMap { get; }
 		public TextInlinedMap? InlinedMap { get; }
 
-		public TextMap(Text? text)
+		internal TextMap(Text? text)
 		{
 			// Check if text does not exist
 			if (text == null)
