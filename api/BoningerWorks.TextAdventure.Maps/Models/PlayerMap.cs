@@ -9,11 +9,14 @@ namespace BoningerWorks.TextAdventure.Maps.Models
 {
 	public class PlayerMap
 	{
+		public Symbol PlayerSymbol { get; }
 		public Symbol AreaSymbol { get; }
 		public ImmutableArray<ItemMap> ItemMaps { get; }
 
 		public PlayerMap(Player? player)
 		{
+			// Set player symbol
+			PlayerSymbol = new Symbol("PLAYER");
 			// Check if player does not exist
 			if (player == null)
 			{
@@ -27,7 +30,7 @@ namespace BoningerWorks.TextAdventure.Maps.Models
 				AreaSymbol = Symbol.TryCreate(player.AreaSymbol) ?? throw new ValidationError($"Area symbol ({player.AreaSymbol}) is not valid.");
 				// Set item maps
 				ItemMaps = player.ItemSymbolToItemMappings?
-					.Select(kv => new ItemMap(kv.Key, Symbol.Player, kv.Value))
+					.Select(kv => new ItemMap(kv.Key, PlayerSymbol, kv.Value))
 					.ToImmutableArray()
 					?? ImmutableArray<ItemMap>.Empty;
 			}

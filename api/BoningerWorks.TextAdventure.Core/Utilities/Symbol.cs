@@ -9,18 +9,7 @@ namespace BoningerWorks.TextAdventure.Core.Utilities
 		public static bool operator ==(Symbol? left, Symbol? right) => Equals(left, null) ? Equals(right, null) : left.Equals(right);
 		public static bool operator !=(Symbol? left, Symbol? right) => !(left == right);
 
-		public static Symbol Global { get; }
-		public static Symbol Player { get; }
-
 		private static readonly Regex _regularExpressionValid = new Regex(@"^[A-Z0-9_]+$", RegexOptions.Singleline);
-
-		static Symbol()
-		{
-			// Create global
-			Global = new Symbol("GAME");
-			// Create player
-			Player = new Symbol("PLAYER");
-		}
 
 		public static Symbol? TryCreate(string? @string)
 		{
