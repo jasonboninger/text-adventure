@@ -2,14 +2,12 @@
 using BoningerWorks.TextAdventure.Maps.Errors;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Text.Json;
 
 namespace BoningerWorks.TextAdventure.Maps.Models
 {
 	public class GameMap
 	{
 		public static GameMap Deserialize(string json) => new GameMap(Game.Deserialize(json));
-		public static GameMap Deserialize(ref Utf8JsonReader reader) => new GameMap(Game.Deserialize(ref reader));
 
 		public ImmutableArray<CommandMap> CommandMaps { get; }
 		public PlayerMap PlayerMap { get; }

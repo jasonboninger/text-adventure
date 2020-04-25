@@ -1,10 +1,4 @@
-﻿using BoningerWorks.TextAdventure.Engine.Exceptions;
-using BoningerWorks.TextAdventure.Engine.Exceptions.Data;
-using BoningerWorks.TextAdventure.Engine.Json.Serializable;
-using BoningerWorks.TextAdventure.Engine.Maps;
-using BoningerWorks.TextAdventure.Engine.States;
-using BoningerWorks.TextAdventure.Engine.States.Data;
-using BoningerWorks.TextAdventure.Engine.Utilities;
+﻿using BoningerWorks.TextAdventure.Maps.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -14,10 +8,12 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 {
 	public class Game
 	{
+		public static Game Deserialize(string json) => new Game(GameMap.Deserialize(json));
+
 		public Items Items { get; }
 		public Commands Commands { get; }
 
-		public Game(GameBlueprint gameBlueprint)
+		internal Game(GameMap gameMap)
 		{
 			// Check if game blueprint does not exist
 			if (gameBlueprint == null)
