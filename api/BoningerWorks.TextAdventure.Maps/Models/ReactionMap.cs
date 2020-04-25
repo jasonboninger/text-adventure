@@ -1,6 +1,7 @@
 ﻿using BoningerWorks.TextAdventure.Core.Exceptions;
 using BoningerWorks.TextAdventure.Core.Utilities;
 using BoningerWorks.TextAdventure.Json.Inputs;
+using BoningerWorks.TextAdventure.Json.Utilities;
 using BoningerWorks.TextAdventure.Maps.Errors;
 using System.Collections.Immutable;
 using System.Linq;
@@ -9,6 +10,20 @@ namespace BoningerWorks.TextAdventure.Maps.Models
 {
 	public class ReactionMap
 	{
+		public static ImmutableArray<ReactionMap> Create(OneOrManyList<Reaction?>? reactions, Symbol? itemSymbolDefault)
+		{
+			// Check if reactions does not exist
+			if (reactions == null)
+			{
+				// Return no reaction maps
+				return ImmutableArray<ReactionMap>.Empty;
+			}
+			// Create reaction maps
+			var reactionMaps = reactions.Select(r => new ReactionMap(r, itemSymbolDefault)).ToImmutableArray();
+			// Return reaction maps
+			return reactionMaps;
+		}
+		
 		public Symbol CommandSymbol { get; }
 		public ImmutableDictionary<Symbol, Symbol> CommandItemSymbolToItemSymbolMappings { get; }
 		public Symbol? ItemSymbolDefault { get; }

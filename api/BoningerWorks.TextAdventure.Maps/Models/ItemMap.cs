@@ -2,6 +2,7 @@
 using BoningerWorks.TextAdventure.Core.Utilities;
 using BoningerWorks.TextAdventure.Json.Inputs;
 using BoningerWorks.TextAdventure.Maps.Errors;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
@@ -9,6 +10,20 @@ namespace BoningerWorks.TextAdventure.Maps.Models
 {
 	public class ItemMap
 	{
+		public static ImmutableArray<ItemMap> Create(Dictionary<string, Item?>? itemSymbolToItemMappings, Symbol locationSymbol)
+		{
+			// Check if item symbol to item mappings does not exist
+			if (itemSymbolToItemMappings == null)
+			{
+				// Return no item maps
+				return ImmutableArray<ItemMap>.Empty;
+			}
+			// Create item maps
+			var itemMaps = itemSymbolToItemMappings.Select(kv => new ItemMap(kv.Key, locationSymbol, kv.Value)).ToImmutableArray();
+			// Return item maps
+			return itemMaps;
+		}
+
 		public Symbol ItemSymbol { get; }
 		public Symbol LocationSymbol { get; }
 		public Names ItemNames { get; }
@@ -46,8 +61,7 @@ namespace BoningerWorks.TextAdventure.Maps.Models
 				ReactionMaps = item.Reactions?.Select(r => new ReactionMap(r, ItemSymbol)).ToImmutableArray() 
 					?? ImmutableArray<ReactionMap>.Empty;
 				// Set item maps
-				ItemMaps = item.ItemSymbolToItemMappings?.Select(kv => new ItemMap(kv.Key, LocationSymbol, kv.Value)).ToImmutableArray()
-					?? ImmutableArray<ItemMap>.Empty;
+				ItemMaps = Create(item.ItemSymbolToItemMappings, LocationSymbol);
 			}
 			catch (GenericException<ValidationError> exception)
 			{

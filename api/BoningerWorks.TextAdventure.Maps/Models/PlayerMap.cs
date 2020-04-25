@@ -3,7 +3,6 @@ using BoningerWorks.TextAdventure.Core.Utilities;
 using BoningerWorks.TextAdventure.Json.Inputs;
 using BoningerWorks.TextAdventure.Maps.Errors;
 using System.Collections.Immutable;
-using System.Linq;
 
 namespace BoningerWorks.TextAdventure.Maps.Models
 {
@@ -12,6 +11,7 @@ namespace BoningerWorks.TextAdventure.Maps.Models
 		public Symbol PlayerSymbol { get; }
 		public Symbol AreaSymbol { get; }
 		public ImmutableArray<ItemMap> ItemMaps { get; }
+		public ImmutableArray<ReactionMap> ReactionMaps { get; }
 
 		public PlayerMap(Player? player)
 		{
@@ -29,10 +29,9 @@ namespace BoningerWorks.TextAdventure.Maps.Models
 				// Set area symbol
 				AreaSymbol = Symbol.TryCreate(player.AreaSymbol) ?? throw new ValidationError($"Area symbol ({player.AreaSymbol}) is not valid.");
 				// Set item maps
-				ItemMaps = player.ItemSymbolToItemMappings?
-					.Select(kv => new ItemMap(kv.Key, PlayerSymbol, kv.Value))
-					.ToImmutableArray()
-					?? ImmutableArray<ItemMap>.Empty;
+				ItemMaps = ItemMap.Create(player.ItemSymbolToItemMappings, PlayerSymbol);
+				// Set reaction maps
+				ReactionMaps = ReactionMap.Create(player.Reactions, itemSymbolDefault: null);
 			}
 			catch (GenericException<ValidationError> exception)
 			{
