@@ -45,19 +45,23 @@ namespace BoningerWorks.TextAdventure.Maps.Models
 				}
 				// Set word symbol to word names mappings
 				WordSymbolToWordNamesMappings = command.WordSymbolToWordNamesMappings?
-					.ToImmutableDictionary
-						(
-							kv => Symbol.TryCreate(kv.Key) ?? throw new ValidationError($"Word symbol ({kv.Key}) is not valid."),
-							kv => Names.TryCreate
+					.Select
+						(kv => new
+						{
+							WordSymbol = Symbol.TryCreate(kv.Key) ?? throw new ValidationError($"Word symbol ({kv.Key}) is not valid."),
+							WordNames = Names.TryCreate
 								(
 									kv.Value.Select(n => Name.TryCreate(n) ?? throw new ValidationError($"Word name ({n}) is not valid."))
 								)
 								?? throw new ValidationError($"Names is not valid.")
-						)
+						})
+					.Where(_ => PartSymbols.Contains(_.WordSymbol))
+					.ToImmutableDictionary(_ => _.WordSymbol, _ => _.WordNames)
 					?? ImmutableDictionary<Symbol, Names>.Empty;
 				// Set command item symbols
 				CommandItemSymbols = command.CommandItemSymbols?
 					.Select(cis => Symbol.TryCreate(cis) ?? throw new ValidationError($"Command item symbol ({cis}) is not valid."))
+					.Where(cis => PartSymbols.Contains(cis))
 					.ToImmutableArray()
 					?? ImmutableArray<Symbol>.Empty;
 				// Create input symbols
@@ -71,8 +75,8 @@ namespace BoningerWorks.TextAdventure.Maps.Models
 					// Throw error
 					throw new ValidationError("Not all input symbols are unique.");
 				}
-				// Check if not all part symbols are found in input symbols
-				if (PartSymbols.Any(ps => !inputSymbols.Contains(ps)))
+				// Check if number of part symbols does not equal number of input symbols
+				if (PartSymbols.Length != inputSymbols.Count)
 				{
 					// Throw error
 					throw new ValidationError("Not all part symbols are found in input symbols.");
