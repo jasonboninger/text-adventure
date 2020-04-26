@@ -1,12 +1,10 @@
-﻿using BoningerWorks.TextAdventure.Intermediate.Enums;
-using BoningerWorks.TextAdventure.Intermediate.Errors;
+﻿using BoningerWorks.TextAdventure.Intermediate.Errors;
 using BoningerWorks.TextAdventure.Json.Inputs;
 
 namespace BoningerWorks.TextAdventure.Intermediate.Maps
 {
 	public class ConditionMap
 	{
-		public EConditionMapType Type { get; }
 		public ConditionSingleMap? SingleMap { get; }
 		public ConditionManyMap? ManyMap { get; }
 
@@ -33,8 +31,6 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 					// Throw error
 					throw new ValidationError("When left, comparison, and right exist, then operator and conditions must be null.");
 				}
-				// Set type
-				Type = EConditionMapType.Single;
 				// Set single condition map
 				SingleMap = new ConditionSingleMap(condition.Left, condition.Comparison, condition.Right);
 				// Return
@@ -49,8 +45,6 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 					// Throw error
 					throw new ValidationError("When operator and conditions exist, then left, comparison, and right must be null.");
 				}
-				// Set type
-				Type = EConditionMapType.Many;
 				// Set many condition map
 				ManyMap = new ConditionManyMap(condition.Operator, condition.Conditions);
 				// Return

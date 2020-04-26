@@ -1,5 +1,5 @@
-﻿using BoningerWorks.TextAdventure.Intermediate.Enums;
-using BoningerWorks.TextAdventure.Intermediate.Errors;
+﻿using BoningerWorks.TextAdventure.Intermediate.Errors;
+using BoningerWorks.TextAdventure.Json.States.Enums;
 
 namespace BoningerWorks.TextAdventure.Intermediate.Maps
 {

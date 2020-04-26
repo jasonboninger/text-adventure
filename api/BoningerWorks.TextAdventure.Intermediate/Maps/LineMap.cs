@@ -1,5 +1,4 @@
-﻿using BoningerWorks.TextAdventure.Intermediate.Enums;
-using BoningerWorks.TextAdventure.Intermediate.Errors;
+﻿using BoningerWorks.TextAdventure.Intermediate.Errors;
 using BoningerWorks.TextAdventure.Json.Inputs;
 using System.Collections.Immutable;
 using System.Linq;
@@ -8,7 +7,6 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 {
 	public class LineMap
 	{
-		public ELineMapType Type { get; }
 		public IfMap<LineMap>? IfMap { get; }
 		public LineSpecialMap? SpecialMap { get; }
 		public LineInlinedMap? InlinedMap { get; }
@@ -28,8 +26,6 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 			{
 				// Increase count
 				count++;
-				// Set type
-				Type = ELineMapType.If;
 				// Set if map
 				IfMap = new IfMap<LineMap>
 					(
@@ -43,8 +39,6 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 			{
 				// Increase count
 				count++;
-				// Set type
-				Type = ELineMapType.Special;
 				// Set special line map
 				SpecialMap = new LineSpecialMap(line.Special);
 			}
@@ -53,8 +47,6 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 			{
 				// Increase count
 				count++;
-				// Set type
-				Type = ELineMapType.Inlined;
 				// Set inlined line map
 				InlinedMap = new LineInlinedMap(line.Texts);
 			}

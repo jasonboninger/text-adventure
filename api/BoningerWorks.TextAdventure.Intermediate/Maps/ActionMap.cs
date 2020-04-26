@@ -1,5 +1,4 @@
 ﻿using BoningerWorks.TextAdventure.Core.Exceptions;
-using BoningerWorks.TextAdventure.Intermediate.Enums;
 using BoningerWorks.TextAdventure.Intermediate.Errors;
 using System.Collections.Immutable;
 using System.Linq;
@@ -9,7 +8,6 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 {
 	public class ActionMap
 	{
-		public EActionMapType Type { get; }
 		public IfMap<ActionMap>? IfMap { get; }
 		public ImmutableArray<MessageMap>? MessageMaps { get; }
 		public ImmutableArray<ChangeMap>? ChangeMaps { get; }
@@ -33,8 +31,6 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 				{
 					// Increase count
 					count++;
-					// Set type
-					Type = EActionMapType.If;
 					// Set if map
 					IfMap = new IfMap<ActionMap>
 						(
@@ -48,8 +44,6 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 				{
 					// Increase count
 					count++;
-					// Set type
-					Type = EActionMapType.Messages;
 					// Check if messages is empty
 					if (action.Messages.Count == 0)
 					{
@@ -64,8 +58,6 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 				{
 					// Increase count
 					count++;
-					// Set type
-					Type = EActionMapType.Changes;
 					// Check if change path to new value mappings is empty
 					if (action.ChangePathToNewValueMappings.Count == 0)
 					{
@@ -80,8 +72,6 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 				{
 					// Increase count
 					count++;
-					// Set type
-					Type = EActionMapType.Triggers;
 					// Check if triggers is empty
 					if (action.Triggers.Count == 0)
 					{
@@ -95,7 +85,7 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 				if (count != 1)
 				{
 					// Throw error
-					throw new ValidationError($"Exactly one action type is required, but instead has {count}.");
+					throw new ValidationError($"Exactly one action is required, but instead has {count}.");
 				}
 			}
 			catch (GenericException<ValidationError> exception)
