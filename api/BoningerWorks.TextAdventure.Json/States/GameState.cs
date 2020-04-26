@@ -7,10 +7,10 @@ namespace BoningerWorks.TextAdventure.Json.States
 	{
 		public ImmutableDictionary<Symbol, EntityState> EntityStates { get; }
 
-		public GameState(ImmutableDictionary<Symbol, EntityState>? entityStates)
+		public GameState(ImmutableList<EntityState>? entityStates)
 		{
 			// Set entity states
-			EntityStates = entityStates ?? ImmutableDictionary<Symbol, EntityState>.Empty;
+			EntityStates = entityStates?.ToImmutableDictionary(es => es.Id) ?? ImmutableDictionary<Symbol, EntityState>.Empty;
 		}
 	}
 }
