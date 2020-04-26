@@ -1,32 +1,22 @@
-﻿using System;
+﻿using BoningerWorks.TextAdventure.Core.Exceptions;
+using BoningerWorks.TextAdventure.Json.States.Errors;
 
 namespace BoningerWorks.TextAdventure.Json.States
 {
 	public class LineState
 	{
-		public static LineState CreateContent(LineContentState content)
-		{
-			// Create content state
-			var contentState = new LineState
-			{
-				Content = content ?? throw new ArgumentException("Content cannot be null.", nameof(content))
-			};
-			// Return content state
-			return contentState;
-		}
+		public LineContentState? ContentState { get; set; }
+		public LineSpecialState? SpecialState { get; set; }
 
-		public static LineState CreateSpecial(LineSpecialState special)
+		public LineState(LineContentState lineContentState)
 		{
-			// Create special state
-			var specialState = new LineState
-			{
-				Special = special ?? throw new ArgumentException("Special cannot be null.", nameof(special))
-			};
-			// Return special state
-			return specialState;
+			// Set content state
+			ContentState = lineContentState ?? throw GenericException.Create(new StateInvalidError("Line content cannot be null."));
 		}
-
-		public LineContentState? Content { get; set; }
-		public LineSpecialState? Special { get; set; }
+		public LineState(LineSpecialState lineSpecialState)
+		{
+			// Set special state
+			SpecialState = lineSpecialState ?? throw GenericException.Create(new StateInvalidError("Special line cannot be null."));
+		}
 	}
 }

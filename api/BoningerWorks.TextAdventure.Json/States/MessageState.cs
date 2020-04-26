@@ -1,27 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using BoningerWorks.TextAdventure.Core.Exceptions;
+using BoningerWorks.TextAdventure.Json.States.Errors;
+using System.Collections.Immutable;
 
 namespace BoningerWorks.TextAdventure.Json.States
 {
 	public class MessageState
 	{
-		public static MessageState Create(List<LineState> lines)
+		public ImmutableList<LineState> Lines { get; set; }
+
+		public MessageState(ImmutableList<LineState> lines)
 		{
 			// Check if lines does not exist
 			if (lines == null || lines.Count == 0)
 			{
 				// Throw error
-				throw new ArgumentException("Lines cannot be null or empty.", nameof(lines));
+				throw GenericException.Create(new StateInvalidError("Lines cannot be null or empty."));
 			}
-			// Create message state
-			var messageState = new MessageState
-			{
-				Lines = lines!
-			};
-			// Return message state
-			return messageState;
+			// Set lines
+			Lines = lines;
 		}
-
-		public List<LineState?>? Lines { get; set; }
 	}
 }

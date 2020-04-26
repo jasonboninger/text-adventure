@@ -1,21 +1,16 @@
 ﻿using BoningerWorks.TextAdventure.Core.Utilities;
-using System.Collections.Generic;
+using System.Collections.Immutable;
 
 namespace BoningerWorks.TextAdventure.Json.States
 {
 	public class GameState
 	{
-		public static GameState Create()
-		{
-			// Create game state
-			var gameState = new GameState
-			{
-				EntityStates = new Dictionary<Symbol, EntityState?>()
-			};
-			// Return game state
-			return gameState;
-		}
+		public ImmutableDictionary<Symbol, EntityState> EntityStates { get; }
 
-		public Dictionary<Symbol, EntityState?>? EntityStates { get; set; }
+		public GameState(ImmutableDictionary<Symbol, EntityState>? entityStates)
+		{
+			// Set entity states
+			EntityStates = entityStates ?? ImmutableDictionary<Symbol, EntityState>.Empty;
+		}
 	}
 }

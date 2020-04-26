@@ -1,20 +1,18 @@
-﻿using System;
+﻿using BoningerWorks.TextAdventure.Core.Exceptions;
+using BoningerWorks.TextAdventure.Json.States.Errors;
 
 namespace BoningerWorks.TextAdventure.Json.States
 {
 	public class LineContentState
 	{
-		public static LineContentState Create(string text)
-		{
-			// Create content line state
-			var lineContentState = new LineContentState
-			{
-				Text = string.IsNullOrWhiteSpace(text) ? throw new ArgumentException("Text cannot be null or whitespace.", nameof(text)) : text
-			};
-			// Return content line state
-			return lineContentState;
-		}
+		public string Text { get; }
 
-		public string? Text { get; set; }
+		public LineContentState(string text)
+		{
+			// Set text
+			Text = string.IsNullOrWhiteSpace(text) 
+				? throw GenericException.Create(new StateInvalidError("Text cannot be null or whitespace.")) 
+				: text;
+		}
 	}
 }

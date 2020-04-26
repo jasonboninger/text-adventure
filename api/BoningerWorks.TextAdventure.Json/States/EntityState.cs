@@ -1,55 +1,32 @@
-﻿using BoningerWorks.TextAdventure.Json.States.Data;
-using System;
-using System.Collections.Generic;
+﻿using BoningerWorks.TextAdventure.Core.Exceptions;
+using BoningerWorks.TextAdventure.Core.Utilities;
+using BoningerWorks.TextAdventure.Json.States.Errors;
+using System.Collections.Immutable;
 
 namespace BoningerWorks.TextAdventure.Json.States
 {
-	public class EntityState
+	public class EntityState<TData> : EntityState
+	where TData : class
 	{
-		public static EntityState CreateGlobal()
-		{
-			// Create global state
-			var globalState = _Create();
-			// Set global data
-			globalState.GlobalData = GlobalData.Create();
-			// Return global state
-			return globalState;
-		}
+		public TData Data { get; }
 
-		public static EntityState CreatePlayer()
+		public EntityState(Symbol id, TData data, ImmutableDictionary<string, string>? customData) : base(id, customData)
 		{
-			// Create player state
-			var playerState = _Create();
-			// Set player data
-			playerState.PlayerData = PlayerData.Create();
-			// Return player state
-			return playerState;
+			// Set data
+			Data = data ?? throw GenericException.Create(new StateInvalidError("Data cannot be null."));
 		}
-
-		public static EntityState CreateItem(ItemData itemData)
+	}
+	public abstract class EntityState
+	{
+		public Symbol Id { get; }
+		public ImmutableDictionary<string, string> CustomData { get; }
+		
+		protected EntityState(Symbol id, ImmutableDictionary<string, string>? customData)
 		{
-			// Create item state
-			var itemState = _Create();
-			// Set item data
-			itemState.ItemData = itemData ?? throw new ArgumentException("Item data cannot be null.", nameof(itemData));
-			// Return item state
-			return itemState;
+			// Set ID
+			Id = id ?? throw GenericException.Create(new StateInvalidError("ID cannot be null."));
+			// Set custom data
+			CustomData = customData ?? ImmutableDictionary<string, string>.Empty;
 		}
-
-		private static EntityState _Create()
-		{
-			// Create entity state
-			var entityState = new EntityState
-			{
-				CustomData = new Dictionary<string, string?>()
-			};
-			// Return entity state
-			return entityState;
-		}
-
-		public GlobalData? GlobalData { get; set; }
-		public PlayerData? PlayerData { get; set; }
-		public ItemData? ItemData { get; set; }
-		public Dictionary<string, string?>? CustomData { get; set; }
 	}
 }

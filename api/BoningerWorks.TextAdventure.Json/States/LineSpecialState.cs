@@ -1,18 +1,15 @@
-﻿namespace BoningerWorks.TextAdventure.Json.States
+﻿using BoningerWorks.TextAdventure.Json.States.Enums;
+
+namespace BoningerWorks.TextAdventure.Json.States
 {
 	public class LineSpecialState
 	{
-		public static LineSpecialState Create(string type)
-		{
-			// Create special line state
-			var lineSpecialState = new LineSpecialState
-			{
-				Type = type
-			};
-			// Return special line state
-			return lineSpecialState;
-		}
+		public ELineSpecialType Type { get; }
 
-		public string? Type { get; set; }
+		public LineSpecialState(ELineSpecialType type)
+		{
+			// Set type
+			Type = type;
+		}
 	}
 }
