@@ -29,9 +29,9 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 		public Names ItemNames { get; }
 		public Name ItemName { get; }
 		public bool? Active { get; }
-		public ImmutableArray<ReactionMap> ReactionMaps { get; }
 		
 		internal ImmutableArray<ItemMap> ItemMaps { get; }
+		internal ImmutableArray<ReactionMap> ReactionMaps { get; }
 
 		internal ItemMap(string itemSymbol, Symbol locationSymbol, Item? item)
 		{
@@ -61,13 +61,13 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 				ItemName = ItemNames.First();
 				// Set active
 				Active = item.Active;
-				// Set reaction maps
-				ReactionMaps = item.Reactions?.Select(r => new ReactionMap(r, ItemSymbol)).ToImmutableArray() 
-					?? ImmutableArray<ReactionMap>.Empty;
 				// Create item maps
 				var itemMaps = Create(item.ItemSymbolToItemMappings, LocationSymbol);
 				// Set item maps
 				ItemMaps = itemMaps.Concat(itemMaps.SelectMany(im => im.ItemMaps)).ToImmutableArray();
+				// Set reaction maps
+				ReactionMaps = item.Reactions?.Select(r => new ReactionMap(r, ItemSymbol)).ToImmutableArray()
+					?? ImmutableArray<ReactionMap>.Empty;
 			}
 			catch (GenericException<ValidationError> exception)
 			{

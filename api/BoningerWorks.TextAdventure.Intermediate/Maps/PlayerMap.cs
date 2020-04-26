@@ -10,9 +10,9 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 	{
 		public Symbol PlayerSymbol { get; }
 		public Symbol AreaSymbol { get; }
-		public ImmutableArray<ReactionMap> ReactionMaps { get; }
 
 		internal ImmutableArray<ItemMap> ItemMaps { get; }
+		internal ImmutableArray<ReactionMap> ReactionMaps { get; }
 
 		internal PlayerMap(Player? player)
 		{
@@ -29,10 +29,10 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 			{
 				// Set area symbol
 				AreaSymbol = Symbol.TryCreate(player.AreaSymbol) ?? throw new ValidationError($"Area symbol ({player.AreaSymbol}) is not valid.");
-				// Set reaction maps
-				ReactionMaps = ReactionMap.Create(player.Reactions, itemSymbolDefault: null);
 				// Set item maps
 				ItemMaps = ItemMap.Create(player.ItemSymbolToItemMappings, PlayerSymbol);
+				// Set reaction maps
+				ReactionMaps = ReactionMap.Create(player.Reactions, itemSymbolDefault: null);
 			}
 			catch (GenericException<ValidationError> exception)
 			{

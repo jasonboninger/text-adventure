@@ -14,6 +14,7 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 		public PlayerMap PlayerMap { get; }
 		public ImmutableArray<AreaMap> AreaMaps { get; }
 		public ImmutableArray<ItemMap> ItemMaps { get; }
+		public ImmutableArray<ReactionMap> ReactionMaps { get; }
 		public ImmutableArray<ActionMap> ActionMapsStart { get; }
 		public ImmutableArray<ActionMap> ActionMapsEnd { get; }
 
@@ -56,7 +57,17 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 				throw new ValidationError("Not all area symbols are unique.");
 			}
 			// Set item maps
-			ItemMaps = PlayerMap.ItemMaps.Concat(AreaMaps.SelectMany(am => am.ItemMaps)).ToImmutableArray();
+			ItemMaps = Enumerable.Empty<ItemMap>() 
+				.Concat(PlayerMap.ItemMaps)
+				.Concat(AreaMaps.SelectMany(am => am.ItemMaps))
+				.SelectMany(im => im.ItemMaps.Append(im))
+				.ToImmutableArray();
+			// Set reaction maps
+			ReactionMaps = Enumerable.Empty<ReactionMap>()
+				.Concat(PlayerMap.ReactionMaps)
+				.Concat(AreaMaps.SelectMany(am => am.ReactionMaps))
+				.Concat(ItemMaps.SelectMany(im => im.ReactionMaps))
+				.ToImmutableArray();
 			// Check if not all item symbols are unique
 			if (ItemMaps.Select(im => im.ItemSymbol).Distinct().Count() != ItemMaps.Length)
 			{

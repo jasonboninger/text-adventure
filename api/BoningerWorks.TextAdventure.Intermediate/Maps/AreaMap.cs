@@ -9,9 +9,9 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 	public class AreaMap
 	{
 		public Symbol AreaSymbol { get; }
-		public ImmutableArray<ReactionMap> ReactionMaps { get; }
 
 		internal ImmutableArray<ItemMap> ItemMaps { get; }
+		internal ImmutableArray<ReactionMap> ReactionMaps { get; }
 
 		internal AreaMap(string areaSymbol, Area? area)
 		{
@@ -26,10 +26,10 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 					// Throw error
 					throw new ValidationError("Area body cannot be null.");
 				}
-				// Set reaction maps
-				ReactionMaps = ReactionMap.Create(area.Reactions, itemSymbolDefault: null);
 				// Set item maps
 				ItemMaps = ItemMap.Create(area.ItemSymbolToItemMappings, AreaSymbol);
+				// Set reaction maps
+				ReactionMaps = ReactionMap.Create(area.Reactions, itemSymbolDefault: null);
 			}
 			catch (GenericException<ValidationError> exception)
 			{

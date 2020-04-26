@@ -1,18 +1,17 @@
 ﻿using BoningerWorks.TextAdventure.Core.Exceptions;
 using BoningerWorks.TextAdventure.Json.States.Errors;
+using System.Collections.Immutable;
 
 namespace BoningerWorks.TextAdventure.Json.States
 {
 	public class LineContentState
 	{
-		public string Text { get; }
+		public ImmutableList<TextState> TextStates { get; }
 
-		public LineContentState(string text)
+		public LineContentState(ImmutableList<TextState> textStates)
 		{
-			// Set text
-			Text = string.IsNullOrWhiteSpace(text) 
-				? throw GenericException.Create(new StateInvalidError("Text cannot be null or whitespace.")) 
-				: text;
+			// Set text states
+			TextStates = textStates ?? throw GenericException.Create(new StateInvalidError("Texts cannot be null."));
 		}
 	}
 }
