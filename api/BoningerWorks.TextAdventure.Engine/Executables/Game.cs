@@ -17,6 +17,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		public static Game Deserialize(string json) => new Game(GameMap.Deserialize(json));
 
 		public Player Player { get; }
+		public Areas Areas { get; }
 		public Items Items { get; }
 		public Commands Commands { get; }
 		public Reactions Reactions { get; }
@@ -31,6 +32,8 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			}
 			// Set player
 			Player = new Player(gameMap.PlayerMap);
+			// Set areas
+			Areas = new Areas(gameMap.AreaMaps);
 			// Set items
 			Items = new Items(gameMap.ItemMaps);
 			// Set commands
