@@ -12,16 +12,12 @@ namespace BoningerWorks.TextAdventure.Json.Static
 		{
 			public static PassThroughJsonNamingPolicy Instance { get; } = new PassThroughJsonNamingPolicy();
 
-			public override string ConvertName(string name)
-			{
-				// Return name
-				return name;
-			}
+			public override string ConvertName(string name) => name;
 
 			private PassThroughJsonNamingPolicy() { }
 		}
 
-		private readonly static ImmutableArray<JsonConverter> _converters = ImmutableArray.Create<JsonConverter>
+		private readonly static ImmutableList<JsonConverter> _converters = ImmutableList.Create<JsonConverter>
 			(
 				new JsonStringEnumConverter(PassThroughJsonNamingPolicy.Instance, allowIntegerValues: false),
 				new OneOrManyListJsonConverterFactory(),
@@ -56,12 +52,10 @@ namespace BoningerWorks.TextAdventure.Json.Static
 				// Disallow comments
 				ReadCommentHandling = JsonCommentHandling.Disallow
 			};
+			// Get converters
+			var converters = options.Converters;
 			// Add converters
-			for (int i = 0; i < _converters.Length; i++)
-			{
-				// Add converter
-				options.Converters.Add(_converters[i]);
-			}
+			_converters.ForEach(converters.Add);
 			// Return options
 			return options;
 		}
