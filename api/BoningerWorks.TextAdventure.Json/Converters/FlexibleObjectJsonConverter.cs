@@ -12,13 +12,8 @@ namespace BoningerWorks.TextAdventure.Json.Converters
 
 		private readonly Reader _readFromDefault;
 		private readonly Reader _readFromString;
-		private readonly Reader _readFromArray;
 
-		public FlexibleObjectJsonConverter
-		(
-			Func<string, TValue>? createFromString = null,
-			Reader? readFromArray = null
-		)
+		public FlexibleObjectJsonConverter(Func<string, TValue>? createFromString = null)
 		{
 			// Set read from default
 			_readFromDefault = JsonSerializer.Deserialize<TValue>;
@@ -28,8 +23,6 @@ namespace BoningerWorks.TextAdventure.Json.Converters
 					createFromString,
 					cfs => (ref Utf8JsonReader reader, JsonSerializerOptions options) => cfs(reader.GetString())
 				);
-			// Set read from array
-			_readFromArray = _CreateReaderOrDefault(readFromArray, rfa => rfa);
 		}
 
 		public override SFlexibleObject<TValue> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
@@ -38,7 +31,6 @@ namespace BoningerWorks.TextAdventure.Json.Converters
 			var value = reader.TokenType switch
 			{
 				JsonTokenType.String => _readFromString(ref reader, options),
-				JsonTokenType.StartArray => _readFromArray(ref reader, options),
 				_ => _readFromDefault(ref reader, options)
 			};
 			// Return flexible object

@@ -1,5 +1,5 @@
 import { ILineSpecial, SSpecial } from "../types/message";
-import { ICondition, IConditions, SComparison, SOperator } from "../types/condition";
+import { XCondition, IConditionSingle, IConditionMany, SComparison, SOperator } from "../types/condition";
 
 export function blank(): ILineSpecial {
 	return _special("BLANK");
@@ -9,66 +9,20 @@ export function horizontalRule(): ILineSpecial {
 	return _special("HORIZONTAL_RULE");
 }
 
-export function is(left: string, right: string): ICondition {
+export function is(left: string, right: string): IConditionSingle {
 	return _condition(left, "IS", right);
 }
 
-export function not(left: string, right: string): ICondition {
+export function not(left: string, right: string): IConditionSingle {
 	return _condition(left, "NOT", right);
 }
 
-export function all(
-	conditionsOne: IConditions, 
-	conditionsTwo: IConditions,
-	conditionsThree?: IConditions,
-	conditionsFour?: IConditions,
-	conditionsFive?: IConditions,
-	conditionsSix?: IConditions,
-	conditionsSeven?: IConditions,
-	conditionsEight?: IConditions,
-	conditionsNine?: IConditions,
-	conditionsTen?: IConditions
-): IConditions {
-	return _conditions(
-		"ALL",
-		conditionsOne,
-		conditionsTwo,
-		conditionsThree,
-		conditionsFour,
-		conditionsFive,
-		conditionsSix,
-		conditionsSeven,
-		conditionsEight,
-		conditionsNine,
-		conditionsTen
-	);
+export function all(...conditions: XCondition[]): IConditionMany {
+	return _conditions("ALL", conditions);
 }
 
-export function any(
-	conditionsOne: IConditions, 
-	conditionsTwo: IConditions,
-	conditionsThree?: IConditions,
-	conditionsFour?: IConditions,
-	conditionsFive?: IConditions,
-	conditionsSix?: IConditions,
-	conditionsSeven?: IConditions,
-	conditionsEight?: IConditions,
-	conditionsNine?: IConditions,
-	conditionsTen?: IConditions
-): IConditions {
-	return _conditions(
-		"ANY",
-		conditionsOne,
-		conditionsTwo,
-		conditionsThree,
-		conditionsFour,
-		conditionsFive,
-		conditionsSix,
-		conditionsSeven,
-		conditionsEight,
-		conditionsNine,
-		conditionsTen
-	);
+export function any(...conditions: XCondition[]): IConditionMany {
+	return _conditions("ANY", conditions);
 }
 
 function _special(special: SSpecial): ILineSpecial {
@@ -77,40 +31,17 @@ function _special(special: SSpecial): ILineSpecial {
 	};
 }
 
-function _condition(left: string, comparison: SComparison, right: string): ICondition {
-	return [
+function _condition(left: string, comparison: SComparison, right: string): IConditionSingle {
+	return {
 		left,
 		comparison,
 		right
-	];
+	};
 }
 
-function _conditions(
-	operator: SOperator,
-	conditionsOne: IConditions, 
-	conditionsTwo: IConditions,
-	conditionsThree?: IConditions,
-	conditionsFour?: IConditions,
-	conditionsFive?: IConditions,
-	conditionsSix?: IConditions,
-	conditionsSeven?: IConditions,
-	conditionsEight?: IConditions,
-	conditionsNine?: IConditions,
-	conditionsTen?: IConditions
-): IConditions {
-	const conditions: IConditions = [
+function _conditions(operator: SOperator, conditions: XCondition[]): IConditionMany {
+	return {
 		operator,
-		conditionsOne,
-		conditionsTwo,
-		conditionsThree,
-		conditionsFour,
-		conditionsFive,
-		conditionsSix,
-		conditionsSeven,
-		conditionsEight,
-		conditionsNine,
-		conditionsTen
-	];
-	while (conditions.length && conditions[conditions.length - 1] === undefined) conditions.pop();
-	return conditions;
+		conditions
+	};
 }

@@ -16,12 +16,6 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 				// Throw error
 				throw new ValidationError("Condition cannot be null.");
 			}
-			// Check if error exists
-			if (condition.Error != null)
-			{
-				// Throw error
-				throw new ValidationError(condition.Error);
-			}
 			// Check if left, comparison, and right exist
 			if (condition.Left != null && condition.Comparison != null && condition.Right != null)
 			{

@@ -175,11 +175,11 @@ namespace BoningerWorks.TextAdventure.Cli
 							""command"": ""INSPECT"",
 							""actions"": {
 								""if"": {
-									""condition"": [
-										""${DOOR.USED}"",
-										""IS"",
-										""yes""
-									],
+									""condition"": {
+										""left"": ""${DOOR.USED}"",
+										""comparison"": ""IS"",
+										""right"": ""yes""
+									},
 									""true"": [
 										{
 											""messages"": ""You glance at the door. Something looks a bit strange.""
@@ -225,21 +225,21 @@ namespace BoningerWorks.TextAdventure.Cli
 					""command"": ""SURVEY"",
 					""actions"": {
 						""if"": {
-							""condition"": [
-								""${DOOR.USED}"",
-								""IS"",
-								""yes""
-							],
+							""condition"": {
+								""left"": ""${DOOR.USED}"",
+								""comparison"": ""IS"",
+								""right"": ""yes""
+							},
 							""true"": {
 								""messages"": ""This room looks pretty cool, but you just want to get out of here and go about your day. You should probably head for the door.""
 							},
 							""false"": {
 								""if"": {
-									""condition"": [
-										""${NOTE_WOODEN.VIEWED}"",
-										""IS"",
-										""yes""
-									],
+									""condition"": {
+										""left"": ""${NOTE_WOODEN.VIEWED}"",
+										""comparison"": ""IS"",
+										""right"": ""yes""
+									},
 									""true"": {
 										""messages"": ""You glance around the room, and it all looks pretty normal. You still can't believe that the door is locked. Maybe there's something to be done if you take a closer look.""
 									},
