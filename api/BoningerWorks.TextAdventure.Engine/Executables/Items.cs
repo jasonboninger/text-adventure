@@ -20,8 +20,8 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 
 		private readonly ImmutableArray<Item> _items;
 		private readonly IEnumerable<Item> _itemsEnumerable;
-		private readonly ImmutableDictionary<Symbol, Item> _itemSymbolToItemMappings;
-		private readonly ImmutableDictionary<Name, ImmutableArray<Item>> _itemNameToItemsMappings;
+		private readonly ImmutableDictionary<Symbol, Item> _symbolToItemMappings;
+		private readonly ImmutableDictionary<Name, ImmutableArray<Item>> _nameToItemsMappings;
 
 		public Items(ImmutableArray<ItemMap> itemMaps)
 		{
@@ -29,10 +29,10 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			_items = itemMaps.Select(im => new Item(im)).ToImmutableArray();
 			// Set enumerable items
 			_itemsEnumerable = _items;
-			// Create item symbol to item mappings
-			_itemSymbolToItemMappings = _items.ToImmutableDictionary(i => i.Symbol);
-			// Create item name to items mappings
-			_itemNameToItemsMappings = _items
+			// Create symbol to item mappings
+			_symbolToItemMappings = _items.ToImmutableDictionary(i => i.Symbol);
+			// Create name to items mappings
+			_nameToItemsMappings = _items
 				.SelectMany(i => i.Names, (i, n) => new { Item = i, Name = n })
 				.GroupBy(_ => _.Name, _ => _.Item)
 				.ToImmutableDictionary(g => g.Key, g => g.ToImmutableArray());
@@ -46,7 +46,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		public Item Get(Symbol symbol)
 		{
 			// Try to get item
-			if (symbol == null || !_itemSymbolToItemMappings.TryGetValue(symbol, out var item))
+			if (symbol == null || !_symbolToItemMappings.TryGetValue(symbol, out var item))
 			{
 				// Throw error
 				throw new ArgumentException($"No item with symbol ({symbol}) could be found.");
@@ -57,7 +57,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		public Item Get(Name name)
 		{
 			// Try to get items
-			if (name == null || !_itemNameToItemsMappings.TryGetValue(name, out var items))
+			if (name == null || !_nameToItemsMappings.TryGetValue(name, out var items))
 			{
 				// Throw error
 				throw new ArgumentException($"No item with name ({name}) could be found.");
@@ -81,7 +81,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				return false;
 			}
 			// Return if item with symbol exists
-			return _itemSymbolToItemMappings.ContainsKey(symbol);
+			return _symbolToItemMappings.ContainsKey(symbol);
 		}
 		public bool Contains(Name name)
 		{
@@ -92,7 +92,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				return false;
 			}
 			// Return if items with name exist
-			return _itemNameToItemsMappings.ContainsKey(name);
+			return _nameToItemsMappings.ContainsKey(name);
 		}
 	}
 }

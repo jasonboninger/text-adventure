@@ -6,12 +6,12 @@ namespace BoningerWorks.TextAdventure.Json.States
 {
 	public class LineContentState
 	{
-		public ImmutableList<TextState> TextStates { get; }
+		public ImmutableList<TextState> Texts { get; }
 
 		public LineContentState(ImmutableList<TextState> textStates)
 		{
-			// Set text states
-			TextStates = textStates ?? throw GenericException.Create(new StateInvalidError("Texts cannot be null."));
+			// Set texts
+			Texts = textStates ?? throw GenericException.Create(new StateInvalidError("Texts cannot be null."));
 		}
 	}
 }

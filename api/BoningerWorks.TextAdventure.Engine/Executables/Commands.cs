@@ -1,8 +1,7 @@
-﻿using BoningerWorks.TextAdventure.Engine.Exceptions;
-using BoningerWorks.TextAdventure.Engine.Exceptions.Data;
-using BoningerWorks.TextAdventure.Engine.Json.Serializable;
-using BoningerWorks.TextAdventure.Engine.Maps;
-using BoningerWorks.TextAdventure.Engine.Utilities;
+﻿using BoningerWorks.TextAdventure.Core.Exceptions;
+using BoningerWorks.TextAdventure.Core.Utilities;
+using BoningerWorks.TextAdventure.Engine.Errors;
+using BoningerWorks.TextAdventure.Intermediate.Maps;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,36 +17,16 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 
 		private readonly ImmutableArray<Command> _commands;
 		private readonly IEnumerable<Command> _commandsEnumerable;
-		private readonly ImmutableDictionary<Symbol, Command> _commandSymbolToCommandMappings;
-		private readonly ImmutableDictionary<Symbol, CommandHandler> _commandSymbolToCommandHandlerMappings;
+		private readonly ImmutableDictionary<Symbol, Command> _symbolToCommandMappings;
 
-		public Commands(Items items, Dictionary<string, CommandBlueprint> commandTemplates, ImmutableList<CommandMap> commandMaps)
+		public Commands(Items items, ImmutableArray<CommandMap> commandMaps)
 		{
-			// Check if command templates does not exist
-			if (commandTemplates == null)
-			{
-				// Throw error
-				throw new ArgumentException("Command templates cannot be null.", nameof(commandTemplates));
-			}
-			// Create commands
-			var commands = commandTemplates
-				.Select(kv => new Command(new Symbol(kv.Key), items, kv.Value))
-				.OrderBy(c => c.Symbol.ToString())
-				.ToImmutableArray();
-			// Check if not all command symbols are unique
-			if (commands.Select(c => c.Symbol).Distinct().Count() != commands.Length)
-			{
-				// Throw error
-				throw new ArgumentException("Not all command symbols are unique.", nameof(commands));
-			}
 			// Set commands
-			_commands = commands;
+			_commands = commandMaps.Select(cm => new Command(items, cm)).OrderBy(c => c.Symbol.ToString()).ToImmutableArray();
 			// Set enumerable commands
 			_commandsEnumerable = _commands;
-			// Set command symbol to command mappings
-			_commandSymbolToCommandMappings = _commands.ToImmutableDictionary(c => c.Symbol);
-			// Set command symbol to command handler mappings
-			_commandSymbolToCommandHandlerMappings = _CreateSymbolToCommandHandlerMappings(items, _commandSymbolToCommandMappings, commandMaps);
+			// Set symbol to command mappings
+			_symbolToCommandMappings = _commands.ToImmutableDictionary(c => c.Symbol);
 		}
 
 		public IEnumerator<Command> GetEnumerator() => _commandsEnumerable.GetEnumerator();
@@ -56,7 +35,9 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		public Command Get(Symbol symbol)
 		{
 			// Try to get command
-			if (!TryGet(symbol, out var command))
+			var command = TryGet(symbol);
+			// Check if command does not exist
+			if (command == null)
 			{
 				// Throw error
 				throw new ArgumentException($"No command with symbol ({symbol}) could be found.");
@@ -65,23 +46,19 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			return command;
 		}
 
-		public bool TryGet(Symbol symbol, out Command command)
+		public Command? TryGet(Symbol symbol)
 		{
 			// Try to get command
-			if (symbol != null && _commandSymbolToCommandMappings.TryGetValue(symbol, out command))
+			if (symbol != null && _symbolToCommandMappings.TryGetValue(symbol, out var command))
 			{
-				// Return succeeded
-				return true;
+				// Return command
+				return command;
 			}
-			// Set command
-			command = null;
-			// Return failed
-			return false;
+			// Return no command
+			return null;
 		}
 
-		public CommandHandler GetHandler(Command command) => _commandSymbolToCommandHandlerMappings[command.Symbol];
-
-		public bool TryCreateMatch(string input, out CommandMatch commandMatch)
+		public CommandMatch? TryGetMatch(string? input)
 		{
 			// Run through commands
 			for (int i = 0; i < _commands.Length; i++)
@@ -91,57 +68,32 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				try
 				{
 					// Try to match command
-					if (command.TryMatchCommand(input, out var itemSymbolToItemsMappings))
+					var commandItemToItemMappings = command.TryGetMatch(input);
+					// Check if command item to item mappings exists
+					if (commandItemToItemMappings != null)
 					{
-						// Set command match
-						commandMatch = new CommandMatch(command, itemSymbolToItemsMappings);
-						// Return succeeded
-						return true;
+						// Create command match
+						var commandMatch = new CommandMatch(command, commandItemToItemMappings);
+						// Return command match
+						return commandMatch;
 					}
 				}
-				catch (GenericException<AmbiguousItemMatchData> exception)
+				catch (GenericException<AmbiguousItemMatchError> exception)
 				{
-					// Get ambiguous item match data
-					var ambiguousItemMatchData = exception.Data;
+					// Get ambiguous item match error
+					var ambiguousItemMatchError = exception.Error;
+					// Check if ambiguous item match error exists
+					if (ambiguousItemMatchError != null)
+					{
+						// Throw error
+						throw GenericException.Create(new AmbiguousCommandItemMatchError(command, ambiguousItemMatchError), exception);
+					}
 					// Throw error
-					throw GenericException.Create(new AmbiguousCommandItemMatchData(command, ambiguousItemMatchData), exception);
+					throw;
 				}
 			}
-			// Set command match
-			commandMatch = null;
-			// Return failed
-			return false;
-		}
-
-		private static ImmutableDictionary<Symbol, CommandHandler> _CreateSymbolToCommandHandlerMappings
-		(
-			Items items,
-			ImmutableDictionary<Symbol, Command> symbolToCommandMappings,
-			ImmutableList<CommandMap> commandMaps
-		)
-		{
-			// Create command symbol to command handler mappings
-			var commandSymbolToCommandHandlerMappings = commandMaps
-				.GroupBy
-					(
-						cm => cm.CommandSymbol,
-						(cs, cms) =>
-						{
-							// Try to get command
-							if (!symbolToCommandMappings.TryGetValue(cs, out var command))
-							{
-								// Throw error
-								throw new InvalidOperationException($"No command with symbol ({cs}) could be found.");
-							}
-							// Create command handler
-							var commandHandler = new CommandHandler(items, command, cms);
-							// Return command symbol to command handler mapping
-							return KeyValuePair.Create(cs, commandHandler);
-						}
-					)
-				.ToImmutableDictionary();
-			// Return command symbol to command handler mappings
-			return commandSymbolToCommandHandlerMappings;
+			// Return no command match
+			return null;
 		}
 	}
 }

@@ -5,18 +5,18 @@ namespace BoningerWorks.TextAdventure.Json.States
 {
 	public class LineState
 	{
-		public LineContentState? ContentState { get; set; }
-		public LineSpecialState? SpecialState { get; set; }
+		public LineContentState? Content { get; }
+		public LineSpecialState? Special { get; }
 
 		public LineState(LineContentState lineContentState)
 		{
 			// Set content state
-			ContentState = lineContentState ?? throw GenericException.Create(new StateInvalidError("Line content cannot be null."));
+			Content = lineContentState ?? throw GenericException.Create(new StateInvalidError("Line content cannot be null."));
 		}
 		public LineState(LineSpecialState lineSpecialState)
 		{
 			// Set special state
-			SpecialState = lineSpecialState ?? throw GenericException.Create(new StateInvalidError("Special line cannot be null."));
+			Special = lineSpecialState ?? throw GenericException.Create(new StateInvalidError("Special line cannot be null."));
 		}
 	}
 }

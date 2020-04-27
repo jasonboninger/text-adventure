@@ -1,4 +1,4 @@
-﻿using BoningerWorks.TextAdventure.Engine.Utilities;
+﻿using BoningerWorks.TextAdventure.Core.Utilities;
 using System.Collections.Immutable;
 
 namespace BoningerWorks.TextAdventure.Engine.Executables
@@ -6,14 +6,14 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 	public class CommandMatch
 	{
 		public Command Command { get; }
-		public ImmutableDictionary<Symbol, Item> ItemSymbolToItemMappings { get; }
+		public ImmutableDictionary<Symbol, Item> CommandItemToItemMappings { get; }
 
-		public CommandMatch(Command command, ImmutableDictionary<Symbol, Item> itemSymbolToItemMappings)
+		public CommandMatch(Command command, ImmutableDictionary<Symbol, Item> commandItemToItemMappings)
 		{
 			// Set command
 			Command = command;
-			// Set item symbol to item mappings
-			ItemSymbolToItemMappings = itemSymbolToItemMappings;
+			// Set command item to item mappings
+			CommandItemToItemMappings = commandItemToItemMappings;
 		}
 	}
 }

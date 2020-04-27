@@ -1,6 +1,8 @@
-﻿using BoningerWorks.TextAdventure.Engine.Maps;
-using BoningerWorks.TextAdventure.Engine.States;
-using BoningerWorks.TextAdventure.Engine.Utilities;
+﻿using BoningerWorks.TextAdventure.Core.Utilities;
+using BoningerWorks.TextAdventure.Engine.Interfaces;
+using BoningerWorks.TextAdventure.Intermediate.Errors;
+using BoningerWorks.TextAdventure.Intermediate.Maps;
+using BoningerWorks.TextAdventure.Json.States;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -11,186 +13,117 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 	public class Action
 	{
 		public Command Command { get; }
-		public ImmutableDictionary<Symbol, Item> CommandItemSymbolToItemMappings { get; }
+		public ImmutableDictionary<Symbol, Item> CommandItemToItemMappings { get; }
 
-		private readonly ImmutableArray<Func<GameState, List<MessageState>>> _executes;
+		private readonly ImmutableArray<IAction<MessageState>> _actionsMessage;
 
-		public Action(Items items, Command command, CommandMap commandMap)
+		public Action(Items items, Command command, ReactionMap reactionMap)
 		{
-			// Check if command does not match command map
-			if (command.Symbol != commandMap.CommandSymbol)
+			// Check if command does not match reaction map command
+			if (command.Symbol != reactionMap.CommandSymbol)
 			{
 				// Throw error
-				throw new ArgumentException($"Command ({command}) does not match command ({commandMap.CommandSymbol}) of command map.");
+				throw new ArgumentException($"Command ({command}) does not match command ({reactionMap.CommandSymbol}) of reaction map.");
 			}
 			// Set command
 			Command = command;
-			// Check if command map has no command item symbol to item symbol mappings
-			if (commandMap.CommandItemSymbolToItemSymbolMappings.Count == 0)
+			// Check if reaction map has no command item symbol to item symbol mappings
+			if (reactionMap.CommandItemSymbolToItemSymbolMappings.Count == 0)
 			{
 				// Check if command has more than one item symbol
-				if (Command.ItemSymbols.Length > 1)
+				if (Command.CommandItems.Length > 1)
 				{
 					// Throw error
-					throw new ArgumentException($"Command map for command ({Command}) is not valid.", nameof(commandMap));
+					throw new ValidationError($"Reaction map for command ({Command}) is not valid.");
 				}
 			}
 			else
 			{
 				// Check if command map does not have an item symbol for each command item symbol
-				if (command.ItemSymbols.Any(cis => !commandMap.CommandItemSymbolToItemSymbolMappings.ContainsKey(cis)))
+				if (command.CommandItems.Any(ci => !reactionMap.CommandItemSymbolToItemSymbolMappings.ContainsKey(ci)))
 				{
 					// Throw error
-					throw new ArgumentException($"Command map for command ({Command}) is not valid.", nameof(commandMap));
+					throw new ValidationError($"Reaction map for command ({Command}) is not valid.");
 				}
 			}
 			// Set command item symbol to item symbol mappings
-			CommandItemSymbolToItemMappings = Command.ItemSymbols
+			CommandItemToItemMappings = Command.CommandItems
 				.Select
 					(cis =>
 					{
 						// Try to get item symbol for command item symbol
-						if (!commandMap.CommandItemSymbolToItemSymbolMappings.TryGetValue(cis, out var itemSymbol))
+						if (!reactionMap.CommandItemSymbolToItemSymbolMappings.TryGetValue(cis, out var itemSymbol))
 						{
 							// Set item symbol to default item symbol
-							itemSymbol = commandMap.ItemSymbolDefault;
+							itemSymbol = reactionMap.ItemSymbolDefault 
+								?? throw new ValidationError($"Reaction map for command ({Command}) is not valid.");
 						}
 						// Check if item symbol does not exist
 						if (itemSymbol == null)
 						{
-							// Create message
-							var message = $"No mapping could be found in command map for command item symbol ({cis}) of command ({Command}).";
 							// Throw error
-							throw new InvalidOperationException(message);
+							throw new ValidationError($"No mapping could be found in command map for command item ({cis}) of command ({Command}).");
 						}
 						// Check if item does not exist
 						if (!items.Contains(itemSymbol))
 						{
 							// Throw error
-							throw new InvalidOperationException($"No item with symbol ({itemSymbol}) could be found.");
+							throw new ValidationError($"No item with symbol ({itemSymbol}) could be found.");
 						}
-						// Return command item symbol to item mapping
+						// Return command item to item mapping
 						return KeyValuePair.Create(cis, items.Get(itemSymbol));
 					})
 				.ToImmutableDictionary();
-			// Set executes
-			_executes = commandMap.ActionMaps.Select(_CreateExecute).ToImmutableArray();
-		}
-
-		public List<MessageState> Execute(GameState gameState)
-		{
-			// Create messages
-			var messages = new List<MessageState>();
-			// Run through executes
-			for (int i = 0; i < _executes.Length; i++)
-			{
-				// Execute execute
-				messages.AddRange(_executes[i](gameState));
-			}
-			// Return messages
-			return messages;
-		}
-
-		private Func<GameState, List<MessageState>> _CreateExecute(ActionMap actionMap)
-		{
-			// Check action type
-			switch (actionMap.Type)
-			{
-				case EActionMapType.If: throw new NotImplementedException();
-				case EActionMapType.Messages:
-					// Create message executes
-					var executesMessage = actionMap.MessageMaps.Select(_CreateExecuteMessage).ToImmutableArray();
-					// Return execute
-					return gameState =>
+			// Set message actions
+			_actionsMessage = reactionMap.ActionMaps
+				.SelectMany
+					(am =>
 					{
-						// Create messages
-						var messages = new List<MessageState>();
-						// Run through message executes
-						for (int i = 0; i < executesMessage.Length; i++)
+						// Check if if map exists
+						if (am.IfMap != null)
 						{
-							// Add message
-							messages.Add(executesMessage[i](gameState));
+
+							return Enumerable.Empty<IAction<MessageState>>();
+
 						}
-						// Return messages
-						return messages;
-					};
-				case EActionMapType.Changes: throw new NotImplementedException();
-				case EActionMapType.Triggers: throw new NotImplementedException();
-				default: throw new ArgumentException($"Action map type ({actionMap.Type}) could not be handled.");
+						// Check if message maps exist
+						if (am.MessageMaps.HasValue)
+						{
+							// Return message actions
+							return am.MessageMaps.Value.Select(mm => new ActionMessage(mm));
+						}
+						// Check if change maps exist
+						if (am.ChangeMaps.HasValue)
+						{
+
+							return Enumerable.Empty<IAction<MessageState>>();
+
+						}
+						// Check if trigger maps exist
+						if (am.TriggerMaps.HasValue)
+						{
+
+							return Enumerable.Empty<IAction<MessageState>>();
+
+						}
+						// Throw error
+						throw new InvalidOperationException("Action map could not be parsed.");
+					})
+				.ToImmutableArray();
+		}
+
+		public ImmutableList<MessageState> Execute(GameState gameState)
+		{
+			// Create message states
+			var messageStates = ImmutableList.CreateBuilder<MessageState>();
+			// Run through message actions
+			for (int i = 0; i < _actionsMessage.Length; i++)
+			{
+				// Add message states
+				messageStates.AddRange(_actionsMessage[i].Execute(gameState));
 			}
-		}
-
-		private Func<GameState, MessageState> _CreateExecuteMessage(MessageMap messageMap)
-		{
-			// Create line executes
-			var executesLine = messageMap.LineMaps.Select(_CreateExecuteLine).ToImmutableArray();
-			// Return execute
-			return gameState =>
-			{
-				// Create lines
-				var lines = new List<LineState>();
-				// Run through line executes
-				for (int i = 0; i < executesLine.Length; i++)
-				{
-					// Add line
-					lines.Add(executesLine[i](gameState));
-				}
-				// Return message
-				return MessageState.Create(lines);
-			};
-		}
-
-		private Func<GameState, LineState> _CreateExecuteLine(LineMap lineMap)
-		{
-			// Check line type
-			switch (lineMap.Type)
-			{
-				case ELineMapType.Inlined:
-					// Create content line execute
-					var executeLineContent = _CreateExecuteLineContent(lineMap.Inlined);
-					// Return execute
-					return gameState =>
-					{
-						// Return content line
-						return LineState.CreateContent(executeLineContent(gameState));
-					};
-				case ELineMapType.Special:
-					// Create special line execute
-					var executeLineSpecial = _CreateExecuteLineSpecial(lineMap.Special);
-					// Return execute
-					return gameState =>
-					{
-						// Return special line
-						return LineState.CreateSpecial(executeLineSpecial(gameState));
-					};
-				default: throw new ArgumentException($"Line map type ({lineMap.Type}) could not be handled.");
-			}
-		}
-
-		private Func<GameState, LineContentState> _CreateExecuteLineContent(LineInlinedMap lineInlinedMap)
-		{
-			// Check if text does not exist
-			if (string.IsNullOrWhiteSpace(lineInlinedMap.Text))
-			{
-				// Throw error
-				throw new ArgumentException("Line text cannot be null, empty, or whitespace.", nameof(lineInlinedMap));
-			}
-			// Return execute
-			return gameState =>
-			{
-				// Return content
-				return LineContentState.Create(lineInlinedMap.Text);
-			};
-		}
-
-		private Func<GameState, LineSpecialState> _CreateExecuteLineSpecial(LineSpecialMap lineSpecialMap)
-		{
-			// Return execute
-			return gameState =>
-			{
-				// Return special
-				return LineSpecialState.Create(lineSpecialMap.Type);
-			};
+			// Return message states
+			return messageStates.ToImmutable();
 		}
 	}
 }

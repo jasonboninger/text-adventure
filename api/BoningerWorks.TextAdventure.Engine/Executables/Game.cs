@@ -1,94 +1,128 @@
-﻿using BoningerWorks.TextAdventure.Intermediate.Maps;
-using System;
+﻿using BoningerWorks.TextAdventure.Core.Exceptions;
+using BoningerWorks.TextAdventure.Core.Utilities;
+using BoningerWorks.TextAdventure.Engine.Errors;
+using BoningerWorks.TextAdventure.Intermediate.Errors;
+using BoningerWorks.TextAdventure.Intermediate.Maps;
+using BoningerWorks.TextAdventure.Json.States;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 
 namespace BoningerWorks.TextAdventure.Engine.Executables
 {
 	public class Game
 	{
+		public static Symbol ValueTrue { get; } = new Symbol("TRUE");
+		public static Symbol ValueFalse { get; } = new Symbol("FALSE");
+
 		public static Game Deserialize(string json) => new Game(GameMap.Deserialize(json));
 
+		public Player Player { get; }
 		public Items Items { get; }
 		public Commands Commands { get; }
+		public Reactions Reactions { get; }
 
 		private Game(GameMap gameMap)
 		{
+			// Check if game map does not exist
+			if (gameMap == null)
+			{
+				// Throw error
+				throw new ValidationError("Game map cannot be null.");
+			}
+			// Set player
+			Player = new Player(gameMap.PlayerMap);
 			// Set items
 			Items = new Items(gameMap.ItemMaps);
 			// Set commands
-			Commands = _CreateCommands(Items, gameMap.CommandMaps);
+			Commands = new Commands(Items, gameMap.CommandMaps);
+			// Set reactions
+			Reactions = new Reactions(Items, Commands, gameMap.ReactionMaps);
 		}
 
 		public GameState New()
 		{
-			// Create game state
-			var gameState = GameState.Create();
-			// Add global state
-			gameState.EntityStates.Add(Symbol.Global, EntityState.CreateGlobal());
+			// Create entity states
+			var entityStates = ImmutableDictionary.CreateBuilder<Symbol, EntityState>();
 			// Add player state
-			gameState.EntityStates.Add(Symbol.Player, EntityState.CreatePlayer());
+			entityStates.Add(Player.Symbol, new EntityState(data: null, customData: null));
 			// Run through items
 			for (int i = 0; i < Items.Count; i++)
 			{
 				var item = Items[i];
-				// Create item data
-				var itemData = ItemData.Create(item.Location, item.Active);
-				// Create item state
-				var itemState = EntityState.CreateItem(itemData);
 				// Add item state
-				gameState.EntityStates.Add(item.Symbol, itemState);
+				entityStates.Add
+					(
+						item.Symbol, 
+						new EntityState
+							(
+								data: ImmutableDictionary.CreateRange(new KeyValuePair<Symbol, Symbol>[] 
+								{
+									KeyValuePair.Create(Item.DataActive, item.Active != false ? ValueTrue : ValueFalse),
+									KeyValuePair.Create(Item.DataLocation, item.Location)
+								}),
+								customData: null
+							)
+					);
 			}
+			// Create game state
+			var gameState = new GameState(entityStates.ToImmutable());
 			// Return game state
 			return gameState;
 		}
 
-		public List<MessageState> Execute(GameState state, string input)
+		public ImmutableList<MessageState> Execute(GameState gameState, string? input)
 		{
-			// Create messages
-			var messages = new List<MessageState>();
-			// Try to create command match
+			// Create message states
+			var messageStates = ImmutableList.CreateBuilder<MessageState>();
+			// Try to get command match
 			try
 			{
-				// Try to create command match
-				if (Commands.TryCreateMatch(input, out var commandMatch))
+				// Try to get command match
+				var commandMatch = Commands.TryGetMatch(input);
+				// Check if command match exists
+				if (commandMatch != null)
 				{
 					// Get command
 					var command = commandMatch.Command;
-					// Get command handler
-					var commandHandler = Commands.GetHandler(command);
-					// Run through command item symbols
-					for (int i = 0; i < command.ItemSymbols.Length; i++)
+					// Try to get reaction
+					var reaction = Reactions.TryGet(command);
+					// Check if reaction exists
+					if (reaction != null)
 					{
-						var commandItemSymbol = command.ItemSymbols[i];
-						// Get item
-						var item = commandMatch.ItemSymbolToItemMappings[command.ItemSymbols[i]];
-						// Try to get next command handler
-						if (!commandHandler.Next.TryGetValue(item.Symbol, out var commandHandlerNext))
+						// Run through command items
+						for (int i = 0; i < command.CommandItems.Length; i++)
 						{
-							// Set no command handler
-							commandHandler = null;
-							// Stop loop
-							break;
+							var commandItem = command.CommandItems[i];
+							// Get item
+							var item = commandMatch.CommandItemToItemMappings[commandItem];
+							// Try to get next reaction
+							if (reaction.Next == null || !reaction.Next.TryGetValue(item.Symbol, out var reactionNext))
+							{
+								// Set no reaction
+								reaction = null;
+								// Stop loop
+								break;
+							}
+							// Set reaction
+							reaction = reactionNext;
 						}
-						// Set command handler
-						commandHandler = commandHandlerNext;
-					}
-					// Check if command handler exists
-					if (commandHandler != null)
-					{
-						// Run through actions
-						for (int i = 0; i < commandHandler.Actions.Length; i++)
+						// Check if reaction exists and actions exist
+						if (reaction != null && reaction.Actions.HasValue)
 						{
-							var action = commandHandler.Actions[i];
-							// Execute action
-							messages.AddRange(action.Execute(state));
+							// Get actions
+							var actions = reaction.Actions.Value;
+							// Run through actions
+							for (int i = 0; i < actions.Length; i++)
+							{
+								var action = actions[i];
+								// Execute action
+								messageStates.AddRange(action.Execute(gameState));
+							}
 						}
 					}
 				}
 			}
-			catch (GenericException<AmbiguousCommandItemMatchData> exception)
+			catch (GenericException<AmbiguousCommandItemMatchError> exception)
 			{
 
 
@@ -101,24 +135,8 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 
 
 			}
-			// Return messages
-			return messages;
-		}
-
-		private static Commands _CreateCommands(Items items, Dictionary<string, CommandBlueprint> commandBlueprints)
-		{
-			// Check if command blueprints does not exist
-			if (commandBlueprints == null)
-			{
-				// Throw error
-				throw new ArgumentException("Command blueprints cannot be null.", nameof(commandBlueprints));
-			}
-			// Create command maps
-			var commandMaps = Enumerable.Empty<CommandMap>()
-				.Concat(items.SelectMany(i => i.CommandMaps))
-				.ToImmutableList();
-			// Return commands
-			return new Commands(items, commandBlueprints, commandMaps);
+			// Return message states
+			return messageStates.ToImmutable();
 		}
 	}
 }

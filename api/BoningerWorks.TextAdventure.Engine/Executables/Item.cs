@@ -5,6 +5,9 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 {
 	public class Item
 	{
+		public static Symbol DataActive { get; }  = new Symbol("ACTIVE");
+		public static Symbol DataLocation { get; } = new Symbol("LOCATION");
+
 		public Symbol Symbol { get; }
 		public Symbol Location { get; }
 		public Names Names { get; }
