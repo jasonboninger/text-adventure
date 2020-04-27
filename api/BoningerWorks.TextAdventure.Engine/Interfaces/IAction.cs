@@ -1,4 +1,4 @@
-﻿using BoningerWorks.TextAdventure.Json.States;
+﻿using BoningerWorks.TextAdventure.Json.Outputs;
 using System.Collections.Generic;
 
 namespace BoningerWorks.TextAdventure.Engine.Interfaces
@@ -6,6 +6,6 @@ namespace BoningerWorks.TextAdventure.Engine.Interfaces
 	public interface IAction<out TValue>
 	where TValue : class
 	{
-		IEnumerable<TValue> Execute(GameState gameState);
+		IEnumerable<TValue> Execute(State gameState);
 	}
 }

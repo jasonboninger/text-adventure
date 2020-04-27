@@ -1,4 +1,4 @@
-﻿namespace BoningerWorks.TextAdventure.Json.States.Enums
+﻿namespace BoningerWorks.TextAdventure.Json.Outputs.Enums
 {
 	public enum ELineSpecialType
 	{

@@ -3,7 +3,7 @@ using BoningerWorks.TextAdventure.Core.Utilities;
 using BoningerWorks.TextAdventure.Engine.Errors;
 using BoningerWorks.TextAdventure.Intermediate.Errors;
 using BoningerWorks.TextAdventure.Intermediate.Maps;
-using BoningerWorks.TextAdventure.Json.States;
+using BoningerWorks.TextAdventure.Json.Outputs;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 
@@ -42,17 +42,17 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			Reactions = new Reactions(Player, Areas, Items, Commands, gameMap.ReactionMaps);
 		}
 
-		public GameState New()
+		public State New()
 		{
 			// Create entity states
-			var entityStates = ImmutableDictionary.CreateBuilder<Symbol, EntityState>();
+			var entityStates = ImmutableDictionary.CreateBuilder<Symbol, Entity>();
 			// Add player state
-			entityStates.Add(Player.Symbol, new EntityState(data: null, customData: null));
+			entityStates.Add(Player.Symbol, new Entity(data: null, customData: null));
 			// Run through areas
 			foreach (var area in Areas)
 			{
 				// Add area state
-				entityStates.Add(area, new EntityState(data: null, customData: null));
+				entityStates.Add(area, new Entity(data: null, customData: null));
 			}
 			// Run through items
 			foreach (var item in Items)
@@ -61,7 +61,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				entityStates.Add
 					(
 						item.Symbol, 
-						new EntityState
+						new Entity
 							(
 								data: ImmutableDictionary.CreateRange(new KeyValuePair<Symbol, Symbol>[] 
 								{
@@ -73,15 +73,15 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 					);
 			}
 			// Create game state
-			var gameState = new GameState(entityStates.ToImmutable());
+			var gameState = new State(entityStates.ToImmutable());
 			// Return game state
 			return gameState;
 		}
 
-		public ImmutableList<MessageState> Execute(GameState gameState, string? input)
+		public ImmutableList<Message> Execute(State gameState, string? input)
 		{
 			// Create message states
-			var messageStates = ImmutableList.CreateBuilder<MessageState>();
+			var messageStates = ImmutableList.CreateBuilder<Message>();
 			// Try to get command match
 			try
 			{

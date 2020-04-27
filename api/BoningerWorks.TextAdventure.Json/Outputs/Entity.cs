@@ -2,14 +2,14 @@
 using System;
 using System.Collections.Immutable;
 
-namespace BoningerWorks.TextAdventure.Json.States
+namespace BoningerWorks.TextAdventure.Json.Outputs
 {
-	public class EntityState
+	public class Entity
 	{
 		public ImmutableDictionary<Symbol, Symbol> Data { get; }
 		public ImmutableDictionary<Symbol, string> CustomData { get; }
 
-		public EntityState(ImmutableDictionary<Symbol, Symbol>? data, ImmutableDictionary<Symbol, string>? customData)
+		public Entity(ImmutableDictionary<Symbol, Symbol>? data, ImmutableDictionary<Symbol, string>? customData)
 		{
 			// Set data
 			Data = data ?? ImmutableDictionary<Symbol, Symbol>.Empty;
@@ -17,7 +17,7 @@ namespace BoningerWorks.TextAdventure.Json.States
 			CustomData = customData ?? ImmutableDictionary<Symbol, string>.Empty;
 		}
 
-		public EntityState UpdateData(Symbol symbol, Symbol value)
+		public Entity UpdateData(Symbol symbol, Symbol value)
 		{
 			// Check if data does not exist
 			if (!Data.ContainsKey(symbol))
@@ -28,17 +28,17 @@ namespace BoningerWorks.TextAdventure.Json.States
 			// Set data
 			var data = Data.SetItem(symbol, value);
 			// Create entity state
-			var entityState = new EntityState(data, CustomData);
+			var entityState = new Entity(data, CustomData);
 			// Return entity state
 			return entityState;
 		}
 
-		public EntityState UpdateCustomData(Symbol symbol, string value)
+		public Entity UpdateCustomData(Symbol symbol, string value)
 		{
 			// Set custom data
 			var customData = CustomData.SetItem(symbol, value);
 			// Create entity state
-			var entityState = new EntityState(Data, customData);
+			var entityState = new Entity(Data, customData);
 			// Return entity state
 			return entityState;
 		}

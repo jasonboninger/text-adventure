@@ -1,5 +1,5 @@
 ﻿using BoningerWorks.TextAdventure.Engine.Executables;
-using BoningerWorks.TextAdventure.Json.States.Enums;
+using BoningerWorks.TextAdventure.Json.Outputs.Enums;
 using System;
 
 namespace BoningerWorks.TextAdventure.Cli

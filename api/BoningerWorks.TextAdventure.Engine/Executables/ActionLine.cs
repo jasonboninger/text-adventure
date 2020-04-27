@@ -1,14 +1,14 @@
 ﻿using BoningerWorks.TextAdventure.Engine.Interfaces;
 using BoningerWorks.TextAdventure.Intermediate.Maps;
-using BoningerWorks.TextAdventure.Json.States;
+using BoningerWorks.TextAdventure.Json.Outputs;
 using System;
 using System.Collections.Generic;
 
 namespace BoningerWorks.TextAdventure.Engine.Executables
 {
-	public class ActionLine : IAction<LineState>
+	public class ActionLine : IAction<Line>
 	{
-		private readonly IAction<LineState> _actionLine;
+		private readonly IAction<Line> _actionLine;
 
 		public ActionLine(LineMap lineMap)
 		{
@@ -44,6 +44,6 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			throw new InvalidOperationException("Line map could not be parsed.");
 		}
 
-		public IEnumerable<LineState> Execute(GameState gameState) => _actionLine.Execute(gameState);
+		public IEnumerable<Line> Execute(State gameState) => _actionLine.Execute(gameState);
 	}
 }

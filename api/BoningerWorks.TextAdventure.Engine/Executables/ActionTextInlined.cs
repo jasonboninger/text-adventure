@@ -1,21 +1,21 @@
 ﻿using BoningerWorks.TextAdventure.Engine.Interfaces;
 using BoningerWorks.TextAdventure.Intermediate.Maps;
-using BoningerWorks.TextAdventure.Json.States;
+using BoningerWorks.TextAdventure.Json.Outputs;
 using System.Collections.Generic;
 
 namespace BoningerWorks.TextAdventure.Engine.Executables
 {
-	public class ActionTextInlined : IAction<TextState>
+	public class ActionTextInlined : IAction<Text>
 	{
-		private readonly TextState _textState;
+		private readonly Text _textState;
 
 		public ActionTextInlined(TextInlinedMap textInlinedMap)
 		{
 			// Set text state
-			_textState = new TextState(textInlinedMap.Value);
+			_textState = new Text(textInlinedMap.Value);
 		}
 
-		public IEnumerable<TextState> Execute(GameState gameState)
+		public IEnumerable<Text> Execute(State gameState)
 		{
 			// Return text state
 			yield return _textState;

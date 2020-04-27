@@ -2,7 +2,7 @@
 using BoningerWorks.TextAdventure.Engine.Interfaces;
 using BoningerWorks.TextAdventure.Intermediate.Errors;
 using BoningerWorks.TextAdventure.Intermediate.Maps;
-using BoningerWorks.TextAdventure.Json.States;
+using BoningerWorks.TextAdventure.Json.Outputs;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -15,7 +15,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		public Command Command { get; }
 		public ImmutableDictionary<Symbol, Item> CommandItemToItemMappings { get; }
 
-		private readonly ImmutableArray<IAction<MessageState>> _actionsMessage;
+		private readonly ImmutableArray<IAction<Message>> _actionsMessage;
 
 		public Action(Player player, Areas areas, Items items, Command command, ReactionMap reactionMap)
 		{
@@ -83,7 +83,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 						if (am.IfMap != null)
 						{
 
-							return Enumerable.Empty<IAction<MessageState>>();
+							return Enumerable.Empty<IAction<Message>>();
 
 						}
 						// Check if message maps exist
@@ -102,7 +102,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 						if (am.TriggerMaps.HasValue)
 						{
 
-							return Enumerable.Empty<IAction<MessageState>>();
+							return Enumerable.Empty<IAction<Message>>();
 
 						}
 						// Throw error
@@ -111,7 +111,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				.ToImmutableArray();
 		}
 
-		public ImmutableList<MessageState> Execute(GameState gameState)
+		public ImmutableList<Message> Execute(State gameState)
 		{
 			// Create message states
 			var messageStates = _actionsMessage.SelectMany(am => am.Execute(gameState)).ToImmutableList();

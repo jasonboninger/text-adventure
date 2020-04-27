@@ -2,19 +2,19 @@
 using System;
 using System.Collections.Immutable;
 
-namespace BoningerWorks.TextAdventure.Json.States
+namespace BoningerWorks.TextAdventure.Json.Outputs
 {
-	public class GameState
+	public class State
 	{
-		public ImmutableDictionary<Symbol, EntityState> EntityStates { get; }
+		public ImmutableDictionary<Symbol, Entity> EntityStates { get; }
 
-		public GameState(ImmutableDictionary<Symbol, EntityState> entityStates)
+		public State(ImmutableDictionary<Symbol, Entity> entityStates)
 		{
 			// Set entity states
-			EntityStates = entityStates ?? ImmutableDictionary<Symbol, EntityState>.Empty;
+			EntityStates = entityStates ?? ImmutableDictionary<Symbol, Entity>.Empty;
 		}
 
-		public GameState UpdateEntityState(Symbol entitySymbol, EntityState entityState)
+		public State UpdateEntityState(Symbol entitySymbol, Entity entityState)
 		{
 			// Check if entity state does not exist
 			if (!EntityStates.ContainsKey(entitySymbol))
@@ -25,7 +25,7 @@ namespace BoningerWorks.TextAdventure.Json.States
 			// Set entity state
 			var entitySymbolToEntityStateMappings = EntityStates.SetItem(entitySymbol, entityState);
 			// Create game state
-			var gameState = new GameState(entitySymbolToEntityStateMappings);
+			var gameState = new State(entitySymbolToEntityStateMappings);
 			// Return game state
 			return gameState;
 		}

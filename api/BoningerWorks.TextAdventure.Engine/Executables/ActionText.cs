@@ -1,14 +1,14 @@
 ﻿using BoningerWorks.TextAdventure.Engine.Interfaces;
 using BoningerWorks.TextAdventure.Intermediate.Maps;
-using BoningerWorks.TextAdventure.Json.States;
+using BoningerWorks.TextAdventure.Json.Outputs;
 using System;
 using System.Collections.Generic;
 
 namespace BoningerWorks.TextAdventure.Engine.Executables
 {
-	public class ActionText : IAction<TextState>
+	public class ActionText : IAction<Text>
 	{
-		private readonly IAction<TextState> _actionText;
+		private readonly IAction<Text> _actionText;
 
 		public ActionText(TextMap textMap)
 		{
@@ -36,6 +36,6 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			throw new InvalidOperationException("Text map could not be parsed.");
 		}
 
-		public IEnumerable<TextState> Execute(GameState gameState) => _actionText.Execute(gameState);
+		public IEnumerable<Text> Execute(State gameState) => _actionText.Execute(gameState);
 	}
 }

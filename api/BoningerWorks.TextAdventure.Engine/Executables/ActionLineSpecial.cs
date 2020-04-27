@@ -1,18 +1,18 @@
 ﻿using BoningerWorks.TextAdventure.Engine.Interfaces;
 using BoningerWorks.TextAdventure.Intermediate.Errors;
 using BoningerWorks.TextAdventure.Intermediate.Maps;
-using BoningerWorks.TextAdventure.Json.States;
-using BoningerWorks.TextAdventure.Json.States.Enums;
+using BoningerWorks.TextAdventure.Json.Outputs;
+using BoningerWorks.TextAdventure.Json.Outputs.Enums;
 using System.Collections.Generic;
 
 namespace BoningerWorks.TextAdventure.Engine.Executables
 {
-	public class ActionLineSpecial : IAction<LineState>
+	public class ActionLineSpecial : IAction<Line>
 	{
-		private static readonly LineState _lineStateBlank = new LineState(new LineSpecialState(ELineSpecialType.Blank));
-		private static readonly LineState _lineStateHorizontalRule = new LineState(new LineSpecialState(ELineSpecialType.HorizontalRule));
+		private static readonly Line _lineStateBlank = new Line(new LineSpecial(ELineSpecialType.Blank));
+		private static readonly Line _lineStateHorizontalRule = new Line(new LineSpecial(ELineSpecialType.HorizontalRule));
 
-		private readonly LineState _lineState;
+		private readonly Line _lineState;
 
 		public ActionLineSpecial(LineSpecialMap lineSpecialMap)
 		{
@@ -25,7 +25,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			};
 		}
 
-		public IEnumerable<LineState> Execute(GameState gameState)
+		public IEnumerable<Line> Execute(State gameState)
 		{
 			// Return line state
 			yield return _lineState;

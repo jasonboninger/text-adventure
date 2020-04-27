@@ -1,11 +1,11 @@
 ﻿using BoningerWorks.TextAdventure.Engine.Interfaces;
 using BoningerWorks.TextAdventure.Intermediate.Maps;
-using BoningerWorks.TextAdventure.Json.States;
+using BoningerWorks.TextAdventure.Json.Outputs;
 using System.Collections.Generic;
 
 namespace BoningerWorks.TextAdventure.Engine.Executables
 {
-	public class ActionChange : IAction<MessageState>
+	public class ActionChange : IAction<Message>
 	{
 
 
@@ -14,7 +14,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 
 		}
 
-		public IEnumerable<MessageState> Execute(GameState gameState)
+		public IEnumerable<Message> Execute(State gameState)
 		{
 
 
