@@ -55,9 +55,8 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 					// Create command item to item mappings builder
 					var commandItemToItemMappingsBuilder = ImmutableDictionary.CreateBuilder<Symbol, Item>();
 					// Run through command items
-					for (int i = 0; i < CommandItems.Length; i++)
+					foreach (var commandItem in CommandItems)
 					{
-						var commandItem = CommandItems[i];
 						// Get command item group
 						var commandItemGroup = commandItem.ToString();
 						// Get group

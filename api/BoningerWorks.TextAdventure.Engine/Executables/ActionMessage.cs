@@ -20,15 +20,9 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		public IEnumerable<MessageState> Execute(GameState gameState)
 		{
 			// Create line states
-			var lineStates = ImmutableList.CreateBuilder<LineState>();
-			// Run through line actions
-			for (int i = 0; i < _actionsLine.Length; i++)
-			{
-				// Add line states
-				lineStates.AddRange(_actionsLine[i].Execute(gameState));
-			}
+			var lineStates = _actionsLine.SelectMany(al => al.Execute(gameState)).ToImmutableList();
 			// Create message state
-			var messageState = new MessageState(lineStates.ToImmutable());
+			var messageState = new MessageState(lineStates);
 			// Return message state
 			yield return messageState;
 		}

@@ -61,9 +61,8 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		public CommandMatch? TryGetMatch(string? input)
 		{
 			// Run through commands
-			for (int i = 0; i < _commands.Length; i++)
+			foreach (var command in _commands)
 			{
-				var command = _commands[i];
 				// Try to match command
 				try
 				{

@@ -13,7 +13,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		public ImmutableDictionary<Symbol, Reaction>? Next { get; }
 		public ImmutableArray<Action>? Actions { get; }
 
-		public Reaction(Items items, Command command, ImmutableList<ReactionMap> reactionMaps) 
+		public Reaction(Player player, Areas areas, Items items, Command command, ImmutableList<ReactionMap> reactionMaps) 
 		: this
 		(
 			command,
@@ -28,7 +28,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 							throw new ArgumentException($"Command ({command}) does not match command ({rm.CommandSymbol}) of reaction map.");
 						}
 						// Create action
-						var action = new Action(items, command, rm);
+						var action = new Action(player, areas, items, command, rm);
 						// Return action
 						return action;
 					})

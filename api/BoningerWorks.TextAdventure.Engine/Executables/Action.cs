@@ -17,7 +17,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 
 		private readonly ImmutableArray<IAction<MessageState>> _actionsMessage;
 
-		public Action(Items items, Command command, ReactionMap reactionMap)
+		public Action(Player player, Areas areas, Items items, Command command, ReactionMap reactionMap)
 		{
 			// Check if command does not match reaction map command
 			if (command.Symbol != reactionMap.CommandSymbol)
@@ -95,9 +95,8 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 						// Check if change maps exist
 						if (am.ChangeMaps.HasValue)
 						{
-
-							return Enumerable.Empty<IAction<MessageState>>();
-
+							// Return change actions
+							return am.ChangeMaps.Value.Select(cm => new ActionChange(player, areas, items, cm));
 						}
 						// Check if trigger maps exist
 						if (am.TriggerMaps.HasValue)
@@ -115,15 +114,9 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		public ImmutableList<MessageState> Execute(GameState gameState)
 		{
 			// Create message states
-			var messageStates = ImmutableList.CreateBuilder<MessageState>();
-			// Run through message actions
-			for (int i = 0; i < _actionsMessage.Length; i++)
-			{
-				// Add message states
-				messageStates.AddRange(_actionsMessage[i].Execute(gameState));
-			}
+			var messageStates = _actionsMessage.SelectMany(am => am.Execute(gameState)).ToImmutableList();
 			// Return message states
-			return messageStates.ToImmutable();
+			return messageStates;
 		}
 	}
 }

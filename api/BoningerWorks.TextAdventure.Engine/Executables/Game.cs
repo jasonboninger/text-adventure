@@ -39,7 +39,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			// Set commands
 			Commands = new Commands(Items, gameMap.CommandMaps);
 			// Set reactions
-			Reactions = new Reactions(Items, Commands, gameMap.ReactionMaps);
+			Reactions = new Reactions(Player, Areas, Items, Commands, gameMap.ReactionMaps);
 		}
 
 		public GameState New()
@@ -48,10 +48,15 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			var entityStates = ImmutableDictionary.CreateBuilder<Symbol, EntityState>();
 			// Add player state
 			entityStates.Add(Player.Symbol, new EntityState(data: null, customData: null));
-			// Run through items
-			for (int i = 0; i < Items.Count; i++)
+			// Run through areas
+			foreach (var area in Areas)
 			{
-				var item = Items[i];
+				// Add area state
+				entityStates.Add(area, new EntityState(data: null, customData: null));
+			}
+			// Run through items
+			foreach (var item in Items)
+			{
 				// Add item state
 				entityStates.Add
 					(
@@ -93,9 +98,8 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 					if (reaction != null)
 					{
 						// Run through command items
-						for (int i = 0; i < command.CommandItems.Length; i++)
+						foreach (var commandItem in command.CommandItems)
 						{
-							var commandItem = command.CommandItems[i];
 							// Get item
 							var item = commandMatch.CommandItemToItemMappings[commandItem];
 							// Try to get next reaction
@@ -112,12 +116,9 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 						// Check if reaction exists and actions exist
 						if (reaction != null && reaction.Actions.HasValue)
 						{
-							// Get actions
-							var actions = reaction.Actions.Value;
 							// Run through actions
-							for (int i = 0; i < actions.Length; i++)
+							foreach (var action in reaction.Actions.Value)
 							{
-								var action = actions[i];
 								// Execute action
 								messageStates.AddRange(action.Execute(gameState));
 							}

@@ -17,7 +17,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		private readonly ImmutableArray<Reaction> _reactions;
 		private readonly IEnumerable<Reaction> _reactionsEnumerable;
 
-		public Reactions(Items items, Commands commands, ImmutableArray<ReactionMap> reactionMaps)
+		public Reactions(Player player, Areas areas, Items items, Commands commands, ImmutableArray<ReactionMap> reactionMaps)
 		{
 			// Set command symbol to command handler mappings
 			_commandSymbolToReactionMappings = reactionMaps
@@ -35,7 +35,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 								throw new InvalidOperationException($"No command with symbol ({cs}) could be found.");
 							}
 							// Create reaction
-							var reaction = new Reaction(items, command, rms.ToImmutableList());
+							var reaction = new Reaction(player, areas, items, command, rms.ToImmutableList());
 							// Return command symbol to reaction mapping
 							return KeyValuePair.Create(cs, reaction);
 						}
