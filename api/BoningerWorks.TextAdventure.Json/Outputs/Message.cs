@@ -1,5 +1,4 @@
-﻿using BoningerWorks.TextAdventure.Core.Exceptions;
-using BoningerWorks.TextAdventure.Json.Outputs.Errors;
+﻿using System;
 using System.Collections.Immutable;
 
 namespace BoningerWorks.TextAdventure.Json.Outputs
@@ -14,7 +13,7 @@ namespace BoningerWorks.TextAdventure.Json.Outputs
 			if (lines == null || lines.Count == 0)
 			{
 				// Throw error
-				throw GenericException.Create(new InvalidDataError("Lines cannot be null or empty."));
+				throw new ArgumentException("Lines cannot be null or empty.", nameof(lines));
 			}
 			// Set lines
 			Lines = lines;

@@ -1,5 +1,4 @@
-﻿using BoningerWorks.TextAdventure.Core.Exceptions;
-using BoningerWorks.TextAdventure.Json.Outputs.Errors;
+﻿using System;
 
 namespace BoningerWorks.TextAdventure.Json.Outputs
 {
@@ -8,15 +7,15 @@ namespace BoningerWorks.TextAdventure.Json.Outputs
 		public LineContent? Content { get; }
 		public LineSpecial? Special { get; }
 
-		public Line(LineContent lineContentState)
+		public Line(LineContent lineContent)
 		{
-			// Set content state
-			Content = lineContentState ?? throw GenericException.Create(new InvalidDataError("Line content cannot be null."));
+			// Set content
+			Content = lineContent ?? throw new ArgumentException("Line content cannot be null.", nameof(lineContent));
 		}
-		public Line(LineSpecial lineSpecialState)
+		public Line(LineSpecial lineSpecial)
 		{
-			// Set special state
-			Special = lineSpecialState ?? throw GenericException.Create(new InvalidDataError("Special line cannot be null."));
+			// Set special
+			Special = lineSpecial ?? throw new ArgumentException("Special line cannot be null.", nameof(lineSpecial));
 		}
 	}
 }

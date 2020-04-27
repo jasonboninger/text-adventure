@@ -1,5 +1,4 @@
-﻿using BoningerWorks.TextAdventure.Core.Exceptions;
-using BoningerWorks.TextAdventure.Json.Outputs.Errors;
+﻿using System;
 using System.Collections.Immutable;
 
 namespace BoningerWorks.TextAdventure.Json.Outputs
@@ -8,10 +7,10 @@ namespace BoningerWorks.TextAdventure.Json.Outputs
 	{
 		public ImmutableList<Text> Texts { get; }
 
-		public LineContent(ImmutableList<Text> textStates)
+		public LineContent(ImmutableList<Text> texts)
 		{
 			// Set texts
-			Texts = textStates ?? throw GenericException.Create(new InvalidDataError("Texts cannot be null."));
+			Texts = texts ?? throw new ArgumentException("Texts cannot be null.", nameof(texts));
 		}
 	}
 }

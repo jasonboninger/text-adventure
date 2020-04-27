@@ -1,5 +1,4 @@
-﻿using BoningerWorks.TextAdventure.Core.Exceptions;
-using BoningerWorks.TextAdventure.Json.Outputs.Errors;
+﻿using System;
 
 namespace BoningerWorks.TextAdventure.Json.Outputs
 {
@@ -10,9 +9,7 @@ namespace BoningerWorks.TextAdventure.Json.Outputs
 		public Text(string value)
 		{
 			// Set value
-			Value = string.IsNullOrWhiteSpace(value)
-				? throw GenericException.Create(new InvalidDataError("Text value cannot be null or whitespace."))
-				: value;
+			Value = string.IsNullOrWhiteSpace(value) ? throw new ArgumentException("Value cannot be null or whitespace.", nameof(value)) : value;
 		}
 	}
 }
