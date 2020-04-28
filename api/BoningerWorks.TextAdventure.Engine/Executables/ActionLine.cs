@@ -1,4 +1,5 @@
-﻿using BoningerWorks.TextAdventure.Intermediate.Maps;
+﻿using BoningerWorks.TextAdventure.Core.Extensions;
+using BoningerWorks.TextAdventure.Intermediate.Maps;
 using BoningerWorks.TextAdventure.Json.Outputs;
 using System;
 using System.Collections.Generic;
@@ -24,14 +25,18 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			// Check if special map exists
 			if (lineMap.SpecialMap != null)
 			{
+				// Create special line action
+				var actionLineSpecial = ActionLineSpecial.Create(lineMap.SpecialMap);
 				// Return special line execute
-				return new ActionLineSpecial(lineMap.SpecialMap).Execute;
+				return state => actionLineSpecial(state).ToEnumerable();
 			}
 			// Check if inlined map exists
 			if (lineMap.InlinedMap != null)
 			{
-				// Return inlined line execute
-				return new ActionLineInlined(lineMap.InlinedMap).Execute;
+				// Create inlined line action
+				var actionLineInlined = ActionLineInlined.Create(lineMap.InlinedMap);
+				// Return action
+				return state => actionLineInlined(state).ToEnumerable();
 			}
 			// Throw error
 			throw new InvalidOperationException("Line map could not be parsed.");

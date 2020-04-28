@@ -1,24 +1,17 @@
-﻿using BoningerWorks.TextAdventure.Engine.Interfaces;
-using BoningerWorks.TextAdventure.Intermediate.Maps;
+﻿using BoningerWorks.TextAdventure.Intermediate.Maps;
 using BoningerWorks.TextAdventure.Json.Outputs;
-using System.Collections.Generic;
+using System;
 
 namespace BoningerWorks.TextAdventure.Engine.Executables
 {
-	public class ActionTextInlined : IAction<Text>
+	public static class ActionTextInlined
 	{
-		private readonly Text _textState;
-
-		public ActionTextInlined(TextInlinedMap textInlinedMap)
+		public static Func<State, Text> Create(TextInlinedMap textInlinedMap)
 		{
-			// Set text state
-			_textState = new Text(textInlinedMap.Value);
-		}
-
-		public IEnumerable<Text> Execute(State gameState)
-		{
-			// Return text state
-			yield return _textState;
+			// Create text
+			var text = new Text(textInlinedMap.Value);
+			// Return action
+			return state => text;
 		}
 	}
 }

@@ -1,34 +1,28 @@
-﻿using BoningerWorks.TextAdventure.Engine.Interfaces;
-using BoningerWorks.TextAdventure.Intermediate.Errors;
+﻿using BoningerWorks.TextAdventure.Intermediate.Errors;
 using BoningerWorks.TextAdventure.Intermediate.Maps;
 using BoningerWorks.TextAdventure.Json.Outputs;
 using BoningerWorks.TextAdventure.Json.Outputs.Enums;
-using System.Collections.Generic;
+using System;
 
 namespace BoningerWorks.TextAdventure.Engine.Executables
 {
-	public class ActionLineSpecial : IAction<Line>
+	public static class ActionLineSpecial
 	{
-		private static readonly Line _lineStateBlank = new Line(new LineSpecial(ELineSpecialType.Blank));
-		private static readonly Line _lineStateHorizontalRule = new Line(new LineSpecial(ELineSpecialType.HorizontalRule));
+		private static readonly Line _lineSpecialBlank = new Line(new LineSpecial(ELineSpecialType.Blank));
+		private static readonly Func<State, Line> _actionLineSpecialBlank = state => _lineSpecialBlank;
 
-		private readonly Line _lineState;
+		private static readonly Line _lineSpecialHorizontalRule = new Line(new LineSpecial(ELineSpecialType.HorizontalRule));
+		private static readonly Func<State, Line> _actionLineSpecialHorizontalRule = state => _lineSpecialHorizontalRule;
 
-		public ActionLineSpecial(LineSpecialMap lineSpecialMap)
+		public static Func<State, Line> Create(LineSpecialMap lineSpecialMap)
 		{
-			// Set line state
-			_lineState = lineSpecialMap.Type switch
+			// Return action
+			return lineSpecialMap.Type switch
 			{
-				ELineSpecialType.Blank => _lineStateBlank,
-				ELineSpecialType.HorizontalRule => _lineStateHorizontalRule,
+				ELineSpecialType.Blank => _actionLineSpecialBlank,
+				ELineSpecialType.HorizontalRule => _actionLineSpecialHorizontalRule,
 				_ => throw new ValidationError($"Special line type ({lineSpecialMap.Type}) could not be handled.")
 			};
-		}
-
-		public IEnumerable<Line> Execute(State gameState)
-		{
-			// Return line state
-			yield return _lineState;
 		}
 	}
 }

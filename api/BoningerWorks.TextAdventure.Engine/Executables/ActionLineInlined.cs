@@ -1,32 +1,35 @@
-﻿using BoningerWorks.TextAdventure.Engine.Interfaces;
-using BoningerWorks.TextAdventure.Intermediate.Maps;
+﻿using BoningerWorks.TextAdventure.Intermediate.Maps;
 using BoningerWorks.TextAdventure.Json.Outputs;
-using System.Collections.Generic;
+using System;
 using System.Collections.Immutable;
 using System.Linq;
 
 namespace BoningerWorks.TextAdventure.Engine.Executables
 {
-	public class ActionLineInlined : IAction<Line>
+	public static class ActionLineInlined
 	{
-		private readonly ImmutableArray<ActionText> _actionsText;
-
-		public ActionLineInlined(LineInlinedMap lineInlinedMap)
+		public static Func<State, Line> Create(LineInlinedMap lineInlinedMap)
 		{
-			// Set text actions
-			_actionsText = lineInlinedMap.TextMaps.Select(tm => new ActionText(tm)).ToImmutableArray();
-		}
-
-		public IEnumerable<Line> Execute(State gameState)
-		{
-			// Create text states
-			var textStates = _actionsText.SelectMany(at => at.Execute(gameState)).ToImmutableList();
-			// Create line content state
-			var lineContentState = new LineContent(textStates);
-			// Create line state
-			var lineState = new Line(lineContentState);
-			// Return line state
-			yield return lineState;
+			// Create text actions
+			var actionsText = lineInlinedMap.TextMaps.Select(tm => ActionText.Create(tm)).ToImmutableArray();
+			// Return action
+			return state =>
+			{
+				// Create texts
+				var texts = ImmutableList.CreateBuilder<Text>();
+				// Run through text actions
+				for (int i = 0; i < actionsText.Length; i++)
+				{
+					// Add texts
+					texts.AddRange(actionsText[i](state));
+				}
+				// Create line content
+				var lineContent = new LineContent(texts.ToImmutable());
+				// Create line
+				var line = new Line(lineContent);
+				// Return line
+				return line;
+			};
 		}
 	}
 }

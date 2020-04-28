@@ -12,7 +12,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		{
 			// Set line actions
 			var actionsLine = messageMap.LineMaps.Select(lm => ActionLine.Create(lm)).ToImmutableArray();
-			// Return execute
+			// Return action
 			return result =>
 			{
 				// Get state
