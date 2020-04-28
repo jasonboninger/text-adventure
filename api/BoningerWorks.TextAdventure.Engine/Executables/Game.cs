@@ -30,10 +30,10 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				// Throw error
 				throw new ValidationError("Game map cannot be null.");
 			}
-			// Set player
-			Player = new Player(gameMap.PlayerMap);
 			// Set areas
 			Areas = new Areas(gameMap.AreaMaps);
+			// Set player
+			Player = new Player(Areas, gameMap.PlayerMap);
 			// Set items
 			Items = new Items(Player, Areas, gameMap.ItemMaps);
 			// Set commands
