@@ -1,30 +1,35 @@
-﻿using BoningerWorks.TextAdventure.Engine.Interfaces;
-using BoningerWorks.TextAdventure.Intermediate.Maps;
+﻿using BoningerWorks.TextAdventure.Intermediate.Maps;
 using BoningerWorks.TextAdventure.Json.Outputs;
-using System.Collections.Generic;
+using System;
 using System.Collections.Immutable;
 using System.Linq;
 
 namespace BoningerWorks.TextAdventure.Engine.Executables
 {
-	public class ActionMessage : IAction<Message>
+	public static class ActionMessage
 	{
-		private readonly ImmutableArray<ActionLine> _actionsLine;
-
-		public ActionMessage(MessageMap messageMap)
+		public static Action<ResultBuilder> Create(MessageMap messageMap)
 		{
 			// Set line actions
-			_actionsLine = messageMap.LineMaps.Select(lm => new ActionLine(lm)).ToImmutableArray();
-		}
-
-		public IEnumerable<Message> Execute(State gameState)
-		{
-			// Create line states
-			var lineStates = _actionsLine.SelectMany(al => al.Execute(gameState)).ToImmutableList();
-			// Create message state
-			var messageState = new Message(lineStates);
-			// Return message state
-			yield return messageState;
+			var actionsLine = messageMap.LineMaps.Select(lm => ActionLine.Create(lm)).ToImmutableArray();
+			// Return execute
+			return result =>
+			{
+				// Get state
+				var state = result.State;
+				// Create lines
+				var lines = ImmutableList.CreateBuilder<Line>();
+				// Run through line actions
+				for (int i = 0; i < actionsLine.Length; i++)
+				{
+					// Add lines
+					lines.AddRange(actionsLine[i](state));
+				}
+				// Create message
+				var message = new Message(lines.ToImmutable());
+				// Add message
+				result.Messages.Add(message);
+			};
 		}
 	}
 }

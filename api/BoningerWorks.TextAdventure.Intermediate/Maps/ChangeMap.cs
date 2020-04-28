@@ -5,7 +5,7 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 {
 	public class ChangeMap
 	{
-		private const char _SEPARATOR_BUILT_IN = '@';
+		private const char _SEPARATOR_BUILT_IN = '>';
 		private const char _SEPARATOR_CUSTOM = '.';
 
 		public Symbol TargetSymbol { get; }

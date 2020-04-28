@@ -8,10 +8,10 @@ namespace BoningerWorks.TextAdventure.Cli
 	{
 		static void Main()
 		{
-			// Create engine
-			var engine = Game.Deserialize(CrazyEx.JSON);
 			// Create game
-			var game = engine.New();
+			var game = Game.Deserialize(CrazyEx.JSON);
+			// Create state
+			var state = game.New();
 			// Loop forever
 			while (true)
 			{
@@ -22,33 +22,40 @@ namespace BoningerWorks.TextAdventure.Cli
 				// Get input
 				var input = Console.ReadLine();
 				// Execute input
-				var messages = engine.Execute(game, input);
-				// Create first
-				var first = true;
+				var result = game.Execute(state, input);
+				// Set state
+				state = result.State;
+				// Get messages
+				var messages = result.Messages;
 				// Run through messages
-				foreach (var message in messages)
+				for (int i = 0; i < messages.Count; i++)
 				{
+					var message = messages[i];
 					// Check if not first
-					if (!first)
+					if (i > 0)
 					{
 						// Write ellipsis
 						Console.WriteLine("...");
 						// Wait for user
 						Console.ReadKey();
 					}
-					// Set not first
-					first = false;
+					// Get lines
+					var lines = message.Lines;
 					// Run through lines
-					foreach (var line in message.Lines)
+					for (int k = 0; k < lines.Count; k++)
 					{
+						var line = lines[k];
 						// Check if content
 						if (line.Content != null)
 						{
 							// Get content
 							var content = line.Content;
+							// Get texts
+							var texts = content.Texts;
 							// Run through texts
-							foreach (var text in content.Texts)
+							for (int m = 0; m < texts.Count; m++)
 							{
+								var text = texts[m];
 								// Write text
 								Console.Write(text.Value);
 							}

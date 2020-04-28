@@ -6,28 +6,28 @@ namespace BoningerWorks.TextAdventure.Json.Outputs
 {
 	public class State
 	{
-		public ImmutableDictionary<Symbol, Entity> EntityStates { get; }
+		public ImmutableDictionary<Symbol, Entity> Entities { get; }
 
 		public State(ImmutableDictionary<Symbol, Entity> entityStates)
 		{
-			// Set entity states
-			EntityStates = entityStates ?? ImmutableDictionary<Symbol, Entity>.Empty;
+			// Set entities
+			Entities = entityStates ?? ImmutableDictionary<Symbol, Entity>.Empty;
 		}
 
-		public State UpdateEntityState(Symbol entitySymbol, Entity entityState)
+		public State UpdateEntity(Symbol entitySymbol, Entity entityState)
 		{
-			// Check if entity state does not exist
-			if (!EntityStates.ContainsKey(entitySymbol))
+			// Check if entity does not exist
+			if (!Entities.ContainsKey(entitySymbol))
 			{
 				// Throw error
-				throw new ArgumentException($"Entity state for entity symbol ({entitySymbol}) could not be found.", nameof(entitySymbol));
+				throw new ArgumentException($"Entity with symbol ({entitySymbol}) could not be found.", nameof(entitySymbol));
 			}
-			// Set entity state
-			var entitySymbolToEntityStateMappings = EntityStates.SetItem(entitySymbol, entityState);
-			// Create game state
-			var gameState = new State(entitySymbolToEntityStateMappings);
-			// Return game state
-			return gameState;
+			// Set entity
+			var entities = Entities.SetItem(entitySymbol, entityState);
+			// Create state
+			var state = new State(entities);
+			// Return state
+			return state;
 		}
 	}
 }

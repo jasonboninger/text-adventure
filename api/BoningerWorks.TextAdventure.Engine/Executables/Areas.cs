@@ -23,6 +23,12 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			_areasEnumerable = _areas;
 		}
 
+		public bool Contains(Symbol? symbol)
+		{
+			// Return if area exists
+			return symbol != null && _areas.Contains(symbol);
+		}
+
 		public IEnumerator<Symbol> GetEnumerator() => _areasEnumerable.GetEnumerator();
 		IEnumerator IEnumerable.GetEnumerator() => _areasEnumerable.GetEnumerator();
 	}

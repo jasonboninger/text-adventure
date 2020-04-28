@@ -23,10 +23,10 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		private readonly ImmutableDictionary<Symbol, Item> _symbolToItemMappings;
 		private readonly ImmutableDictionary<Name, ImmutableArray<Item>> _nameToItemsMappings;
 
-		public Items(ImmutableArray<ItemMap> itemMaps)
+		public Items(Player player, Areas areas, ImmutableArray<ItemMap> itemMaps)
 		{
 			// Set items
-			_items = itemMaps.Select(im => new Item(im)).ToImmutableArray();
+			_items = itemMaps.Select(im => new Item(player, areas, im)).ToImmutableArray();
 			// Set enumerable items
 			_itemsEnumerable = _items;
 			// Create symbol to item mappings

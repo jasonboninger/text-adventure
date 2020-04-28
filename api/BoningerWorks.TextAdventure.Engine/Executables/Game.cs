@@ -35,7 +35,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			// Set areas
 			Areas = new Areas(gameMap.AreaMaps);
 			// Set items
-			Items = new Items(gameMap.ItemMaps);
+			Items = new Items(Player, Areas, gameMap.ItemMaps);
 			// Set commands
 			Commands = new Commands(Items, gameMap.CommandMaps);
 			// Set reactions
@@ -65,8 +65,8 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 							(
 								data: ImmutableDictionary.CreateRange(new KeyValuePair<Symbol, Symbol>[] 
 								{
-									KeyValuePair.Create(Item.DataActive, item.Active != false ? ValueTrue : ValueFalse),
-									KeyValuePair.Create(Item.DataLocation, item.Location)
+									KeyValuePair.Create(Item.DatumActive, item.Active != false ? ValueTrue : ValueFalse),
+									KeyValuePair.Create(Item.DatumLocation, item.Location)
 								}),
 								customData: null
 							)
@@ -78,10 +78,10 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			return gameState;
 		}
 
-		public ImmutableList<Message> Execute(State gameState, string? input)
+		public Result Execute(State state, string? input)
 		{
-			// Create message states
-			var messageStates = ImmutableList.CreateBuilder<Message>();
+			// Create messages
+			var messages = ImmutableList.CreateBuilder<Message>();
 			// Try to get command match
 			try
 			{
@@ -97,9 +97,12 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 					// Check if reaction exists
 					if (reaction != null)
 					{
+						// Get command items
+						var commandItems = command.CommandItems;
 						// Run through command items
-						foreach (var commandItem in command.CommandItems)
+						for (int i = 0; i < commandItems.Length; i++)
 						{
+							var commandItem = commandItems[i];
 							// Get item
 							var item = commandMatch.CommandItemToItemMappings[commandItem];
 							// Try to get next reaction
@@ -116,11 +119,18 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 						// Check if reaction exists and actions exist
 						if (reaction != null && reaction.Actions.HasValue)
 						{
+							// Get actions
+							var actions = reaction.Actions.Value;
 							// Run through actions
-							foreach (var action in reaction.Actions.Value)
+							for (int i = 0; i < actions.Length; i++)
 							{
+								var action = actions[i];
 								// Execute action
-								messageStates.AddRange(action.Execute(gameState));
+								var result = action.Execute(state);
+								// Set state
+								state = result.State;
+								// Add messages
+								messages.AddRange(result.Messages);
 							}
 						}
 					}
@@ -139,8 +149,8 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 
 
 			}
-			// Return message states
-			return messageStates.ToImmutable();
+			// Return result
+			return new Result(state, messages.ToImmutable());
 		}
 	}
 }

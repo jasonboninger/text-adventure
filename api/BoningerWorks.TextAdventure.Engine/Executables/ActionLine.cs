@@ -1,16 +1,13 @@
-﻿using BoningerWorks.TextAdventure.Engine.Interfaces;
-using BoningerWorks.TextAdventure.Intermediate.Maps;
+﻿using BoningerWorks.TextAdventure.Intermediate.Maps;
 using BoningerWorks.TextAdventure.Json.Outputs;
 using System;
 using System.Collections.Generic;
 
 namespace BoningerWorks.TextAdventure.Engine.Executables
 {
-	public class ActionLine : IAction<Line>
+	public static class ActionLine
 	{
-		private readonly IAction<Line> _actionLine;
-
-		public ActionLine(LineMap lineMap)
+		public static Func<State, IEnumerable<Line>> Create(LineMap lineMap)
 		{
 			// Check if if map exists
 			if (lineMap.IfMap != null)
@@ -27,23 +24,17 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			// Check if special map exists
 			if (lineMap.SpecialMap != null)
 			{
-				// Set special line action
-				_actionLine = new ActionLineSpecial(lineMap.SpecialMap);
-				// Return
-				return;
+				// Return special line execute
+				return new ActionLineSpecial(lineMap.SpecialMap).Execute;
 			}
 			// Check if inlined map exists
 			if (lineMap.InlinedMap != null)
 			{
-				// Set inlined line action
-				_actionLine = new ActionLineInlined(lineMap.InlinedMap);
-				// Return
-				return;
+				// Return inlined line execute
+				return new ActionLineInlined(lineMap.InlinedMap).Execute;
 			}
 			// Throw error
 			throw new InvalidOperationException("Line map could not be parsed.");
 		}
-
-		public IEnumerable<Line> Execute(State gameState) => _actionLine.Execute(gameState);
 	}
 }

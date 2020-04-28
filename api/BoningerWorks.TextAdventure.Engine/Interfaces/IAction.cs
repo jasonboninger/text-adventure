@@ -6,6 +6,6 @@ namespace BoningerWorks.TextAdventure.Engine.Interfaces
 	public interface IAction<out TValue>
 	where TValue : class
 	{
-		IEnumerable<TValue> Execute(State gameState);
+		IEnumerable<TValue> Execute(State state);
 	}
 }

@@ -1,5 +1,4 @@
 ﻿using BoningerWorks.TextAdventure.Core.Utilities;
-using BoningerWorks.TextAdventure.Engine.Interfaces;
 using BoningerWorks.TextAdventure.Intermediate.Errors;
 using BoningerWorks.TextAdventure.Intermediate.Maps;
 using BoningerWorks.TextAdventure.Json.Outputs;
@@ -15,7 +14,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		public Command Command { get; }
 		public ImmutableDictionary<Symbol, Item> CommandItemToItemMappings { get; }
 
-		private readonly ImmutableArray<IAction<Message>> _actionsMessage;
+		private readonly ImmutableArray<Action<ResultBuilder>> _actions;
 
 		public Action(Player player, Areas areas, Items items, Command command, ReactionMap reactionMap)
 		{
@@ -74,8 +73,8 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 						return KeyValuePair.Create(cis, items.Get(itemSymbol));
 					})
 				.ToImmutableDictionary();
-			// Set message actions
-			_actionsMessage = reactionMap.ActionMaps
+			// Set actions
+			_actions = reactionMap.ActionMaps
 				.SelectMany
 					(am =>
 					{
@@ -83,26 +82,26 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 						if (am.IfMap != null)
 						{
 
-							return Enumerable.Empty<IAction<Message>>();
+							return Enumerable.Empty<Action<ResultBuilder>>();
 
 						}
 						// Check if message maps exist
 						if (am.MessageMaps.HasValue)
 						{
 							// Return message actions
-							return am.MessageMaps.Value.Select(mm => new ActionMessage(mm));
+							return am.MessageMaps.Value.Select(mm => ActionMessage.Create(mm));
 						}
 						// Check if change maps exist
 						if (am.ChangeMaps.HasValue)
 						{
 							// Return change actions
-							return am.ChangeMaps.Value.Select(cm => new ActionChange(player, areas, items, cm));
+							return am.ChangeMaps.Value.Select(cm => ActionChange.Create(player, areas, items, cm));
 						}
 						// Check if trigger maps exist
 						if (am.TriggerMaps.HasValue)
 						{
 
-							return Enumerable.Empty<IAction<Message>>();
+							return Enumerable.Empty<Action<ResultBuilder>>();
 
 						}
 						// Throw error
@@ -111,12 +110,18 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				.ToImmutableArray();
 		}
 
-		public ImmutableList<Message> Execute(State gameState)
+		public Result Execute(State state)
 		{
-			// Create message states
-			var messageStates = _actionsMessage.SelectMany(am => am.Execute(gameState)).ToImmutableList();
-			// Return message states
-			return messageStates;
+			// Create result
+			var result = new ResultBuilder(state);
+			// Run through actions
+			for (int i = 0; i < _actions.Length; i++)
+			{
+				// Execute action
+				_actions[i](result);
+			}
+			// Return result
+			return result.ToImmutable();
 		}
 	}
 }

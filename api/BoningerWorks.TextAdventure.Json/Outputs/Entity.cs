@@ -27,20 +27,20 @@ namespace BoningerWorks.TextAdventure.Json.Outputs
 			}
 			// Set data
 			var data = Data.SetItem(symbol, value);
-			// Create entity state
-			var entityState = new Entity(data, CustomData);
-			// Return entity state
-			return entityState;
+			// Create entity
+			var entity = new Entity(data, CustomData);
+			// Return entity
+			return entity;
 		}
 
 		public Entity UpdateCustomData(Symbol symbol, string value)
 		{
 			// Set custom data
 			var customData = CustomData.SetItem(symbol, value);
-			// Create entity state
-			var entityState = new Entity(Data, customData);
-			// Return entity state
-			return entityState;
+			// Create entity
+			var entity = new Entity(Data, customData);
+			// Return entity
+			return entity;
 		}
 	}
 }
