@@ -21,7 +21,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			// Set symbol
 			Symbol = itemMap.ItemSymbol;
 			// Set location
-			Location = itemMap.LocationSymbol;
+			Location = itemMap.LocationSymbol ?? throw new ValidationError("Item location cannot be null.");
 			// Check if location does not exist
 			if (Location != player.Symbol && !areas.Contains(Location))
 			{

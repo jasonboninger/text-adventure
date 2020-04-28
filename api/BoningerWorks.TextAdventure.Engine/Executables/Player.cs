@@ -13,20 +13,14 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		{
 			// Set symbol
 			Symbol = playerMap.PlayerSymbol ?? throw new ValidationError("Player symbol cannot be null.");
-			// Check if area does not exist
-			if (playerMap.AreaSymbol == null)
-			{
-				// Throw error
-				throw new ValidationError("Area symbol for player cannot be null.");
-			}
+			// Set area
+			Area = playerMap.AreaSymbol ?? throw new ValidationError("Player area cannot be null.");
 			// Check if area does not exist
 			if (!areas.Contains(playerMap.AreaSymbol))
 			{
 				// Throw error
-				throw new ValidationError($"Area symbol ({playerMap.AreaSymbol}) for player could not be found.");
+				throw new ValidationError($"Player area ({playerMap.AreaSymbol}) could not be found.");
 			}
-			// Set area
-			Area = playerMap.AreaSymbol;
 		}
 	}
 }
