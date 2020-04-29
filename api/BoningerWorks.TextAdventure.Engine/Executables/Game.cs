@@ -96,17 +96,17 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 							// Set reaction
 							reaction = reactionNext;
 						}
-						// Check if reaction exists and actions exist
-						if (reaction != null && reaction.Actions.HasValue)
+						// Check if reaction exists and matches exist
+						if (reaction != null && reaction.Matches.HasValue)
 						{
-							// Get actions
-							var actions = reaction.Actions.Value;
-							// Run through actions
-							for (int i = 0; i < actions.Length; i++)
+							// Get matches
+							var matches = reaction.Matches.Value;
+							// Run through matches
+							for (int i = 0; i < matches.Length; i++)
 							{
-								var action = actions[i];
-								// Execute action
-								var result = action.Execute(state);
+								var match = matches[i];
+								// Execute match
+								var result = match.Execute(state);
 								// Set state
 								state = result.State;
 								// Add messages

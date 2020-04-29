@@ -11,7 +11,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 	{
 		public Command Command { get; }
 		public ImmutableDictionary<Symbol, Reaction>? Next { get; }
-		public ImmutableArray<Action>? Actions { get; }
+		public ImmutableArray<ReactionMatch>? Matches { get; }
 
 		public Reaction(Entities entities, Items items, Command command, ImmutableList<ReactionMap> reactionMaps) 
 		: this
@@ -27,48 +27,48 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 							// Throw error
 							throw new ArgumentException($"Command ({command}) does not match command ({rm.CommandSymbol}) of reaction map.");
 						}
-						// Create action
-						var action = new Action(entities, items, command, rm);
-						// Return action
-						return action;
+						// Create match
+						var match = new ReactionMatch(entities, items, command, rm);
+						// Return match
+						return match;
 					})
 				.ToImmutableList(),
 			index: 0
 		) 
 		{ }
-		private Reaction(Command command, ImmutableList<Action> actions, int index)
+		private Reaction(Command command, ImmutableList<ReactionMatch> matches, int index)
 		{
 			// Set command
 			Command = command;
 			// Check if no more command item symbols
 			if (index == Command.CommandItems.Length)
 			{
-				// Set actions
-				Actions = actions.ToImmutableArray();
+				// Set matches
+				Matches = matches.ToImmutableArray();
 			}
 			else
 			{
 				// Set next
-				Next = _CreateNext(Command, actions, index);
+				Next = _CreateNext(Command, matches, index);
 			}
 		}
 
-		private static ImmutableDictionary<Symbol, Reaction> _CreateNext(Command command, ImmutableList<Action> actions, int index)
+		private static ImmutableDictionary<Symbol, Reaction> _CreateNext(Command command, ImmutableList<ReactionMatch> matches, int index)
 		{
 			// Get next index
 			var indexNext = index + 1;
 			// Create next
-			var next = actions
+			var next = matches
 				.GroupBy
 					(
-						a =>
+						m =>
 						{
 							// Get item
-							var item = a.CommandItemToItemMappings[command.CommandItems[index]];
+							var item = m.CommandItemToItemMappings[command.CommandItems[index]];
 							// Return item symbol
 							return item.Symbol;
 						},
-						(@is, @as) => KeyValuePair.Create(@is, new Reaction(command, @as.ToImmutableList(), indexNext))
+						(@is, m) => KeyValuePair.Create(@is, new Reaction(command, m.ToImmutableList(), indexNext))
 					)
 				.ToImmutableDictionary();
 			// Return next
