@@ -6,10 +6,21 @@ namespace BoningerWorks.TextAdventure.Core.Utilities
 {
 	public sealed class Symbol : IEquatable<Symbol>
 	{
+		public static Symbol True { get; }
+		public static Symbol False { get; }
+
 		public static bool operator ==(Symbol? left, Symbol? right) => Equals(left, null) ? Equals(right, null) : left.Equals(right);
 		public static bool operator !=(Symbol? left, Symbol? right) => !(left == right);
 
 		private static readonly Regex _regularExpressionValid = new Regex(@"^[A-Z0-9_]+$", RegexOptions.Singleline);
+
+		static Symbol()
+		{
+			// Set true
+			True = new Symbol("TRUE");
+			// Set false
+			False = new Symbol("FALSE");
+		}
 
 		public static Symbol? TryCreate(string? @string)
 		{
