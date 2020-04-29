@@ -7,15 +7,15 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 {
 	public static class ActionChange
 	{
-		public static Action<ResultBuilder> Create(Player player, Areas areas, Items items, ChangeMap changeMap)
+		public static Action<ResultBuilder> Create(Entities entities, ChangeMap changeMap)
 		{
 			// Get target symbol
 			var targetSymbol = changeMap.TargetSymbol;
-			// Check if not player, area, or item
-			if (targetSymbol != player.Symbol && !areas.Contains(targetSymbol) && !items.Contains(targetSymbol))
+			// Check if entity does not exist
+			if (!entities.Contains(targetSymbol))
 			{
 				// Throw error
-				throw new ValidationError($"Target symbol ({targetSymbol}) could not be found.");
+				throw new ValidationError($"Entity for symbol ({targetSymbol}) could not be found.");
 			}
 			// Get target datum
 			var targetDatum = changeMap.TargetDatum;
@@ -43,9 +43,11 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			{
 				// Create new value
 				var newValue = Symbol.TryCreate(changeMap.NewValue) 
-					?? throw new ValidationError($"Data value ({changeMap.NewValue}) is not a valid.");
-				// Throw if not valid data
-				_ThrowIfNotValidData(player, areas, items, targetSymbol, targetDatum, newValue);
+					?? throw new ValidationError($"Data value ({changeMap.NewValue}) is not a valid symbol.");
+				// Get entity
+				var entity = entities.Get(targetSymbol);
+				// Ensure valid data
+				entity.EnsureValidData(targetDatum, newValue);
 				// Return execute
 				return result =>
 				{
@@ -60,52 +62,6 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 					// Set state
 					result.State = state;
 				};
-			}
-		}
-
-		private static void _ThrowIfNotValidData(Player player, Areas areas, Items items, Symbol targetSymbol, Symbol targetDatum, Symbol newValue)
-		{
-			// Check if player
-			if (targetSymbol == player.Symbol)
-			{
-				// Throw error
-				throw new ValidationError($"Player data ({targetDatum}) could not be found.");
-			}
-			// Check if area
-			if (areas.Contains(targetSymbol))
-			{
-				// Throw error
-				throw new ValidationError($"Area data ({targetDatum}) could not be found.");
-			}
-			// Check if item
-			if (items.Contains(targetSymbol))
-			{
-				// Check if active
-				if (targetDatum == Item.DatumActive)
-				{
-					// Check if not true or false
-					if (newValue != Game.ValueTrue && newValue != Game.ValueFalse)
-					{
-						// Throw error
-						throw new ValidationError($"Item active ({newValue}) must be set to {Game.ValueTrue} or {Game.ValueFalse}.");
-					}
-					// Return
-					return;
-				}
-				// Check if location
-				if (targetDatum == Item.DatumLocation)
-				{
-					// Check if not player and area does not exist
-					if (targetDatum != player.Symbol && !areas.Contains(targetDatum))
-					{
-						// Throw error
-						throw new ValidationError($"Item location ({newValue}) must be set to {player.Symbol} or an area.");
-					}
-					// Return
-					return;
-				}
-				// Throw error
-				throw new ValidationError($"Item data ({targetDatum}) could not be found.");
 			}
 		}
 	}

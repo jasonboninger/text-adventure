@@ -8,10 +8,16 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 	{
 		public static Func<State, Text> Create(TextInlinedMap textInlinedMap)
 		{
-			// Create text
-			var text = new Text(textInlinedMap.Value);
+			// Create replaceable
+			var replaceable = new Replaceable(textInlinedMap.Value);
 			// Return action
-			return state => text;
+			return state =>
+			{
+				// Create value
+				var value = replaceable.Replace(state);
+				// Return text
+				return new Text(value);
+			};
 		}
 	}
 }

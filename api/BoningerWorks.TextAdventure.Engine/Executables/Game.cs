@@ -4,21 +4,18 @@ using BoningerWorks.TextAdventure.Engine.Errors;
 using BoningerWorks.TextAdventure.Intermediate.Errors;
 using BoningerWorks.TextAdventure.Intermediate.Maps;
 using BoningerWorks.TextAdventure.Json.Outputs;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 
 namespace BoningerWorks.TextAdventure.Engine.Executables
 {
 	public class Game
 	{
-		public static Symbol ValueTrue { get; } = new Symbol("TRUE");
-		public static Symbol ValueFalse { get; } = new Symbol("FALSE");
-
 		public static Game Deserialize(string json) => new Game(GameMap.Deserialize(json));
 
 		public Player Player { get; }
 		public Areas Areas { get; }
 		public Items Items { get; }
+		public Entities Entities { get; }
 		public Commands Commands { get; }
 		public Reactions Reactions { get; }
 
@@ -36,46 +33,29 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			Player = new Player(Areas, gameMap.PlayerMap);
 			// Set items
 			Items = new Items(Player, Areas, gameMap.ItemMaps);
+			// Set entities
+			Entities = new Entities(Player, Areas, Items);
 			// Set commands
 			Commands = new Commands(Items, gameMap.CommandMaps);
 			// Set reactions
-			Reactions = new Reactions(Player, Areas, Items, Commands, gameMap.ReactionMaps);
+			Reactions = new Reactions(Entities, Items, Commands, gameMap.ReactionMaps);
 		}
 
 		public State New()
 		{
-			// Create entity states
-			var entityStates = ImmutableDictionary.CreateBuilder<Symbol, Entity>();
-			// Add player state
-			entityStates.Add(Player.Symbol, new Entity(data: null, customData: null));
-			// Run through areas
-			foreach (var area in Areas)
+			// Create entities
+			var entities = ImmutableDictionary.CreateBuilder<Symbol, Entity>();
+			// Run through entities
+			for (int i = 0; i < Entities.Count; i++)
 			{
-				// Add area state
-				entityStates.Add(area, new Entity(data: null, customData: null));
+				var entity = Entities[i];
+				// Add entity
+				entities.Add(entity.Symbol, entity.Create());
 			}
-			// Run through items
-			foreach (var item in Items)
-			{
-				// Add item state
-				entityStates.Add
-					(
-						item.Symbol, 
-						new Entity
-							(
-								data: ImmutableDictionary.CreateRange(new KeyValuePair<Symbol, Symbol>[] 
-								{
-									KeyValuePair.Create(Item.DatumActive, item.Active != false ? ValueTrue : ValueFalse),
-									KeyValuePair.Create(Item.DatumLocation, item.Location)
-								}),
-								customData: null
-							)
-					);
-			}
-			// Create game state
-			var gameState = new State(entityStates.ToImmutable());
-			// Return game state
-			return gameState;
+			// Create state
+			var state = new State(entities.ToImmutable());
+			// Return state
+			return state;
 		}
 
 		public Result Execute(State state, string? input)

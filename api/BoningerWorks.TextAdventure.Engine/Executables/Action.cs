@@ -16,7 +16,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 
 		private readonly ImmutableArray<Action<ResultBuilder>> _actions;
 
-		public Action(Player player, Areas areas, Items items, Command command, ReactionMap reactionMap)
+		public Action(Entities entities, Items items, Command command, ReactionMap reactionMap)
 		{
 			// Check if command does not match reaction map command
 			if (command.Symbol != reactionMap.CommandSymbol)
@@ -95,7 +95,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 						if (am.ChangeMaps.HasValue)
 						{
 							// Return change actions
-							return am.ChangeMaps.Value.Select(cm => ActionChange.Create(player, areas, items, cm));
+							return am.ChangeMaps.Value.Select(cm => ActionChange.Create(entities, cm));
 						}
 						// Check if trigger maps exist
 						if (am.TriggerMaps.HasValue)
