@@ -9,7 +9,7 @@ namespace BoningerWorks.TextAdventure.Json.Outputs
 		public ImmutableDictionary<Symbol, Symbol> Data { get; }
 		public ImmutableDictionary<Symbol, string> CustomData { get; }
 
-		public Entity(ImmutableDictionary<Symbol, Symbol>? data, ImmutableDictionary<Symbol, string>? customData)
+		public Entity(ImmutableDictionary<Symbol, Symbol>? data, ImmutableDictionary<Symbol, string>? customData = null)
 		{
 			// Set data
 			Data = data ?? ImmutableDictionary<Symbol, Symbol>.Empty;
