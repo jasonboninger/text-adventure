@@ -1,5 +1,4 @@
-﻿using BoningerWorks.TextAdventure.Core.Extensions;
-using BoningerWorks.TextAdventure.Core.Static;
+﻿using BoningerWorks.TextAdventure.Core.Static;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,43 +9,33 @@ namespace BoningerWorks.TextAdventure.Core.Utilities
 {
 	public class Names : IReadOnlyList<Name>
 	{
-		public static Names? TryCreate(IEnumerable<Name> names)
+		public static Names? TryCreate(IEnumerable<Name>? names)
 		{
-			// Create names object
-			Names? namesObject;
-			// Create names array
-			var namesArray = names?.ToImmutableArray();
-			// Check if names array exists and exception does not exist
-			if (namesArray.HasValue && _GetException(namesArray) == null)
+			// Create value
+			Names? value;
+			// Create try
+			var @try = true;
+			// Try to create names
+			try
 			{
-				// Set names object
-				namesObject = new Names(namesArray.Value);
+				// Set names
+				value = new Names(names!);
+				// Return names
+				return value;
 			}
-			else
+			catch
 			{
-				// Set no names object
-				namesObject = null;
+				// Set no names
+				value = null;
+				// Check if try
+				if (@try)
+				{
+					// Return no names
+					return value;
+				}
+				// Throw error
+				throw;
 			}
-			// Return no names
-			return namesObject;
-		}
-
-		private static Exception? _GetException(ImmutableArray<Name>? names)
-		{
-			// Check if no names exist
-			if (!names.HasValue || names.Value.Length == 0)
-			{
-				// Return error
-				return new ArgumentException("At least one name is required.", nameof(names));
-			}
-			// Check if any names do not exist
-			if (names.Value.Any(n => n == null))
-			{
-				// Return error
-				return new ArgumentException("No names can be null.", nameof(names));
-			}
-			// Return no exception
-			return null;
 		}
 
 		public int Count => _names.Length;
@@ -60,8 +49,18 @@ namespace BoningerWorks.TextAdventure.Core.Utilities
 		public Names(IEnumerable<Name> names) : this(names?.ToImmutableArray() ?? ImmutableArray<Name>.Empty) { }
 		public Names(ImmutableArray<Name> names)
 		{
-			// Throw error if exception exists
-			_GetException(names).ThrowIfExists();
+			// Check if no names exist
+			if (names.Length == 0)
+			{
+				// Throw error
+				throw new ArgumentException("At least one name is required.", nameof(names));
+			}
+			// Check if any names do not exist
+			if (names.Any(n => n == null))
+			{
+				// Throw error
+				throw new ArgumentException("No names can be null.", nameof(names));
+			}
 			// Set names
 			_names = names;
 			// Set enumerable names

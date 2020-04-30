@@ -1,5 +1,4 @@
-﻿using BoningerWorks.TextAdventure.Core.Extensions;
-using System;
+﻿using System;
 using System.Text.RegularExpressions;
 
 namespace BoningerWorks.TextAdventure.Core.Utilities
@@ -24,32 +23,25 @@ namespace BoningerWorks.TextAdventure.Core.Utilities
 
 		public static Symbol? TryCreate(string? @string)
 		{
-			// Check if string exists and exception does not exist
-			if (@string != null && _GetException(@string) == null)
+			// Create try
+			var @try = true;
+			// Try to create symbol
+			try
 			{
 				// Return symbol
-				return new Symbol(@string);
+				return new Symbol(@string!);
 			}
-			// Return no symbol
-			return null;
-		}
-
-		private static Exception? _GetException(string? symbol)
-		{
-			// Check if symbol does not exist
-			if (string.IsNullOrWhiteSpace(symbol))
+			catch
 			{
-				// Return exception
-				return new ArgumentException("Symbol cannot be null, empty, or whitespace.", nameof(symbol));
+				// Check if try
+				if (@try)
+				{
+					// Return no symbol
+					return null;
+				}
+				// Throw error
+				throw;
 			}
-			// Check if not valid symbol
-			if (!_regularExpressionValid.IsMatch(symbol))
-			{
-				// Return exception
-				return new ArgumentException($"Symbol ({symbol}) can only contain underscores, numbers, and capital letters.", nameof(symbol));
-			}
-			// Return no exception
-			return null;
 		}
 
 		private readonly string _value;
@@ -57,8 +49,18 @@ namespace BoningerWorks.TextAdventure.Core.Utilities
 
 		public Symbol(string symbol)
 		{
-			// Throw error if exception exists
-			_GetException(symbol).ThrowIfExists();
+			// Check if symbol does not exist
+			if (string.IsNullOrWhiteSpace(symbol))
+			{
+				// Throw error
+				throw new ArgumentException("Symbol cannot be null, empty, or whitespace.", nameof(symbol));
+			}
+			// Check if not valid symbol
+			if (!_regularExpressionValid.IsMatch(symbol))
+			{
+				// Throw error
+				throw new ArgumentException($"Symbol ({symbol}) can only contain underscores, numbers, and capital letters.", nameof(symbol));
+			}
 			// Set value
 			_value = symbol;
 			// Set hash code
