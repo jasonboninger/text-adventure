@@ -1,5 +1,5 @@
 import { IGame } from "./types/game";
-import { horizontalRule, blank, is } from "./utilities/helpers";
+import { horizontalRule, blank, is, not } from "./utilities/helpers";
 
 export const CRAZY_EX: IGame = {
 	commands: {
@@ -105,14 +105,14 @@ export const CRAZY_EX: IGame = {
 							command: "INSPECT",
 							actions: {
 								if: {
-									condition: is("${DOOR.USED}", "yes"),
+									condition: not("${DOOR.USED}", "TRUE"),
 									true: [
 										{
 											messages: "You glance at the door. Something looks a bit strange."
 										},
 										{
 											changes: {
-												"DOOR.USED": "yes"
+												"DOOR.USED": "TRUE"
 											}
 										},
 										{
@@ -141,13 +141,13 @@ export const CRAZY_EX: IGame = {
 					command: "SURVEY",
 					actions: {
 						if: {
-							condition: is("${DOOR.USED}", "yes"),
+							condition: not("${DOOR.USED}", "TRUE"),
 							true: {
 								messages: "This room looks pretty cool, but you just want to get out of here and go about your day. You should probably head for the door."
 							},
 							false: {
 								if: {
-									condition: is("${NOTE_WOODEN.VIEWED}", "yes"),
+									condition: is("${NOTE_WOODEN.VIEWED}", "TRUE"),
 									true: {
 										messages: "You glance around the room, and it all looks pretty normal. You still can't believe that the door is locked. Maybe there's something to be done if you take a closer look."
 									},

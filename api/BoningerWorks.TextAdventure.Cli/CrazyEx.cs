@@ -177,8 +177,8 @@ namespace BoningerWorks.TextAdventure.Cli
 								""if"": {
 									""condition"": {
 										""left"": ""${DOOR.USED}"",
-										""comparison"": ""IS"",
-										""right"": ""yes""
+										""comparison"": ""NOT"",
+										""right"": ""TRUE""
 									},
 									""true"": [
 										{
@@ -186,7 +186,7 @@ namespace BoningerWorks.TextAdventure.Cli
 										},
 										{
 											""changes"": {
-												""DOOR.USED"": ""yes""
+												""DOOR.USED"": ""TRUE""
 											}
 										},
 										{
@@ -227,8 +227,8 @@ namespace BoningerWorks.TextAdventure.Cli
 						""if"": {
 							""condition"": {
 								""left"": ""${DOOR.USED}"",
-								""comparison"": ""IS"",
-								""right"": ""yes""
+								""comparison"": ""NOT"",
+								""right"": ""TRUE""
 							},
 							""true"": {
 								""messages"": ""This room looks pretty cool, but you just want to get out of here and go about your day. You should probably head for the door.""
@@ -238,7 +238,7 @@ namespace BoningerWorks.TextAdventure.Cli
 									""condition"": {
 										""left"": ""${NOTE_WOODEN.VIEWED}"",
 										""comparison"": ""IS"",
-										""right"": ""yes""
+										""right"": ""TRUE""
 									},
 									""true"": {
 										""messages"": ""You glance around the room, and it all looks pretty normal. You still can't believe that the door is locked. Maybe there's something to be done if you take a closer look.""
