@@ -97,10 +97,10 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 							reaction = reactionNext;
 						}
 						// Check if reaction exists and matches exist
-						if (reaction != null && reaction.Matches.HasValue)
+						if (reaction != null && reaction.Reactions.HasValue)
 						{
 							// Get matches
-							var matches = reaction.Matches.Value;
+							var matches = reaction.Reactions.Value;
 							// Run through matches
 							for (int i = 0; i < matches.Length; i++)
 							{
