@@ -10,7 +10,7 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 {
 	public class ReactionMap
 	{
-		internal static ImmutableArray<ReactionMap> Create(OneOrManyList<Reaction?>? reactions, Symbol? itemSymbolDefault)
+		internal static ImmutableArray<ReactionMap> Create(Symbol entitySymbol, OneOrManyList<Reaction?>? reactions)
 		{
 			// Check if reactions does not exist
 			if (reactions == null)
@@ -19,18 +19,20 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 				return ImmutableArray<ReactionMap>.Empty;
 			}
 			// Create reaction maps
-			var reactionMaps = reactions.Select(r => new ReactionMap(r, itemSymbolDefault)).ToImmutableArray();
+			var reactionMaps = reactions.Select(r => new ReactionMap(entitySymbol, r)).ToImmutableArray();
 			// Return reaction maps
 			return reactionMaps;
 		}
 		
+		public Symbol EntitySymbol { get; }
 		public Symbol CommandSymbol { get; }
 		public ImmutableDictionary<Symbol, Symbol> CommandItemSymbolToItemSymbolMappings { get; }
-		public Symbol? ItemSymbolDefault { get; }
 		public ImmutableArray<ActionMap> ActionMaps { get; }
 
-		internal ReactionMap(Reaction? reaction, Symbol? itemSymbolDefault)
+		private ReactionMap(Symbol entitySymbol, Reaction? reaction)
 		{
+			// Set entity symbol
+			EntitySymbol = entitySymbol;
 			// Check if reaction does not exist
 			if (reaction == null)
 			{
@@ -51,8 +53,6 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 							kv => Symbol.TryCreate(kv.Value) ?? throw new ValidationError($"Item symbol ({kv.Value}) is not valid.")
 						)
 					?? ImmutableDictionary<Symbol, Symbol>.Empty;
-				// Set default item symbol
-				ItemSymbolDefault = itemSymbolDefault;
 				// Check if actions does not exist
 				if (reaction.Actions == null || reaction.Actions.Count == 0)
 				{

@@ -33,7 +33,7 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 		internal ImmutableArray<ItemMap> ItemMaps { get; }
 		internal ImmutableArray<ReactionMap> ReactionMaps { get; }
 
-		internal ItemMap(string itemSymbol, Symbol locationSymbol, Item? item)
+		private ItemMap(string itemSymbol, Symbol locationSymbol, Item? item)
 		{
 			// Set item symbol
 			ItemSymbol = Symbol.TryCreate(itemSymbol) ?? throw new ValidationError($"Item symbol ({itemSymbol}) is not valid.");
@@ -66,8 +66,7 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 				// Set item maps
 				ItemMaps = itemMaps.Concat(itemMaps.SelectMany(im => im.ItemMaps)).ToImmutableArray();
 				// Set reaction maps
-				ReactionMaps = item.Reactions?.Select(r => new ReactionMap(r, ItemSymbol)).ToImmutableArray()
-					?? ImmutableArray<ReactionMap>.Empty;
+				ReactionMaps = ReactionMap.Create(ItemSymbol, item.Reactions);
 			}
 			catch (GenericException<ValidationError> exception)
 			{

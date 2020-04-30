@@ -1,5 +1,7 @@
 ﻿using BoningerWorks.TextAdventure.Core.Utilities;
+using BoningerWorks.TextAdventure.Intermediate.Errors;
 using BoningerWorks.TextAdventure.Intermediate.Maps;
+using BoningerWorks.TextAdventure.Json.Outputs;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -10,69 +12,79 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 	public class Reaction
 	{
 		public Command Command { get; }
-		public ImmutableDictionary<Symbol, Reaction>? Next { get; }
-		public ImmutableArray<ReactionMatch>? Matches { get; }
+		public ImmutableDictionary<Symbol, Item> CommandItemToItemMappings { get; }
 
-		public Reaction(Entities entities, Items items, Command command, ImmutableList<ReactionMap> reactionMaps) 
-		: this
-		(
-			command,
-			reactionMaps
-				.Select
-					(rm =>
-					{
-						// Check if command does not match reaction map command
-						if (command.Symbol != rm.CommandSymbol)
-						{
-							// Throw error
-							throw new ArgumentException($"Command ({command}) does not match command ({rm.CommandSymbol}) of reaction map.");
-						}
-						// Create match
-						var match = new ReactionMatch(entities, items, command, rm);
-						// Return match
-						return match;
-					})
-				.ToImmutableList(),
-			index: 0
-		) 
-		{ }
-		private Reaction(Command command, ImmutableList<ReactionMatch> matches, int index)
+		private readonly ImmutableArray<Action<ResultBuilder>> _actions;
+
+		public Reaction(Entities entities, Items items, Commands commands, ReactionMap reactionMap)
 		{
 			// Set command
-			Command = command;
-			// Check if no more command item symbols
-			if (index == Command.CommandItems.Length)
+			Command = commands.TryGet(reactionMap.CommandSymbol) 
+				?? throw new InvalidOperationException($"No command with symbol ({reactionMap.CommandSymbol}) could be found.");
+			// Check if reaction map has no command item symbol to item symbol mappings
+			if (reactionMap.CommandItemSymbolToItemSymbolMappings.Count == 0)
 			{
-				// Set matches
-				Matches = matches.ToImmutableArray();
+				// Check if command has more than one item symbol
+				if (Command.CommandItems.Length > 1)
+				{
+					// Throw error
+					throw new ValidationError($"Reaction map for command ({Command}) is not valid.");
+				}
 			}
 			else
 			{
-				// Set next
-				Next = _CreateNext(Command, matches, index);
+				// Check if command map does not have an item symbol for each command item symbol
+				if (Command.CommandItems.Any(ci => !reactionMap.CommandItemSymbolToItemSymbolMappings.ContainsKey(ci)))
+				{
+					// Throw error
+					throw new ValidationError($"Reaction map for command ({Command}) is not valid.");
+				}
 			}
+			// Set command item symbol to item symbol mappings
+			CommandItemToItemMappings = Command.CommandItems
+				.Select
+					(cis =>
+					{
+						// Try to get item symbol for command item symbol
+						if (!reactionMap.CommandItemSymbolToItemSymbolMappings.TryGetValue(cis, out var itemSymbol))
+						{
+							// Set item symbol
+							itemSymbol = items.Contains(reactionMap.EntitySymbol) 
+								? reactionMap.EntitySymbol
+								: throw new ValidationError($"Reaction map for command ({Command}) is not valid.");
+						}
+						// Check if item symbol does not exist
+						if (itemSymbol == null)
+						{
+							// Throw error
+							throw new ValidationError($"No mapping could be found in command map for command item ({cis}) of command ({Command}).");
+						}
+						// Check if item does not exist
+						if (!items.Contains(itemSymbol))
+						{
+							// Throw error
+							throw new ValidationError($"No item with symbol ({itemSymbol}) could be found.");
+						}
+						// Return command item to item mapping
+						return KeyValuePair.Create(cis, items.Get(itemSymbol));
+					})
+				.ToImmutableDictionary();
+			// Set actions
+			_actions = reactionMap.ActionMaps.SelectMany(am => Action.Create(entities, items, am)).ToImmutableArray();
 		}
 
-		private static ImmutableDictionary<Symbol, Reaction> _CreateNext(Command command, ImmutableList<ReactionMatch> matches, int index)
+		public Result Execute(State state)
 		{
-			// Get next index
-			var indexNext = index + 1;
-			// Create next
-			var next = matches
-				.GroupBy
-					(
-						m =>
-						{
-							// Get item
-							var item = m.CommandItemToItemMappings[command.CommandItems[index]];
-							// Return item symbol
-							return item.Symbol;
-						},
-						(@is, m) => KeyValuePair.Create(@is, new Reaction(command, m.ToImmutableList(), indexNext))
-					)
-				.ToImmutableDictionary();
-			// Return next
-			return next;
+			// Create result
+			var result = new ResultBuilder(state);
+			// Run through actions
+			for (int i = 0; i < _actions.Length; i++)
+			{
+				// Execute action
+				_actions[i](result);
+			}
+			// Return result
+			return result.ToImmutable();
 		}
 	}
 }

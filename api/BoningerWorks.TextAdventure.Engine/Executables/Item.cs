@@ -14,14 +14,14 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		private static readonly Symbol _datumLocation = new Symbol("LOCATION");
 
 		public Symbol Symbol { get; }
-		public Symbol Location { get; }
 		public Names Names { get; }
 		public Name Name { get; }
-		public bool? Active { get; }
 		public string RegularExpression { get; }
 
 		private readonly Player _player;
 		private readonly Areas _areas;
+		public readonly Symbol _location;
+		public readonly bool? _active;
 
 		public Item(Player player, Areas areas, ItemMap itemMap)
 		{
@@ -32,19 +32,19 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			// Set symbol
 			Symbol = itemMap.ItemSymbol;
 			// Set location
-			Location = itemMap.LocationSymbol ?? throw new ValidationError("Item location cannot be null.");
+			_location = itemMap.LocationSymbol ?? throw new ValidationError("Item location cannot be null.");
 			// Check if location does not exist
-			if (Location != player.Symbol && !areas.Contains(Location))
+			if (_location != player.Symbol && !areas.Contains(_location))
 			{
 				// Throw error
-				throw new ValidationError($"Item location ({Location}) could not be found.");
+				throw new ValidationError($"Item location ({_location}) could not be found.");
 			}
 			// Set names
 			Names = itemMap.ItemNames;
 			// Set name
 			Name = itemMap.ItemName;
 			// Set active
-			Active = itemMap.Active;
+			_active = itemMap.Active;
 			// Set regular expression
 			RegularExpression = Names.RegularExpression;
 		}
@@ -55,13 +55,25 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			return Symbol.ToString();
 		}
 
+		public Symbol GetLocation(State state)
+		{
+			// Return location
+			return state.Entities[Symbol].Data[_datumLocation];
+		}
+
+		public Symbol GetActive(State state)
+		{
+			// Return active
+			return state.Entities[Symbol].Data[_datumActive];
+		}
+
 		Entity IEntity.Create()
 		{
 			// Return entity
 			return new Entity(ImmutableDictionary.CreateRange(new KeyValuePair<Symbol, Symbol>[]
 			{
-				KeyValuePair.Create(_datumActive, Active == false ? Symbol.False : Symbol.True),
-				KeyValuePair.Create(_datumLocation, Location)
+				KeyValuePair.Create(_datumActive, _active == false ? Symbol.False : Symbol.True),
+				KeyValuePair.Create(_datumLocation, _location)
 			}));
 		}
 
@@ -99,6 +111,14 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			}
 			// Throw error
 			throw new ValidationError($"Item data ({symbol}) could not be found.");
+		}
+
+		bool IEntity.IsInContext(Game game, State state)
+		{
+			// Get location
+			var location = GetLocation(state);
+			// Return if active and on player or in player area
+			return GetActive(state) == Symbol.True && (location == game.Player.Symbol || location == game.Player.GetArea(state));
 		}
 	}
 }

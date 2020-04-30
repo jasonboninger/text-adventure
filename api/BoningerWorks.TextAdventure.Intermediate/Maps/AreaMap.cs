@@ -29,7 +29,7 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 				// Set item maps
 				ItemMaps = ItemMap.Create(area.ItemSymbolToItemMappings, AreaSymbol);
 				// Set reaction maps
-				ReactionMaps = ReactionMap.Create(area.Reactions, itemSymbolDefault: null);
+				ReactionMaps = ReactionMap.Create(AreaSymbol, area.Reactions);
 			}
 			catch (GenericException<ValidationError> exception)
 			{

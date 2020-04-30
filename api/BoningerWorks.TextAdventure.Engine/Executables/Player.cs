@@ -13,8 +13,8 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		private static readonly Symbol _datumArea = new Symbol("AREA");
 
 		public Symbol Symbol { get; }
-		public Symbol Area { get; }
 
+		private readonly Symbol _area;
 		private readonly Areas _areas;
 
 		public Player(Areas areas, PlayerMap playerMap)
@@ -24,13 +24,19 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			// Set symbol
 			Symbol = playerMap.PlayerSymbol ?? throw new ValidationError("Player symbol cannot be null.");
 			// Set area
-			Area = playerMap.AreaSymbol ?? throw new ValidationError("Player area cannot be null.");
+			_area = playerMap.AreaSymbol ?? throw new ValidationError("Player area cannot be null.");
 			// Check if area does not exist
-			if (!areas.Contains(playerMap.AreaSymbol))
+			if (!areas.Contains(_area))
 			{
 				// Throw error
-				throw new ValidationError($"Player area ({playerMap.AreaSymbol}) could not be found.");
+				throw new ValidationError($"Player area ({_area}) could not be found.");
 			}
+		}
+
+		public Symbol GetArea(State state)
+		{
+			// Return area
+			return state.Entities[Symbol].Data[_datumArea];
 		}
 
 		Entity IEntity.Create()
@@ -38,7 +44,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			// Return entity
 			return new Entity(ImmutableDictionary.CreateRange(new KeyValuePair<Symbol, Symbol>[] 
 			{
-				KeyValuePair.Create(_datumArea, Area)
+				KeyValuePair.Create(_datumArea, _area)
 			}));
 		}
 
@@ -64,6 +70,12 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			}
 			// Throw error
 			throw new ValidationError($"Player data ({symbol}) could not be found.");
+		}
+
+		bool IEntity.IsInContext(Game game, State state)
+		{
+			// Return always in context
+			return true;
 		}
 	}
 }

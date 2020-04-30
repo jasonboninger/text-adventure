@@ -33,5 +33,11 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			// Throw error
 			throw new ValidationError($"Area data ({symbol}) could not be found.");
 		}
+
+		bool IEntity.IsInContext(Game game, State state)
+		{
+			// Return if player is in area
+			return game.Player.GetArea(state) == Symbol;
+		}
 	}
 }
