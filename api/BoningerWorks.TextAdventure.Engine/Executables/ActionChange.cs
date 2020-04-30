@@ -9,56 +9,55 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 	{
 		public static Action<ResultBuilder> Create(Entities entities, ChangeMap changeMap)
 		{
-			// Get target symbol
-			var targetSymbol = changeMap.TargetSymbol;
+			// Get target
+			var target = changeMap.Path.Target;
 			// Check if entity does not exist
-			if (!entities.Contains(targetSymbol))
+			if (entities.TryGet(target) == null)
 			{
 				// Throw error
-				throw new ValidationError($"Entity for symbol ({targetSymbol}) could not be found.");
+				throw new ValidationError($"Entity for symbol ({target}) could not be found.");
 			}
-			// Get target datum
-			var targetDatum = changeMap.TargetDatum;
-			// Check if custom datum
-			if (changeMap.CustomDatum)
+			// Get datum
+			var datum = changeMap.Path.Datum;
+			// Check if custom
+			if (changeMap.Path.Custom)
 			{
-				// Get new value
-				var newValue = changeMap.NewValue;
+				// Get replaceable
+				var replaceable = new Replaceable(entities, changeMap.Value);
 				// Return execute
 				return result =>
 				{
 					// Get state
 					var state = result.State;
 					// Get entity
-					var entity = state.Entities[targetSymbol];
+					var entity = state.Entities[target];
+					// Get value
+					var value = replaceable.Replace(state);
 					// Update entity
-					entity = entity.UpdateCustomData(targetDatum, newValue);
+					entity = entity.UpdateCustomData(datum, value);
 					// Update state
-					state = state.UpdateEntity(targetSymbol, entity);
+					state = state.UpdateEntity(target, entity);
 					// Set state
 					result.State = state;
 				};
 			}
 			else
 			{
-				// Create new value
-				var newValue = Symbol.TryCreate(changeMap.NewValue) 
-					?? throw new ValidationError($"Data value ({changeMap.NewValue}) is not a valid symbol.");
-				// Get entity
-				var entity = entities.Get(targetSymbol);
+				// Create value
+				var value = Symbol.TryCreate(changeMap.Value) ?? throw new ValidationError($"Data value ({changeMap.Value}) is not a valid symbol.");
 				// Ensure valid data
-				entity.EnsureValidData(targetDatum, newValue);
+				entities.Get(target).EnsureValidData(datum, value);
 				// Return execute
 				return result =>
 				{
 					// Get state
 					var state = result.State;
 					// Get entity
-					var entity = state.Entities[targetSymbol];
+					var entity = state.Entities[target];
 					// Update entity
-					entity = entity.UpdateData(targetDatum, newValue);
+					entity = entity.UpdateData(datum, value);
 					// Update state
-					state = state.UpdateEntity(targetSymbol, entity);
+					state = state.UpdateEntity(target, entity);
 					// Set state
 					result.State = state;
 				};

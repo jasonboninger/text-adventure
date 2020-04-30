@@ -20,7 +20,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			if (actionMap.MessageMaps.HasValue)
 			{
 				// Return message actions
-				return actionMap.MessageMaps.Value.Select(mm => ActionMessage.Create(mm));
+				return actionMap.MessageMaps.Value.Select(mm => ActionMessage.Create(entities, mm));
 			}
 			// Check if change maps exist
 			if (actionMap.ChangeMaps.HasValue)

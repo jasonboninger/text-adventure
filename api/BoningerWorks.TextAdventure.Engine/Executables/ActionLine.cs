@@ -8,7 +8,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 {
 	public static class ActionLine
 	{
-		public static Func<State, IEnumerable<Line>> Create(LineMap lineMap)
+		public static Func<State, IEnumerable<Line>> Create(Entities entities, LineMap lineMap)
 		{
 			// Check if if map exists
 			if (lineMap.IfMap != null)
@@ -34,7 +34,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			if (lineMap.InlinedMap != null)
 			{
 				// Create inlined line action
-				var actionLineInlined = ActionLineInlined.Create(lineMap.InlinedMap);
+				var actionLineInlined = ActionLineInlined.Create(entities, lineMap.InlinedMap);
 				// Return action
 				return state => actionLineInlined(state).ToEnumerable();
 			}

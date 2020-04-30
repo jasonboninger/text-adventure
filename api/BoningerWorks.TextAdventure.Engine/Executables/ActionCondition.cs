@@ -15,9 +15,9 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			if (conditionMap.SingleMap != null)
 			{
 				// Get left
-				var left = new Replaceable(conditionMap.SingleMap.Left);
+				var left = new Replaceable(entities, conditionMap.SingleMap.Left);
 				// Get right
-				var right = new Replaceable(conditionMap.SingleMap.Right);
+				var right = new Replaceable(entities, conditionMap.SingleMap.Right);
 				// Get comparison
 				var comparison = conditionMap.SingleMap.Comparison;
 				// Check if is

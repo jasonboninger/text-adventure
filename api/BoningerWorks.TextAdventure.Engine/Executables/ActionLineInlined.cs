@@ -8,10 +8,10 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 {
 	public static class ActionLineInlined
 	{
-		public static Func<State, Line> Create(LineInlinedMap lineInlinedMap)
+		public static Func<State, Line> Create(Entities entities, LineInlinedMap lineInlinedMap)
 		{
 			// Create text actions
-			var actionsText = lineInlinedMap.TextMaps.Select(tm => ActionText.Create(tm)).ToImmutableArray();
+			var actionsText = lineInlinedMap.TextMaps.Select(tm => ActionText.Create(entities, tm)).ToImmutableArray();
 			// Return action
 			return state =>
 			{

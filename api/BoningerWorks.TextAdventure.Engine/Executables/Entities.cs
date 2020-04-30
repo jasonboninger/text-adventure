@@ -32,20 +32,20 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 
 		public IEntity Get(Symbol symbol)
 		{
+			// Return entity
+			return TryGet(symbol) ?? throw new ArgumentException($"No entity with symbol ({symbol}) could be found.");
+		}
+
+		public IEntity? TryGet(Symbol? symbol)
+		{
 			// Try to get entity
 			if (symbol == null || !_symbolToEntityMappings.TryGetValue(symbol, out var entity))
 			{
-				// Throw error
-				throw new ArgumentException($"No entity with symbol ({symbol}) could be found.");
+				// Return no entity
+				return null;
 			}
 			// Return entity
 			return entity;
-		}
-
-		public bool Contains(Symbol symbol)
-		{
-			// Return if entity exists
-			return symbol != null && _symbolToEntityMappings.ContainsKey(symbol);
 		}
 	}
 }

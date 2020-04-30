@@ -8,10 +8,10 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 {
 	public static class ActionMessage
 	{
-		public static Action<ResultBuilder> Create(MessageMap messageMap)
+		public static Action<ResultBuilder> Create(Entities entities, MessageMap messageMap)
 		{
 			// Set line actions
-			var actionsLine = messageMap.LineMaps.Select(lm => ActionLine.Create(lm)).ToImmutableArray();
+			var actionsLine = messageMap.LineMaps.Select(lm => ActionLine.Create(entities, lm)).ToImmutableArray();
 			// Return action
 			return result =>
 			{

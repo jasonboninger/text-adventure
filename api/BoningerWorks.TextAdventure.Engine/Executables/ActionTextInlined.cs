@@ -6,10 +6,10 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 {
 	public static class ActionTextInlined
 	{
-		public static Func<State, Text> Create(TextInlinedMap textInlinedMap)
+		public static Func<State, Text> Create(Entities entities, TextInlinedMap textInlinedMap)
 		{
 			// Create replaceable
-			var replaceable = new Replaceable(textInlinedMap.Value);
+			var replaceable = new Replaceable(entities, textInlinedMap.Value);
 			// Return action
 			return state =>
 			{
