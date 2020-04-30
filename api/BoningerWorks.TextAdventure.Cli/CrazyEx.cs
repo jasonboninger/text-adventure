@@ -165,6 +165,10 @@ namespace BoningerWorks.TextAdventure.Cli
 	},
 	""areas"": {
 		""HOTEL_ROOM"": {
+			""names"": [
+				""Hotel room"",
+				""room""
+			],
 			""items"": {
 				""DOOR"": {
 					""names"": [

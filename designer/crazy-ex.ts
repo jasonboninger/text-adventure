@@ -97,6 +97,7 @@ export const CRAZY_EX: IGame = {
 	},
 	areas: {
 		HOTEL_ROOM: {
+			names: ["Hotel room", "room"],
 			items: {
 				DOOR: {
 					names: ["Door"],

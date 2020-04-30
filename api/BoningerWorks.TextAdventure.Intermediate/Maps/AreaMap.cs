@@ -3,12 +3,15 @@ using BoningerWorks.TextAdventure.Core.Utilities;
 using BoningerWorks.TextAdventure.Intermediate.Errors;
 using BoningerWorks.TextAdventure.Json.Inputs;
 using System.Collections.Immutable;
+using System.Linq;
 
 namespace BoningerWorks.TextAdventure.Intermediate.Maps
 {
 	public class AreaMap
 	{
 		public Symbol AreaSymbol { get; }
+		public Names AreaNames { get; }
+		public Name AreaName { get; }
 
 		internal ImmutableArray<ItemMap> ItemMaps { get; }
 		internal ImmutableArray<ReactionMap> ReactionMaps { get; }
@@ -26,6 +29,11 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 					// Throw error
 					throw new ValidationError("Area body cannot be null.");
 				}
+				// Set area names
+				AreaNames = Names.TryCreate(area.Names?.Select(n => Name.TryCreate(n) ?? throw new ValidationError($"Name ({n}) is not valid.")))
+					?? throw new ValidationError("Names is not valid.");
+				// Set area name
+				AreaName = AreaNames.First();
 				// Set item maps
 				ItemMaps = ItemMap.Create(area.ItemSymbolToItemMappings, AreaSymbol);
 				// Set reaction maps

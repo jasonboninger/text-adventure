@@ -9,11 +9,20 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 	public class Area : IEntity
 	{
 		public Symbol Symbol { get; }
+		public Names Names { get; }
+		public Name Name { get; }
+		public string RegularExpression { get; }
 
 		public Area(AreaMap areaMap)
 		{
 			// Set symbol
-			Symbol = areaMap.AreaSymbol ?? throw new ValidationError("Area symbol cannot be null.");
+			Symbol = areaMap.AreaSymbol;
+			// Set names
+			Names = areaMap.AreaNames;
+			// Set name
+			Name = areaMap.AreaName;
+			// Set regular expression
+			RegularExpression = Names.RegularExpression;
 		}
 
 		Entity IEntity.Create()

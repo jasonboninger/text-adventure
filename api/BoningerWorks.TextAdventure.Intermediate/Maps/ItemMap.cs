@@ -55,7 +55,7 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 					throw new ValidationError("Names cannot be null or empty.");
 				}
 				// Set item names
-				ItemNames = Names.TryCreate(item.Names.Select(n => Name.TryCreate(n) ?? throw new ValidationError($"Name ({n}) is not valid.")))
+				ItemNames = Names.TryCreate(item.Names?.Select(n => Name.TryCreate(n) ?? throw new ValidationError($"Name ({n}) is not valid.")))
 					?? throw new ValidationError("Names is not valid.");
 				// Set item name
 				ItemName = ItemNames.First();
