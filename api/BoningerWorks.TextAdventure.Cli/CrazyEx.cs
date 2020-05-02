@@ -89,8 +89,9 @@ namespace BoningerWorks.TextAdventure.Cli
 			""Myself""
 		],
 		""area"": ""HOTEL_ROOM"",
-		""items"": {
-			""PHONE"": {
+		""items"": [
+			{
+				""id"": ""PHONE"",
 				""names"": [
 					""Phone"",
 					""My phone"",
@@ -140,7 +141,8 @@ namespace BoningerWorks.TextAdventure.Cli
 					}
 				]
 			},
-			""WALLET"": {
+			{
+				""id"": ""WALLET"",
 				""names"": [
 					""Wallet"",
 					""My wallet""
@@ -154,7 +156,7 @@ namespace BoningerWorks.TextAdventure.Cli
 					}
 				]
 			}
-		}
+		]
 	},
 	""start"": {
 		""messages"": [
@@ -179,8 +181,9 @@ namespace BoningerWorks.TextAdventure.Cli
 				""Hotel room"",
 				""room""
 			],
-			""items"": {
-				""DOOR"": {
+			""items"": [
+				{
+					""id"": ""DOOR"",
 					""names"": [
 						""Door""
 					],
@@ -220,7 +223,8 @@ namespace BoningerWorks.TextAdventure.Cli
 						}
 					]
 				},
-				""NOTE_WOODEN"": {
+				{
+					""id"": ""NOTE_WOODEN"",
 					""names"": [
 						""Wood Sign"",
 						""Sign"",
@@ -233,7 +237,7 @@ namespace BoningerWorks.TextAdventure.Cli
 						""Wood Board""
 					]
 				}
-			},
+			],
 			""reactions"": [
 				{
 					""command"": ""SURVEY"",

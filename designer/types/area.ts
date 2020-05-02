@@ -4,7 +4,7 @@ import { IReaction } from "./reaction";
 
 export interface IArea {
 	id: string;
-	names: IOneOrArray<string>;
+	names: string[];
 	reactions?: IOneOrArray<IReaction>;
-	items?: IDictionary<IItem>;
+	items?: IItem[];
 }

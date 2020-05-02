@@ -41,7 +41,7 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 				// Set area symbol
 				AreaSymbol = Symbol.TryCreate(player.AreaSymbol) ?? throw new ValidationError($"Area symbol ({player.AreaSymbol}) is not valid.");
 				// Set item maps
-				ItemMaps = ItemMap.Create(player.ItemSymbolToItemMappings, PlayerSymbol);
+				ItemMaps = ItemMap.Create(player.Items, PlayerSymbol);
 				// Set reaction maps
 				ReactionMaps = ReactionMap.Create(PlayerSymbol, player.Reactions);
 			}

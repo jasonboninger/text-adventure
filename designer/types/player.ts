@@ -4,8 +4,8 @@ import { IReaction } from "./reaction";
 
 export interface IPlayer {
 	id: string;
-	names: IOneOrArray<string>;
+	names: string[];
 	area: string;
-	items?: IDictionary<IItem>;
+	items?: IItem[];
 	reactions?: IOneOrArray<IReaction>;
 }

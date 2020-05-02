@@ -32,7 +32,7 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 				AreaNames = Names.TryCreate(area.Names?.Select(n => Name.TryCreate(n) ?? throw new ValidationError($"Name ({n}) is not valid.")))
 					?? throw new ValidationError("Names is not valid.");
 				// Set item maps
-				ItemMaps = ItemMap.Create(area.ItemSymbolToItemMappings, AreaSymbol);
+				ItemMaps = ItemMap.Create(area.Items, AreaSymbol);
 				// Set reaction maps
 				ReactionMaps = ReactionMap.Create(AreaSymbol, area.Reactions);
 			}

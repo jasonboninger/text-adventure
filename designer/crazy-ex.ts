@@ -40,8 +40,9 @@ export const CRAZY_EX: IGame = {
 		id: "PLAYER",
 		names: ["Self", "Myself"],
 		area: "HOTEL_ROOM",
-		items: {
-			PHONE: {
+		items: [
+			{
+				id: "PHONE",
 				names: ["Phone", "My phone", "Cellphone", "My cellphone", "Cell phone", "My cell phone"],
 				reactions: [
 					{
@@ -72,7 +73,8 @@ export const CRAZY_EX: IGame = {
 					}
 				]
 			},
-			WALLET: {
+			{
+				id: "WALLET",
 				names: ["Wallet", "My wallet"],
 				reactions: [
 					{
@@ -83,7 +85,7 @@ export const CRAZY_EX: IGame = {
 					}
 				]
 			}
-		}
+		]
 	},
 	start: {
 		messages: [
@@ -105,8 +107,9 @@ export const CRAZY_EX: IGame = {
 		{
 			id: "HOTEL_ROOM",
 			names: ["Hotel room", "room"],
-			items: {
-				DOOR: {
+			items: [
+				{
+					id: "DOOR",
 					names: ["Door"],
 					reactions: [
 						{
@@ -140,10 +143,11 @@ export const CRAZY_EX: IGame = {
 						}
 					]
 				},
-				NOTE_WOODEN: {
+				{
+					id: "NOTE_WOODEN",
 					names: ["Wood Sign", "Sign", "Door Sign", "Wooden Note", "Wood Note", "Door Note", "Board", "Wooden Board", "Wood Board"]
 				}
-			},
+			],
 			reactions: [
 				{
 					command: "SURVEY",
