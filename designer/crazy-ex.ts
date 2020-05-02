@@ -2,28 +2,32 @@ import { IGame } from "./types/game";
 import { horizontalRule, blank, is, not } from "./utilities/helpers";
 
 export const CRAZY_EX: IGame = {
-	commands: {
-		INSPECT: {
+	commands: [
+		{
+			id: "INSPECT",
 			parts: ["COMMAND", "ITEM"],
 			words: {
 				COMMAND: ["Inspect", "Ins", "Look at", "Lookat", "Look", "Observe", "Check"],
 			},
 			items: ["ITEM"]
 		},
-		SURVEY: {
+		{
+			id: "SURVEY",
 			parts: ["COMMAND"],
 			words: {
 				COMMAND: ["Survey", "Look around", "Lookaround", "Look", "Observe"]
 			}
 		},
-		USE: {
+		{
+			id: "USE",
 			parts: ["COMMAND", "ITEM"],
 			words: {
 				COMMAND: ["Use"]
 			},
 			items: ["ITEM"]
 		},
-		USE_ON: {
+		{
+			id: "USE_ON",
 			parts: ["COMMAND_START", "ITEM_TO_USE", "COMMAND_JOIN", "ITEM_TO_USE_ON"],
 			words: {
 				COMMAND_START: ["Use", "Utilize", "Put", "Hold"],
@@ -31,8 +35,9 @@ export const CRAZY_EX: IGame = {
 			},
 			items: ["ITEM_TO_USE", "ITEM_TO_USE_ON"]
 		}
-	},
+	],
 	player: {
+		id: "PLAYER",
 		names: ["Self", "Myself"],
 		area: "HOTEL_ROOM",
 		items: {
@@ -96,8 +101,9 @@ export const CRAZY_EX: IGame = {
 			}
 		]
 	},
-	areas: {
-		HOTEL_ROOM: {
+	areas: [
+		{
+			id: "HOTEL_ROOM",
 			names: ["Hotel room", "room"],
 			items: {
 				DOOR: {
@@ -176,7 +182,7 @@ export const CRAZY_EX: IGame = {
 				}
 			]
 		}
-	},
+	],
 	end: {
 		messages: [
 			{

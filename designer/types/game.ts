@@ -5,9 +5,9 @@ import { IArea } from "./area";
 import { XAction } from "./action";
 
 export interface IGame {
-	commands: IDictionary<ICommand>;
+	commands: ICommand[];
 	player: IPlayer;
-	areas: IDictionary<IArea>;
+	areas: IArea[];
 	start?: IOneOrArray<XAction>;
 	end?: IOneOrArray<XAction>;
 }

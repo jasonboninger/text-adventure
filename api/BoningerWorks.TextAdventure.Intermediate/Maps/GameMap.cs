@@ -26,14 +26,14 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 				// Throw error
 				throw new ValidationError("Game cannot be null.");
 			}
-			// Check if command symbol to command mappings does not exist
-			if (game.CommandSymbolToCommandMappings == null || game.CommandSymbolToCommandMappings.Count == 0)
+			// Check if commands does not exist
+			if (game.Commands == null || game.Commands.Count == 0)
 			{
 				// Throw error
-				throw new ValidationError("Command symbol to command mappings cannot be null or empty.");
+				throw new ValidationError("Commands cannot be null or empty.");
 			}
 			// Set command maps
-			CommandMaps = game.CommandSymbolToCommandMappings.Select(kv => new CommandMap(kv.Key, kv.Value)).ToImmutableArray();
+			CommandMaps = game.Commands.Select(c => new CommandMap(c)).ToImmutableArray();
 			// Check if not all command symbols are unqiue
 			if (CommandMaps.Select(cm => cm.CommandSymbol).Distinct().Count() != CommandMaps.Length)
 			{
@@ -42,14 +42,14 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 			}
 			// Set player map
 			PlayerMap = new PlayerMap(game.Player);
-			// Check if area symbol to area mappings does not exist
-			if (game.AreaSymbolToAreaMappings == null || game.AreaSymbolToAreaMappings.Count == 0)
+			// Check if areas does not exist
+			if (game.Areas == null || game.Areas.Count == 0)
 			{
 				// Throw error
-				throw new ValidationError("Area symbol to area mappings cannot be null or empty.");
+				throw new ValidationError("Areas cannot be null or empty.");
 			}
 			// Set area maps
-			AreaMaps = game.AreaSymbolToAreaMappings.Select(kv => new AreaMap(kv.Key, kv.Value)).ToImmutableArray();
+			AreaMaps = game.Areas.Select(a => new AreaMap(a)).ToImmutableArray();
 			// Check if not all area symbols are unqiue
 			if (AreaMaps.Select(am => am.AreaSymbol).Distinct().Count() != AreaMaps.Length)
 			{

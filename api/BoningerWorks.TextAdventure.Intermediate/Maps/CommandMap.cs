@@ -15,19 +15,19 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 		public ImmutableArray<Symbol> CommandAreaSymbols { get; }
 		public ImmutableArray<Symbol> CommandItemSymbols { get; }
 
-		internal CommandMap(string commandSymbol, Command? command)
+		internal CommandMap(Command? command)
 		{
+			// Check if command does not exist
+			if (command == null)
+			{
+				// Throw error
+				throw new ValidationError("Command cannot be null.");
+			}
 			// Set command symbol
-			CommandSymbol = Symbol.TryCreate(commandSymbol) ?? throw new ValidationError($"Command symbol ({commandSymbol}) is not valid.");
+			CommandSymbol = Symbol.TryCreate(command.Id) ?? throw new ValidationError($"Command symbol ({command.Id}) is not valid.");
 			// Try to create command map
 			try
 			{
-				// Check if command does not exist
-				if (command == null)
-				{
-					// Throw error
-					throw new ValidationError("Command body cannot be null.");
-				}
 				// Check if part symbols is does not exist
 				if (command.PartSymbols == null || command.PartSymbols.Count == 0)
 				{

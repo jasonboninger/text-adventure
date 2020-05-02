@@ -15,19 +15,19 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 		internal ImmutableArray<ItemMap> ItemMaps { get; }
 		internal ImmutableArray<ReactionMap> ReactionMaps { get; }
 
-		internal AreaMap(string areaSymbol, Area? area)
+		internal AreaMap(Area? area)
 		{
+			// Check if area does not exist
+			if (area == null)
+			{
+				// Throw error
+				throw new ValidationError("Area cannot be null.");
+			}
 			// Set area symbol
-			AreaSymbol = Symbol.TryCreate(areaSymbol) ?? throw new ValidationError($"Area symbol ({areaSymbol}) is not valid.");
+			AreaSymbol = Symbol.TryCreate(area.Id) ?? throw new ValidationError($"Area symbol ({area.Id}) is not valid.");
 			// Try to create area
 			try
 			{
-				// Check if area does not exist
-				if (area == null)
-				{
-					// Throw error
-					throw new ValidationError("Area body cannot be null.");
-				}
 				// Set area names
 				AreaNames = Names.TryCreate(area.Names?.Select(n => Name.TryCreate(n) ?? throw new ValidationError($"Name ({n}) is not valid.")))
 					?? throw new ValidationError("Names is not valid.");

@@ -6,6 +6,7 @@ namespace BoningerWorks.TextAdventure.Json.Inputs
 {
 	public class Player
 	{
+		[JsonPropertyName("id")] public string? Id { get; set; }
 		[JsonPropertyName("names")] public OneOrManyList<string?>? Names { get; set; }
 		[JsonPropertyName("area")] public string? AreaSymbol { get; set; }
 		[JsonPropertyName("items")] public Dictionary<string, Item?>? ItemSymbolToItemMappings { get; set; }

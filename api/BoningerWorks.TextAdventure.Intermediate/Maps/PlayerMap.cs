@@ -18,14 +18,14 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 
 		internal PlayerMap(Player? player)
 		{
-			// Set player symbol
-			PlayerSymbol = new Symbol("PLAYER");
 			// Check if player does not exist
 			if (player == null)
 			{
 				// Throw error
 				throw new ValidationError("Player cannot be null.");
 			}
+			// Set player symbol
+			PlayerSymbol = Symbol.TryCreate(player.Id) ?? throw new ValidationError($"Player symbol ({player.Id}) is not valid.");
 			// Try to create player
 			try
 			{

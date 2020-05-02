@@ -9,9 +9,9 @@ namespace BoningerWorks.TextAdventure.Json.Inputs
 	{
 		public static Game Deserialize(string json) => JsonSerializerExecutor.Deserialize<Game>(json);
 
-		[JsonPropertyName("commands")] public Dictionary<string, Command?>? CommandSymbolToCommandMappings { get; set; }
+		[JsonPropertyName("commands")] public List<Command?>? Commands { get; set; }
 		[JsonPropertyName("player")] public Player? Player { get; set; }
-		[JsonPropertyName("areas")] public Dictionary<string, Area?>? AreaSymbolToAreaMappings { get; set; }
+		[JsonPropertyName("areas")] public List<Area?>? Areas { get; set; }
 		[JsonPropertyName("start")] public OneOrManyList<Action?>? ActionsStart { get; set; }
 		[JsonPropertyName("end")] public OneOrManyList<Action?>? ActionsEnd { get; set; }
 	}

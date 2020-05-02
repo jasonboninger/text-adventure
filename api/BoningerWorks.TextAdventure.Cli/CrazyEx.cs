@@ -4,8 +4,9 @@ namespace BoningerWorks.TextAdventure.Cli
 	{
 		public const string JSON = 
 @"{
-	""commands"": {
-		""INSPECT"": {
+	""commands"": [
+		{
+			""id"": ""INSPECT"",
 			""parts"": [
 				""COMMAND"",
 				""ITEM""
@@ -25,7 +26,8 @@ namespace BoningerWorks.TextAdventure.Cli
 				""ITEM""
 			]
 		},
-		""SURVEY"": {
+		{
+			""id"": ""SURVEY"",
 			""parts"": [
 				""COMMAND""
 			],
@@ -39,7 +41,8 @@ namespace BoningerWorks.TextAdventure.Cli
 				]
 			}
 		},
-		""USE"": {
+		{
+			""id"": ""USE"",
 			""parts"": [
 				""COMMAND"",
 				""ITEM""
@@ -53,7 +56,8 @@ namespace BoningerWorks.TextAdventure.Cli
 				""ITEM""
 			]
 		},
-		""USE_ON"": {
+		{
+			""id"": ""USE_ON"",
 			""parts"": [
 				""COMMAND_START"",
 				""ITEM_TO_USE"",
@@ -77,8 +81,9 @@ namespace BoningerWorks.TextAdventure.Cli
 				""ITEM_TO_USE_ON""
 			]
 		}
-	},
+	],
 	""player"": {
+		""id"": ""PLAYER"",
 		""names"": [
 			""Self"",
 			""Myself""
@@ -167,8 +172,9 @@ namespace BoningerWorks.TextAdventure.Cli
 			}
 		]
 	},
-	""areas"": {
-		""HOTEL_ROOM"": {
+	""areas"": [
+		{
+			""id"": ""HOTEL_ROOM"",
 			""names"": [
 				""Hotel room"",
 				""room""
@@ -274,7 +280,7 @@ namespace BoningerWorks.TextAdventure.Cli
 				}
 			]
 		}
-	},
+	],
 	""end"": {
 		""messages"": [
 			{
