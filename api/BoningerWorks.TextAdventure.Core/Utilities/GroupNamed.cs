@@ -1,5 +1,6 @@
 ﻿using BoningerWorks.TextAdventure.Core.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
@@ -12,31 +13,31 @@ namespace BoningerWorks.TextAdventure.Core.Utilities
 
 		private readonly ImmutableDictionary<Name, ImmutableArray<TValue>> _nameToValuesMappings;
 
-		public GroupNamed(ImmutableArray<TValue> values) : base(values)
+		public GroupNamed(IEnumerable<TValue> values) : base(values)
 		{
 			// Check if any names does not exist
-			if (values.Any(v => v.Names == null))
+			if (this.Any(v => v.Names == null))
 			{
 				// Throw error
 				throw new ArgumentException("Value names cannot be null.", nameof(values));
 			}
 			// Run through values
-			foreach (var value in values)
+			foreach (var value in this)
 			{
 				// Check if not every value name is unique
-				if (values.Any(v => v != value && v.Names.Contains(value.Names.Name)))
+				if (this.Any(v => v != value && v.Names.Contains(value.Names.Name)))
 				{
 					// Throw error
 					throw new ArgumentException($"Value name ({value.Names.Name}) is not unique in the group.", nameof(values));
 				}
 			}
 			// Create name to values mappings
-			_nameToValuesMappings = values
+			_nameToValuesMappings = this
 				.SelectMany(v => v.Names, (v, n) => new { Value = v, Name = n })
 				.GroupBy(_ => _.Name, _ => _.Value)
 				.ToImmutableDictionary(g => g.Key, g => g.ToImmutableArray());
 			// Set regular expression
-			RegularExpression = new Names(values.SelectMany(v => v.Names)).RegularExpression;
+			RegularExpression = new Names(this.SelectMany(v => v.Names)).RegularExpression;
 		}
 
 		public TValue Get(Name name)

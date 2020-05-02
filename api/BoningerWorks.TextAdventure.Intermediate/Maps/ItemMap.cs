@@ -27,7 +27,6 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 		public Symbol ItemSymbol { get; }
 		public Symbol LocationSymbol { get; }
 		public Names ItemNames { get; }
-		public Name ItemName { get; }
 		public bool? Active { get; }
 		
 		internal ImmutableArray<ItemMap> ItemMaps { get; }
@@ -57,8 +56,6 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 				// Set item names
 				ItemNames = Names.TryCreate(item.Names?.Select(n => Name.TryCreate(n) ?? throw new ValidationError($"Name ({n}) is not valid.")))
 					?? throw new ValidationError("Names is not valid.");
-				// Set item name
-				ItemName = ItemNames.First();
 				// Set active
 				Active = item.Active;
 				// Create item maps

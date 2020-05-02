@@ -1,4 +1,5 @@
-﻿using BoningerWorks.TextAdventure.Core.Utilities;
+﻿using BoningerWorks.TextAdventure.Core.Interfaces;
+using BoningerWorks.TextAdventure.Core.Utilities;
 using BoningerWorks.TextAdventure.Engine.Interfaces;
 using BoningerWorks.TextAdventure.Intermediate.Errors;
 using BoningerWorks.TextAdventure.Intermediate.Maps;
@@ -8,15 +9,13 @@ using System.Collections.Immutable;
 
 namespace BoningerWorks.TextAdventure.Engine.Executables
 {
-	public class Item : IEntity
+	public class Item : INamed, IEntity
 	{
 		private static readonly Symbol _datumActive = new Symbol("ACTIVE");
 		private static readonly Symbol _datumLocation = new Symbol("LOCATION");
 
 		public Symbol Symbol { get; }
 		public Names Names { get; }
-		public Name Name { get; }
-		public string RegularExpression { get; }
 
 		private readonly Player _player;
 		private readonly Areas _areas;
@@ -41,12 +40,8 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			}
 			// Set names
 			Names = itemMap.ItemNames;
-			// Set name
-			Name = itemMap.ItemName;
 			// Set active
 			_active = itemMap.Active;
-			// Set regular expression
-			RegularExpression = Names.RegularExpression;
 		}
 
 		public override string ToString()

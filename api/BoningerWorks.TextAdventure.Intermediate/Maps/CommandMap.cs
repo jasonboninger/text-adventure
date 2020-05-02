@@ -12,6 +12,7 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 		public Symbol CommandSymbol { get; }
 		public ImmutableArray<Symbol> PartSymbols { get; }
 		public ImmutableDictionary<Symbol, Names> WordSymbolToWordNamesMappings { get; }
+		public ImmutableArray<Symbol> CommandAreaSymbols { get; }
 		public ImmutableArray<Symbol> CommandItemSymbols { get; }
 
 		internal CommandMap(string commandSymbol, Command? command)
@@ -49,15 +50,19 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 						(kv => new
 						{
 							WordSymbol = Symbol.TryCreate(kv.Key) ?? throw new ValidationError($"Word symbol ({kv.Key}) is not valid."),
-							WordNames = Names.TryCreate
-								(
-									kv.Value.Select(n => Name.TryCreate(n) ?? throw new ValidationError($"Word name ({n}) is not valid."))
-								)
+							WordNames = Names
+								.TryCreate(kv.Value.Select(n => Name.TryCreate(n) ?? throw new ValidationError($"Word name ({n}) is not valid.")))
 								?? throw new ValidationError($"Names is not valid.")
 						})
 					.Where(_ => PartSymbols.Contains(_.WordSymbol))
 					.ToImmutableDictionary(_ => _.WordSymbol, _ => _.WordNames)
 					?? ImmutableDictionary<Symbol, Names>.Empty;
+				// Set command area symbols
+				CommandAreaSymbols = command.CommandAreaSymbols?
+					.Select(cas => Symbol.TryCreate(cas) ?? throw new ValidationError($"Command area symbol ({cas}) is not valid."))
+					.Where(cas => PartSymbols.Contains(cas))
+					.ToImmutableArray()
+					?? ImmutableArray<Symbol>.Empty;
 				// Set command item symbols
 				CommandItemSymbols = command.CommandItemSymbols?
 					.Select(cis => Symbol.TryCreate(cis) ?? throw new ValidationError($"Command item symbol ({cis}) is not valid."))
@@ -67,6 +72,7 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 				// Create input symbols
 				var inputSymbols = Enumerable.Empty<Symbol>()
 					.Concat(WordSymbolToWordNamesMappings.Select(kv => kv.Key))
+					.Concat(CommandAreaSymbols)
 					.Concat(CommandItemSymbols)
 					.ToList();
 				// Check if not all input symbols are unique
@@ -79,7 +85,7 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 				if (PartSymbols.Length != inputSymbols.Count)
 				{
 					// Throw error
-					throw new ValidationError("Not all part symbols are found in input symbols.");
+					throw new ValidationError("Number of part symbols does not equal number of input symbols.");
 				}
 			}
 			catch (GenericException<ValidationError> exception)

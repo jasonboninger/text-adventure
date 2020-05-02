@@ -10,29 +10,24 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 	public class Areas : IReadOnlyList<Area>
 	{
 		public Area this[int index] => _areas[index];
-		public int Count => _areas.Length;
+		public int Count => _areas.Count;
+		public string RegularExpression => _areas.RegularExpression;
 
-		private readonly ImmutableArray<Area> _areas;
-		private readonly IEnumerable<Area> _areasEnumerable;
-		private readonly ImmutableDictionary<Symbol, Area> _symbolToAreaMappings;
+		private readonly GroupNamed<Area> _areas;
 
 		public Areas(ImmutableArray<AreaMap> areaMaps)
 		{
 			// Set areas
-			_areas = areaMaps.Select(am => new Area(am)).ToImmutableArray();
-			// Set enumerable areas
-			_areasEnumerable = _areas;
-			// Set symbol to area mappings
-			_symbolToAreaMappings = _areas.ToImmutableDictionary(a => a.Symbol);
+			_areas = new GroupNamed<Area>(areaMaps.Select(am => new Area(am)));
 		}
 
-		public bool Contains(Symbol? symbol)
-		{
-			// Return if area exists
-			return symbol != null && _symbolToAreaMappings.ContainsKey(symbol);
-		}
+		IEnumerator IEnumerable.GetEnumerator() => _areas.GetEnumerator();
+		public IEnumerator<Area> GetEnumerator() => _areas.GetEnumerator();
 
-		public IEnumerator<Area> GetEnumerator() => _areasEnumerable.GetEnumerator();
-		IEnumerator IEnumerable.GetEnumerator() => _areasEnumerable.GetEnumerator();
+		public Area Get(Symbol symbol) => _areas.Get(symbol);
+		public Area Get(Name name) => _areas.Get(name);
+
+		public bool Contains(Symbol? symbol) => _areas.Contains(symbol);
+		public int Contains(Name? name) => _areas.Contains(name);
 	}
 }

@@ -1,4 +1,5 @@
-﻿using BoningerWorks.TextAdventure.Core.Utilities;
+﻿using BoningerWorks.TextAdventure.Core.Interfaces;
+using BoningerWorks.TextAdventure.Core.Utilities;
 using BoningerWorks.TextAdventure.Engine.Interfaces;
 using BoningerWorks.TextAdventure.Intermediate.Errors;
 using BoningerWorks.TextAdventure.Intermediate.Maps;
@@ -6,12 +7,10 @@ using BoningerWorks.TextAdventure.Json.Outputs;
 
 namespace BoningerWorks.TextAdventure.Engine.Executables
 {
-	public class Area : IEntity
+	public class Area : INamed, IEntity
 	{
 		public Symbol Symbol { get; }
 		public Names Names { get; }
-		public Name Name { get; }
-		public string RegularExpression { get; }
 
 		public Area(AreaMap areaMap)
 		{
@@ -19,10 +18,6 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			Symbol = areaMap.AreaSymbol;
 			// Set names
 			Names = areaMap.AreaNames;
-			// Set name
-			Name = areaMap.AreaName;
-			// Set regular expression
-			RegularExpression = Names.RegularExpression;
 		}
 
 		Entity IEntity.Create()

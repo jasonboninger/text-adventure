@@ -8,6 +8,7 @@ namespace BoningerWorks.TextAdventure.Json.Inputs
 	{
 		[JsonPropertyName("parts")] public OneOrManyList<string?>? PartSymbols { get; set; }
 		[JsonPropertyName("words")] public Dictionary<string, OneOrManyList<string?>?>? WordSymbolToWordNamesMappings { get; set; }
+		[JsonPropertyName("areas")] public OneOrManyList<string?>? CommandAreaSymbols { get; set; }
 		[JsonPropertyName("items")] public OneOrManyList<string?>? CommandItemSymbols { get; set; }
 	}
 }

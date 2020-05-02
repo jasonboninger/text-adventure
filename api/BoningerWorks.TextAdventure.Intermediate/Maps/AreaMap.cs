@@ -11,7 +11,6 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 	{
 		public Symbol AreaSymbol { get; }
 		public Names AreaNames { get; }
-		public Name AreaName { get; }
 
 		internal ImmutableArray<ItemMap> ItemMaps { get; }
 		internal ImmutableArray<ReactionMap> ReactionMaps { get; }
@@ -32,8 +31,6 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 				// Set area names
 				AreaNames = Names.TryCreate(area.Names?.Select(n => Name.TryCreate(n) ?? throw new ValidationError($"Name ({n}) is not valid.")))
 					?? throw new ValidationError("Names is not valid.");
-				// Set area name
-				AreaName = AreaNames.First();
 				// Set item maps
 				ItemMaps = ItemMap.Create(area.ItemSymbolToItemMappings, AreaSymbol);
 				// Set reaction maps

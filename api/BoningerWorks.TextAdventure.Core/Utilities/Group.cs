@@ -17,16 +17,18 @@ namespace BoningerWorks.TextAdventure.Core.Utilities
 		private readonly IEnumerable<TValue> _valuesEnumerable;
 		private readonly ImmutableDictionary<Symbol, TValue> _symbolToValueMappings;
 
-		public Group(ImmutableArray<TValue> values)
+		public Group(IEnumerable<TValue> values)
 		{
+			// Set values
+			_values = values?.ToImmutableArray() ?? throw new ArgumentException("Values cannot be null.", nameof(values));
 			// Check if any values do not exist
-			if (values.Any(v => v == null))
+			if (_values.Any(v => v == null))
 			{
-				// Set values
-				_values = values;
+				// Throw error
+				throw new ArgumentException("Value cannot be null.", nameof(values));
 			}
 			// Check if any symbol does not exist
-			if (values.Any(v => v.Symbol == null))
+			if (_values.Any(v => v.Symbol == null))
 			{
 				// Throw error
 				throw new ArgumentException("Value symbol cannot be null.", nameof(values));
