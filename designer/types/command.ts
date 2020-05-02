@@ -1,9 +1,24 @@
-import { IDictionary, IOneOrArray } from "./core";
+export type ICommandPart = string[] | ICommandPartWord | ICommandPartArea | ICommandPartItem
 
 export interface ICommand {
 	id: string;
-	parts: IOneOrArray<string>;
-	words?: IDictionary<IOneOrArray<string>>;
-	items?: IOneOrArray<string>;
-	areas?: IOneOrArray<string>;
+	parts: ICommandPart[];
+}
+
+export interface ICommandPartWord {
+	words: string[];
+	area?: never;
+	item?: never;
+}
+
+export interface ICommandPartArea {
+	words?: never;
+	area: string;
+	item?: never;
+}
+
+export interface ICommandPartItem {
+	words?: never;
+	area?: never;
+	item: string;
 }

@@ -2,7 +2,6 @@
 using BoningerWorks.TextAdventure.Core.Static;
 using BoningerWorks.TextAdventure.Core.Utilities;
 using BoningerWorks.TextAdventure.Engine.Interfaces;
-using BoningerWorks.TextAdventure.Intermediate.Errors;
 using BoningerWorks.TextAdventure.Intermediate.Maps;
 using BoningerWorks.TextAdventure.Json.Outputs;
 using System;
@@ -15,38 +14,90 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 {
 	public class Command : IIdentifiable
 	{
+		private class CommandInputMetadatum
+		{
+			public CommandInput CommandInput { get; }
+			public Func<Name, IReadOnlyList<IEntity>> GetEntitiesByName { get; }
+
+			public CommandInputMetadatum(CommandInput commandInput, Func<Name, IReadOnlyList<IEntity>> getEntitiesByName)
+			{
+				// Set command input
+				CommandInput = commandInput;
+				// Set get entities by name
+				GetEntitiesByName = getEntitiesByName;
+			}
+		}
+
 		public Symbol Symbol { get; }
 		public ImmutableArray<CommandInput> Inputs { get; }
 
-		private readonly Areas _areas;
-		private readonly Items _items;
-		private readonly ImmutableArray<Symbol> _parts;
-		private readonly ImmutableDictionary<Symbol, Names> _wordToNamesMappings;
-		private readonly ImmutableArray<Symbol> _commandAreas;
-		private readonly ImmutableArray<Symbol> _commandItems;
 		private readonly Regex _regularExpression;
-		private readonly ImmutableDictionary<Symbol, CommandInput> _commandInputToInputMappings;
+		private readonly ImmutableArray<CommandInputMetadatum> _commandInputMetadata;
 
 		public Command(Areas areas, Items items, CommandMap commandMap)
 		{
-			// Set areas
-			_areas = areas;
-			// Set items
-			_items = items;
 			// Set symbol
 			Symbol = commandMap.CommandSymbol;
-			// Set parts
-			_parts = commandMap.PartSymbols;
-			// Set word to names mappings
-			_wordToNamesMappings = commandMap.WordSymbolToWordNamesMappings;
-			// Set command areas
-			_commandAreas = commandMap.CommandAreaSymbols;
-			// Set command items
-			_commandItems = commandMap.CommandItemSymbols;
-			// Set regular expression and command input to input mappings
-			(_regularExpression, _commandInputToInputMappings) = _CreateRegularExpressionAndCommandInputToInputMappings();
+			// Create command input metadata
+			var commandInputMetadata = ImmutableArray.CreateBuilder<CommandInputMetadatum>();
+			// Create regular expressions
+			var regularExpressions = new List<string>();
+			// Run through command part maps
+			foreach (var commandPartMap in commandMap.CommandPartMaps)
+			{
+				// Check if words exists
+				if (commandPartMap.Words != null)
+				{
+					// Get words
+					var words = commandPartMap.Words;
+					// Create regular expression
+					var regularExpression = RegularExpressions.CreateNonCapturingGroup(words.RegularExpression);
+					// Add regular expression
+					regularExpressions.Add(regularExpression);
+					// Continue
+					continue;
+				}
+				// Check if area exists
+				if (commandPartMap.Area != null)
+				{
+					// Get area
+					var area = commandPartMap.Area;
+					// Create command input metadatum
+					var commandInputMetadatum = new CommandInputMetadatum(new CommandInput(area, e => e is Area), n => areas.GetAll(n));
+					// Add command input metadatum
+					commandInputMetadata.Add(commandInputMetadatum);
+					// Create regular expression
+					var regularExpression = RegularExpressions.CreateCaptureGroup(area.ToString(), areas.RegularExpression);
+					// Add regular expression
+					regularExpressions.Add(regularExpression);
+					// Continue
+					continue;
+				}
+				// Check if item exists
+				if (commandPartMap.Item != null)
+				{
+					// Get item
+					var item = commandPartMap.Item;
+					// Create command input metadatum
+					var commandInputMetadatum = new CommandInputMetadatum(new CommandInput(item, e => e is Item), n => items.GetAll(n));
+					// Add command input metadatum
+					commandInputMetadata.Add(commandInputMetadatum);
+					// Create regular expression
+					var regularExpression = RegularExpressions.CreateCaptureGroup(item.ToString(), items.RegularExpression);
+					// Add regular expression
+					regularExpressions.Add(regularExpression);
+					// Continue
+					continue;
+				}
+				// Throw error
+				throw new ArgumentException("Command part map could not be handled.", nameof(commandMap));
+			}
+			// Set command input metadata
+			_commandInputMetadata = commandInputMetadata.ToImmutable();
+			// Set regular expression
+			_regularExpression = new Regex(@"^" + string.Join(@" +", regularExpressions) + @"$", RegexOptions.IgnoreCase | RegexOptions.Singleline);
 			// Set inputs
-			Inputs = _commandInputToInputMappings.Values.ToImmutableArray();
+			Inputs = _commandInputMetadata.Select(cim => cim.CommandInput).ToImmutableArray();
 		}
 
 		public override string ToString()
@@ -67,51 +118,46 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				{
 					// Create parts
 					var parts = ImmutableList.CreateBuilder<CommandMatchPart>();
-					// Run through command areas
-					for (int i = 0; i < _commandAreas.Length; i++)
+					// Run through command input metadata
+					for (int i = 0; i < _commandInputMetadata.Length; i++)
 					{
-						var commandArea = _commandAreas[i];
-						// Get command area group
-						var commandAreaGroup = commandArea.ToString();
+						var commandInputMetadatum = _commandInputMetadata[i];
+						// Get command input
+						var commandInput = commandInputMetadatum.CommandInput;
+						// Get get entities by name
+						var getEntitiesByName = commandInputMetadatum.GetEntitiesByName;
+						// Get group name
+						var groupName = commandInput.Symbol.ToString();
 						// Get group
-						var group = match.Groups[commandAreaGroup];
-						// Get area name
-						var areaName = new Name(group.Value);
-						// Get areas
-						var areas = _areas.GetAll(areaName);
-						// Try to create part
-						var part = _TryCreatePart(game, state, _commandInputToInputMappings[commandArea], areas);
-						// Check if part does not exist
-						if (part == null)
+						var group = match.Groups[groupName];
+						// Get entity name
+						var entityName = new Name(group.Value);
+						// Get entities
+						var entities = getEntitiesByName(entityName);
+						// Create entities in context
+						var entitiesInContext = ImmutableList.CreateBuilder<IEntity>();
+						// Run through entities
+						for (int k = 0; k < entities.Count; k++)
+						{
+							var entity = entities[k];
+							// Check if entity is in context
+							if (entity.IsInContext(game, state))
+							{
+								// Add entity in context
+								entitiesInContext.Add(entity);
+							}
+						}
+						// Check if no entities in context
+						if (entitiesInContext.Count == 0)
 						{
 							// Return no match
 							return null;
 						}
+						// Create part
+						var part = new CommandMatchPart(commandInput, entitiesInContext.ToImmutable());
 						// Add part
 						parts.Add(part);
-					}
-					// Run through command items
-					for (int i = 0; i < _commandItems.Length; i++)
-					{
-						var commandItem = _commandItems[i];
-						// Get command item group
-						var commandItemGroup = commandItem.ToString();
-						// Get group
-						var group = match.Groups[commandItemGroup];
-						// Get item name
-						var itemName = new Name(group.Value);
-						// Get items
-						var items = _items.GetAll(itemName);
-						// Try to create part
-						var part = _TryCreatePart(game, state, _commandInputToInputMappings[commandItem], items);
-						// Check if part does not exist
-						if (part == null)
-						{
-							// Return no match
-							return null;
-						}
-						// Add part
-						parts.Add(part);
+
 					}
 					// Return match
 					return new CommandMatch(this, parts.ToImmutable());
@@ -119,77 +165,6 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			}
 			// Return no match
 			return null;
-		}
-
-		private static CommandMatchPart? _TryCreatePart(Game game, State state, CommandInput input, IReadOnlyList<IEntity> entities)
-		{
-			// Create entities in context
-			var entitiesInContext = ImmutableList.CreateBuilder<IEntity>();
-			// Run through entities
-			for (int i = 0; i < entities.Count; i++)
-			{
-				var entity = entities[i];
-				// Check if entity is in context
-				if (entity.IsInContext(game, state))
-				{
-					// Add entity in context
-					entitiesInContext.Add(entity);
-				}
-			}
-			// Check if entities in context exists
-			if (entitiesInContext.Count > 0)
-			{
-				// Return part
-				return new CommandMatchPart(input, entitiesInContext.ToImmutable());
-			}
-			// Return no part
-			return null;
-		}
-
-		private Tuple<Regex, ImmutableDictionary<Symbol, CommandInput>> _CreateRegularExpressionAndCommandInputToInputMappings()
-		{
-			// Create command input to input mappings
-			var commandInputToInputMappings = ImmutableDictionary.CreateBuilder<Symbol, CommandInput>();
-			// Create regular expressions
-			var regularExpressions = _parts.Select(p =>
-			{
-				// Check if word exists
-				if (_wordToNamesMappings.TryGetValue(p, out var names))
-				{
-					// Create word regular expression
-					var regularExpressionWord = RegularExpressions.CreateNonCapturingGroup(names.RegularExpression);
-					// Return word regular expression
-					return regularExpressionWord;
-				}
-				// Check if command area exists
-				if (_commandAreas.Contains(p))
-				{
-					// Add input
-					commandInputToInputMappings.Add(p, new CommandInput(p, e => e is Area));
-					// Create command area regular expression
-					var regularExpressionCommandArea = RegularExpressions.CreateCaptureGroup(p.ToString(), _areas.RegularExpression);
-					// Return command area regular expression
-					return regularExpressionCommandArea;
-				}
-				// Check if command item exists
-				if (_commandItems.Contains(p))
-				{
-					// Add input
-					commandInputToInputMappings.Add(p, new CommandInput(p, e => e is Item));
-					// Create command item regular expression
-					var regularExpressionCommandItem = RegularExpressions.CreateCaptureGroup(p.ToString(), _items.RegularExpression);
-					// Return command item regular expression
-					return regularExpressionCommandItem;
-				}
-				// Throw error
-				throw new ValidationError($"Command ({Symbol}) part ({p}) could not be found in words or command items.");
-			});
-			// Create regular expression options
-			var regularExpressionOptions = RegexOptions.IgnoreCase | RegexOptions.Singleline;
-			// Create regular expression
-			var regularExpression = new Regex(@"^" + string.Join(@" +", regularExpressions) + @"$", regularExpressionOptions);
-			// Return regular expression and command input to input mappings
-			return Tuple.Create(regularExpression, commandInputToInputMappings.ToImmutable());
 		}
 	}
 }

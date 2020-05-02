@@ -8,11 +8,7 @@ namespace BoningerWorks.TextAdventure.Cli
 		{
 			""id"": ""INSPECT"",
 			""parts"": [
-				""COMMAND"",
-				""ITEM""
-			],
-			""words"": {
-				""COMMAND"": [
+				[
 					""Inspect"",
 					""Ins"",
 					""Look at"",
@@ -20,65 +16,54 @@ namespace BoningerWorks.TextAdventure.Cli
 					""Look"",
 					""Observe"",
 					""Check""
-				]
-			},
-			""items"": [
-				""ITEM""
+				],
+				{
+					""item"": ""ITEM""
+				}
 			]
 		},
 		{
 			""id"": ""SURVEY"",
 			""parts"": [
-				""COMMAND""
-			],
-			""words"": {
-				""COMMAND"": [
+				[
 					""Survey"",
 					""Look around"",
 					""Lookaround"",
 					""Look"",
 					""Observe""
 				]
-			}
+			]
 		},
 		{
 			""id"": ""USE"",
 			""parts"": [
-				""COMMAND"",
-				""ITEM""
-			],
-			""words"": {
-				""COMMAND"": [
+				[
 					""Use""
-				]
-			},
-			""items"": [
-				""ITEM""
+				],
+				{
+					""item"": ""ITEM""
+				}
 			]
 		},
 		{
 			""id"": ""USE_ON"",
 			""parts"": [
-				""COMMAND_START"",
-				""ITEM_TO_USE"",
-				""COMMAND_JOIN"",
-				""ITEM_TO_USE_ON""
-			],
-			""words"": {
-				""COMMAND_START"": [
+				[
 					""Use"",
 					""Utilize"",
 					""Put"",
 					""Hold""
 				],
-				""COMMAND_JOIN"": [
+				{
+					""item"": ""ITEM_TO_USE""
+				},
+				[
 					""On"",
 					""With""
-				]
-			},
-			""items"": [
-				""ITEM_TO_USE"",
-				""ITEM_TO_USE_ON""
+				],
+				{
+					""item"": ""ITEM_TO_USE_ON""
+				}
 			]
 		}
 	],

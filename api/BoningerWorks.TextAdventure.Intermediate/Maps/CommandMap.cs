@@ -2,6 +2,7 @@
 using BoningerWorks.TextAdventure.Core.Utilities;
 using BoningerWorks.TextAdventure.Intermediate.Errors;
 using BoningerWorks.TextAdventure.Json.Inputs;
+using System;
 using System.Collections.Immutable;
 using System.Linq;
 
@@ -10,10 +11,7 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 	public class CommandMap
 	{
 		public Symbol CommandSymbol { get; }
-		public ImmutableArray<Symbol> PartSymbols { get; }
-		public ImmutableDictionary<Symbol, Names> WordSymbolToWordNamesMappings { get; }
-		public ImmutableArray<Symbol> CommandAreaSymbols { get; }
-		public ImmutableArray<Symbol> CommandItemSymbols { get; }
+		public ImmutableArray<CommandPartMap> CommandPartMaps { get; }
 
 		internal CommandMap(Command? command)
 		{
@@ -28,64 +26,26 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 			// Try to create command map
 			try
 			{
-				// Check if part symbols is does not exist
-				if (command.PartSymbols == null || command.PartSymbols.Count == 0)
+				// Check if command parts does not exist
+				if (command.CommandParts == null || command.CommandParts.Count == 0)
 				{
 					// Throw error
-					throw new ValidationError("Part symbols cannot be null or empty.");
+					throw new ValidationError("Command parts cannot be null or empty.");
 				}
-				// Set part symbols
-				PartSymbols = command.PartSymbols
-					.Select(ps => Symbol.TryCreate(ps) ?? throw new ValidationError($"Part symbol ({ps}) is not valid."))
-					.ToImmutableArray();
-				// Check if not all part symbols are unique
-				if (PartSymbols.Distinct().Count() != PartSymbols.Length)
-				{
-					// Throw error
-					throw new ValidationError("Not all part symbols are unique.");
-				}
-				// Set word symbol to word names mappings
-				WordSymbolToWordNamesMappings = command.WordSymbolToWordNamesMappings?
-					.Select
-						(kv => new
-						{
-							WordSymbol = Symbol.TryCreate(kv.Key) ?? throw new ValidationError($"Word symbol ({kv.Key}) is not valid."),
-							WordNames = Names
-								.TryCreate(kv.Value.Select(n => Name.TryCreate(n) ?? throw new ValidationError($"Word name ({n}) is not valid.")))
-								?? throw new ValidationError($"Names is not valid.")
-						})
-					.Where(_ => PartSymbols.Contains(_.WordSymbol))
-					.ToImmutableDictionary(_ => _.WordSymbol, _ => _.WordNames)
-					?? ImmutableDictionary<Symbol, Names>.Empty;
-				// Set command area symbols
-				CommandAreaSymbols = command.CommandAreaSymbols?
-					.Select(cas => Symbol.TryCreate(cas) ?? throw new ValidationError($"Command area symbol ({cas}) is not valid."))
-					.Where(cas => PartSymbols.Contains(cas))
-					.ToImmutableArray()
-					?? ImmutableArray<Symbol>.Empty;
-				// Set command item symbols
-				CommandItemSymbols = command.CommandItemSymbols?
-					.Select(cis => Symbol.TryCreate(cis) ?? throw new ValidationError($"Command item symbol ({cis}) is not valid."))
-					.Where(cis => PartSymbols.Contains(cis))
-					.ToImmutableArray()
-					?? ImmutableArray<Symbol>.Empty;
-				// Create input symbols
-				var inputSymbols = Enumerable.Empty<Symbol>()
-					.Concat(WordSymbolToWordNamesMappings.Select(kv => kv.Key))
-					.Concat(CommandAreaSymbols)
-					.Concat(CommandItemSymbols)
+				// Set command part maps
+				CommandPartMaps = command.CommandParts.Select(cp => new CommandPartMap(cp)).ToImmutableArray();
+				// Get duplicate command part symbols
+				var commandPartSymbolDuplicates = CommandPartMaps
+					.Where(cpm => cpm.Words == null)
+					.GroupBy(cpm => cpm.Area ?? cpm.Item ?? throw new InvalidOperationException("No symbol found."))
+					.Where(g => g.Count() > 1)
+					.Select(g => g.Key)
 					.ToList();
-				// Check if not all input symbols are unique
-				if (inputSymbols.Distinct().Count() != inputSymbols.Count)
+				// Check if duplicate commard part symbols exist
+				if (commandPartSymbolDuplicates.Count != 0)
 				{
 					// Throw error
-					throw new ValidationError("Not all input symbols are unique.");
-				}
-				// Check if number of part symbols does not equal number of input symbols
-				if (PartSymbols.Length != inputSymbols.Count)
-				{
-					// Throw error
-					throw new ValidationError("Number of part symbols does not equal number of input symbols.");
+					throw new ValidationError("Not all command part symbols are unique.");
 				}
 			}
 			catch (GenericException<ValidationError> exception)

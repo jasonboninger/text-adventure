@@ -19,8 +19,24 @@ namespace BoningerWorks.TextAdventure.Cli
 				Console.WriteLine();
 				// Ask for input
 				Console.WriteLine("Give me some input...");
+				// Create input
+				string input;
 				// Get input
-				var input = Console.ReadLine();
+				while (true)
+				{
+					// Get input
+					input = Console.ReadLine();
+					// Check if input does not exist
+					if (string.IsNullOrWhiteSpace(input))
+					{
+						// Remove line
+						Console.CursorTop--;
+						// Continue
+						continue;
+					}
+					// Stop
+					break;
+				}
 				// Execute input
 				var result = game.Execute(state, input);
 				// Set state

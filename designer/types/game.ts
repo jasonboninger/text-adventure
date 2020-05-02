@@ -1,4 +1,4 @@
-import { IDictionary, IOneOrArray } from "./core";
+import { IOneOrArray } from "./core";
 import { ICommand } from "./command";
 import { IPlayer } from "./player";
 import { IArea } from "./area";

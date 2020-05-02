@@ -5,35 +5,40 @@ export const CRAZY_EX: IGame = {
 	commands: [
 		{
 			id: "INSPECT",
-			parts: ["COMMAND", "ITEM"],
-			words: {
-				COMMAND: ["Inspect", "Ins", "Look at", "Lookat", "Look", "Observe", "Check"],
-			},
-			items: ["ITEM"]
+			parts: [
+				["Inspect", "Ins", "Look at", "Lookat", "Look", "Observe", "Check"],
+				{
+					item: "ITEM"
+				}
+			]
 		},
 		{
 			id: "SURVEY",
-			parts: ["COMMAND"],
-			words: {
-				COMMAND: ["Survey", "Look around", "Lookaround", "Look", "Observe"]
-			}
+			parts: [
+				["Survey", "Look around", "Lookaround", "Look", "Observe"]
+			]
 		},
 		{
 			id: "USE",
-			parts: ["COMMAND", "ITEM"],
-			words: {
-				COMMAND: ["Use"]
-			},
-			items: ["ITEM"]
+			parts: [
+				["Use"],
+				{
+					item: "ITEM"
+				}
+			]
 		},
 		{
 			id: "USE_ON",
-			parts: ["COMMAND_START", "ITEM_TO_USE", "COMMAND_JOIN", "ITEM_TO_USE_ON"],
-			words: {
-				COMMAND_START: ["Use", "Utilize", "Put", "Hold"],
-				COMMAND_JOIN: ["On", "With"]
-			},
-			items: ["ITEM_TO_USE", "ITEM_TO_USE_ON"]
+			parts: [
+				["Use", "Utilize", "Put", "Hold"],
+				{
+					item: "ITEM_TO_USE"
+				},
+				["On", "With"],
+				{
+					item: "ITEM_TO_USE_ON"
+				}
+			]
 		}
 	],
 	player: {
