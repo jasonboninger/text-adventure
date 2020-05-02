@@ -33,6 +33,7 @@ export const CRAZY_EX: IGame = {
 		}
 	},
 	player: {
+		names: ["Self", "Myself"],
 		area: "HOTEL_ROOM",
 		items: {
 			PHONE: {

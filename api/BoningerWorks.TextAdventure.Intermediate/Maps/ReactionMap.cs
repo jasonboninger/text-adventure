@@ -26,7 +26,7 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 		
 		public Symbol EntitySymbol { get; }
 		public Symbol CommandSymbol { get; }
-		public ImmutableDictionary<Symbol, Symbol> CommandItemSymbolToItemSymbolMappings { get; }
+		public ImmutableDictionary<Symbol, Symbol> InputSymbolToEntitySymbolMappings { get; }
 		public ImmutableArray<ActionMap> ActionMaps { get; }
 
 		private ReactionMap(Symbol entitySymbol, Reaction? reaction)
@@ -45,12 +45,12 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 				// Set command symbol
 				CommandSymbol = Symbol.TryCreate(reaction.CommandSymbol)
 					?? throw new ValidationError($"Command symbol ({reaction.CommandSymbol}) is not valid.");
-				// Set command item symbol to item symbol mappings
-				CommandItemSymbolToItemSymbolMappings = reaction.CommandItemSymbolToItemSymbolMappings?
+				// Set input symbol to entity symbol mappings
+				InputSymbolToEntitySymbolMappings = reaction.InputSymbolToEntitySymbolMappings?
 					.ToImmutableDictionary
 						(
-							kv => Symbol.TryCreate(kv.Key) ?? throw new ValidationError($"Command item symbol ({kv.Key}) is not valid."),
-							kv => Symbol.TryCreate(kv.Value) ?? throw new ValidationError($"Item symbol ({kv.Value}) is not valid.")
+							kv => Symbol.TryCreate(kv.Key) ?? throw new ValidationError($"Command input symbol ({kv.Key}) is not valid."),
+							kv => Symbol.TryCreate(kv.Value) ?? throw new ValidationError($"Command entity symbol ({kv.Value}) is not valid.")
 						)
 					?? ImmutableDictionary<Symbol, Symbol>.Empty;
 				// Check if actions does not exist

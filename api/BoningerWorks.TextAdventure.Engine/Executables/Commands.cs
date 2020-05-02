@@ -1,8 +1,6 @@
-﻿using BoningerWorks.TextAdventure.Core.Exceptions;
-using BoningerWorks.TextAdventure.Core.Utilities;
-using BoningerWorks.TextAdventure.Engine.Errors;
+﻿using BoningerWorks.TextAdventure.Core.Utilities;
 using BoningerWorks.TextAdventure.Intermediate.Maps;
-using System;
+using BoningerWorks.TextAdventure.Json.Outputs;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -12,86 +10,40 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 {
 	public class Commands : IReadOnlyList<Command>
 	{
-		public int Count => _commands.Length;
+		public int Count => _commands.Count;
 		public Command this[int index] => _commands[index];
 
-		private readonly ImmutableArray<Command> _commands;
-		private readonly IEnumerable<Command> _commandsEnumerable;
-		private readonly ImmutableDictionary<Symbol, Command> _symbolToCommandMappings;
+		private readonly Group<Command> _commands;
 
-		public Commands(Items items, ImmutableArray<CommandMap> commandMaps)
+		public Commands(Areas areas, Items items, ImmutableArray<CommandMap> commandMaps)
 		{
 			// Set commands
-			_commands = commandMaps.Select(cm => new Command(items, cm)).OrderBy(c => c.Symbol.ToString()).ToImmutableArray();
-			// Set enumerable commands
-			_commandsEnumerable = _commands;
-			// Set symbol to command mappings
-			_symbolToCommandMappings = _commands.ToImmutableDictionary(c => c.Symbol);
+			_commands = new Group<Command>(commandMaps.Select(cm => new Command(areas, items, cm)).OrderBy(c => c.Symbol.ToString()));
 		}
 
-		public IEnumerator<Command> GetEnumerator() => _commandsEnumerable.GetEnumerator();
-		IEnumerator IEnumerable.GetEnumerator() => _commandsEnumerable.GetEnumerator();
+		IEnumerator IEnumerable.GetEnumerator() => _commands.GetEnumerator();
+		public IEnumerator<Command> GetEnumerator() => _commands.GetEnumerator();
 
-		public Command Get(Symbol symbol)
-		{
-			// Try to get command
-			var command = TryGet(symbol);
-			// Check if command does not exist
-			if (command == null)
-			{
-				// Throw error
-				throw new ArgumentException($"No command with symbol ({symbol}) could be found.");
-			}
-			// Return command
-			return command;
-		}
+		public Command Get(Symbol symbol) => _commands.Get(symbol);
 
-		public Command? TryGet(Symbol symbol)
-		{
-			// Try to get command
-			if (symbol != null && _symbolToCommandMappings.TryGetValue(symbol, out var command))
-			{
-				// Return command
-				return command;
-			}
-			// Return no command
-			return null;
-		}
+		public Command? TryGet(Symbol? symbol) => _commands.TryGet(symbol);
 
-		public CommandMatch? TryGetMatch(string? input)
+		public CommandMatch? TryGetMatch(Game game, State state, string? input)
 		{
 			// Run through commands
-			foreach (var command in _commands)
+			for (int i = 0; i < _commands.Count; i++)
 			{
-				// Try to match command
-				try
+				var command = _commands[i];
+				// Try to get match
+				var match = command.TryGetMatch(game, state, input);
+				// Check if match exists
+				if (match != null)
 				{
-					// Try to match command
-					var commandItemToItemMappings = command.TryGetMatch(input);
-					// Check if command item to item mappings exists
-					if (commandItemToItemMappings != null)
-					{
-						// Create command match
-						var commandMatch = new CommandMatch(command, commandItemToItemMappings);
-						// Return command match
-						return commandMatch;
-					}
-				}
-				catch (GenericException<AmbiguousItemMatchError> exception)
-				{
-					// Get ambiguous item match error
-					var ambiguousItemMatchError = exception.Error;
-					// Check if ambiguous item match error exists
-					if (ambiguousItemMatchError != null)
-					{
-						// Throw error
-						throw GenericException.Create(new AmbiguousCommandItemMatchError(command, ambiguousItemMatchError), exception);
-					}
-					// Throw error
-					throw;
+					// Return match
+					return match;
 				}
 			}
-			// Return no command match
+			// Return no match
 			return null;
 		}
 	}

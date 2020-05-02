@@ -2,7 +2,7 @@
 
 namespace BoningerWorks.TextAdventure.Core.Interfaces
 {
-	public interface IId
+	public interface IIdentifiable
 	{
 		public Symbol Symbol { get; }
 	}

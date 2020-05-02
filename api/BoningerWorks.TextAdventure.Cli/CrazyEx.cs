@@ -79,6 +79,10 @@ namespace BoningerWorks.TextAdventure.Cli
 		}
 	},
 	""player"": {
+		""names"": [
+			""Self"",
+			""Myself""
+		],
 		""area"": ""HOTEL_ROOM"",
 		""items"": {
 			""PHONE"": {

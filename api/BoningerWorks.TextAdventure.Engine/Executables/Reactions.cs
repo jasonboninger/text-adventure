@@ -1,6 +1,4 @@
-﻿using BoningerWorks.TextAdventure.Core.Utilities;
-using BoningerWorks.TextAdventure.Intermediate.Maps;
-using System;
+﻿using BoningerWorks.TextAdventure.Intermediate.Maps;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -10,12 +8,12 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 {
 	public class Reactions : IReadOnlyList<Reaction>
 	{
-		public int Count => _reactions.Length;
 		public Reaction this[int index] => _reactions[index];
+		public int Count => _reactions.Length;
 
 		private readonly ImmutableArray<Reaction> _reactions;
 		private readonly IEnumerable<Reaction> _reactionsEnumerable;
-		private readonly ImmutableDictionary<Symbol, ReactionTree> _commandSymbolToReactionTreeMappings;
+		private readonly ImmutableDictionary<Command, ReactionTree> _commandToReactionTreeMappings;
 
 		public Reactions(Entities entities, Items items, Commands commands, ImmutableArray<ReactionMap> reactionMaps)
 		{
@@ -24,36 +22,47 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			// Set enumerable reactions
 			_reactionsEnumerable = _reactions;
 			// Set command symbol to reaction tree mappings
-			_commandSymbolToReactionTreeMappings = ReactionTree.Create(_reactions);
+			_commandToReactionTreeMappings = ReactionTree.Create(_reactions);
 		}
 
-		public IEnumerator<Reaction> GetEnumerator() => _reactionsEnumerable.GetEnumerator();
 		IEnumerator IEnumerable.GetEnumerator() => _reactionsEnumerable.GetEnumerator();
+		public IEnumerator<Reaction> GetEnumerator() => _reactionsEnumerable.GetEnumerator();
 
-		public ReactionTree Get(Command command)
+		public ImmutableArray<Reaction>? TryGet(ReactionPath? reactionPath)
 		{
-			// Try to get reaction tree
-			var reactionTree = TryGet(command);
-			// Check if reaction tree does not exist
-			if (reactionTree == null)
+			// Check if reaction path does not exist
+			if (reactionPath == null)
 			{
-				// Throw error
-				throw new ArgumentException($"No reaction for command ({command}) could be found.");
+				// Return no reactions
+				return null;
 			}
-			// Return reaction tree
-			return reactionTree;
-		}
-
-		public ReactionTree? TryGet(Command? command)
-		{
+			// Get command
+			var command = reactionPath.Command;
 			// Try to get reaction tree
-			if (command != null && command.Symbol != null && _commandSymbolToReactionTreeMappings.TryGetValue(command.Symbol, out var reactionTree))
+			if (!_commandToReactionTreeMappings.TryGetValue(command, out var reactionTree))
 			{
-				// Return reaction tree
-				return reactionTree;
+				// Return no reactions
+				return null;
 			}
-			// Return no reaction tree
-			return null;
+			// Create reactions
+			var reactions = reactionTree.Reactions;
+			// Get parts
+			var parts = reactionPath.Parts;
+			// Run through parts
+			for (int i = 0; i < parts.Count; i++)
+			{
+				var part = parts[i];
+				// Try to get next reaction tree
+				if (reactionTree.Next == null || !reactionTree.Next.TryGetValue(part.Entity, out reactionTree))
+				{
+					// Return no reactions
+					return null;
+				}
+				// Set reactions
+				reactions = reactionTree.Reactions;
+			}
+			// Return reactions
+			return reactions;
 		}
 	}
 }

@@ -1,13 +1,12 @@
-﻿using BoningerWorks.TextAdventure.Core.Utilities;
+﻿using BoningerWorks.TextAdventure.Core.Interfaces;
+using BoningerWorks.TextAdventure.Core.Utilities;
 using BoningerWorks.TextAdventure.Engine.Executables;
 using BoningerWorks.TextAdventure.Json.Outputs;
 
 namespace BoningerWorks.TextAdventure.Engine.Interfaces
 {
-	public interface IEntity
+	public interface IEntity : INamed
 	{
-		Symbol Symbol { get; }
-
 		Entity Create();
 
 		bool HasData(Symbol symbol);

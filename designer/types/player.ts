@@ -3,6 +3,7 @@ import { IItem } from "./item";
 import { IReaction } from "./reaction";
 
 export interface IPlayer {
+	names: IOneOrArray<string>;
 	area: string;
 	items?: IDictionary<IItem>;
 	reactions?: IOneOrArray<IReaction>;

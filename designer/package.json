@@ -10,6 +10,8 @@
     "typescript": "^3.8.3"
   },
   "scripts": {
+    "start": "npm run generate && npm run cli",
+    "cli": "start cmd /k \"dotnet run --project ../api/BoningerWorks.TextAdventure.Cli\"",
     "generate": "ts-node generate.ts ../api/BoningerWorks.TextAdventure.Cli",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

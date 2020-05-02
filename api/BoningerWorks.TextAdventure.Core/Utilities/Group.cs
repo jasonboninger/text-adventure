@@ -8,7 +8,7 @@ using System.Linq;
 namespace BoningerWorks.TextAdventure.Core.Utilities
 {
 	public class Group<TValue> : IReadOnlyList<TValue>
-	where TValue : class, IId
+	where TValue : class, IIdentifiable
 	{
 		public int Count => _values.Length;
 		public TValue this[int index] => _values[index];

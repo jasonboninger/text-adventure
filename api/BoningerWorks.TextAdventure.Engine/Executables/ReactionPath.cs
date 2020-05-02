@@ -3,12 +3,12 @@ using System.Collections.Immutable;
 
 namespace BoningerWorks.TextAdventure.Engine.Executables
 {
-	public class CommandMatch
+	public class ReactionPath
 	{
 		public Command Command { get; }
-		public ImmutableList<CommandMatchPart> Parts { get; }
+		public ImmutableList<ReactionPathPart> Parts { get; }
 
-		public CommandMatch(Command command, ImmutableList<CommandMatchPart> parts)
+		public ReactionPath(Command command, ImmutableList<ReactionPathPart> parts)
 		{
 			// Set command
 			Command = command ?? throw new ArgumentException("Command cannot be null.", nameof(command));

@@ -1,10 +1,9 @@
-﻿using BoningerWorks.TextAdventure.Core.Exceptions;
-using BoningerWorks.TextAdventure.Core.Utilities;
-using BoningerWorks.TextAdventure.Engine.Errors;
-using BoningerWorks.TextAdventure.Intermediate.Errors;
+﻿using BoningerWorks.TextAdventure.Core.Utilities;
 using BoningerWorks.TextAdventure.Intermediate.Maps;
 using BoningerWorks.TextAdventure.Json.Outputs;
+using System;
 using System.Collections.Immutable;
+using System.Text;
 
 namespace BoningerWorks.TextAdventure.Engine.Executables
 {
@@ -25,7 +24,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			if (gameMap == null)
 			{
 				// Throw error
-				throw new ValidationError("Game map cannot be null.");
+				throw new ArgumentException("Game map cannot be null.", nameof(gameMap));
 			}
 			// Set areas
 			Areas = new Areas(gameMap.AreaMaps);
@@ -36,7 +35,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			// Set entities
 			Entities = new Entities(Player, Areas, Items);
 			// Set commands
-			Commands = new Commands(Items, gameMap.CommandMaps);
+			Commands = new Commands(Areas, Items, gameMap.CommandMaps);
 			// Set reactions
 			Reactions = new Reactions(Entities, Items, Commands, gameMap.ReactionMaps);
 		}
@@ -60,74 +59,84 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 
 		public Result Execute(State state, string? input)
 		{
+			// Try to get match
+			var match = Commands.TryGetMatch(this, state, input);
+			// Check if match does not exist
+			if (match == null)
+			{
+				// Return result
+				return new Result(state, ImmutableList<Message>.Empty);
+			}
+			// Get match parts
+			var matchParts = match.Parts;
+			// Create path parts
+			var pathParts = ImmutableList.CreateBuilder<ReactionPathPart>();
+			// Run through match parts
+			for (int i = 0; i < matchParts.Count; i++)
+			{
+				var matchPart = matchParts[i];
+				// Get entities
+				var entities = matchPart.Entities;
+				// Check if more than one entity
+				if (entities.Count > 1)
+				{
+					// Create text
+					var text = new StringBuilder("Input matched more than one entity. Did you mean ");
+					// Run through entities
+					for (int k = 0; k < entities.Count; k++)
+					{
+						var entity = entities[k];
+						// Check if not first
+						if (k > 0)
+						{
+							// Add comma
+							text.Append(", ");
+						}
+						// Check if last
+						if (k == entities.Count - 1)
+						{
+							// Add or
+							text.Append("or ");
+						}
+						// Add name
+						text.Append(entity.Names.Name);
+					}
+					// Add question mark
+					text.Append("?");
+					// Create message
+					var message = new Message(text.ToString());
+					// Return result
+					return new Result(state, ImmutableList.Create(message));
+				}
+				// Create path part
+				var pathPart = new ReactionPathPart(matchPart.Input, entities[0]);
+				// Add path part
+				pathParts.Add(pathPart);
+			}
+			// Get command
+			var command = match.Command;
+			// Create path
+			var path = new ReactionPath(command, pathParts.ToImmutable());
+			// Try to get reactions
+			var reactions = Reactions.TryGet(path);
+			// Check if reactions exists
+			if (!reactions.HasValue)
+			{
+				// Return result
+				return new Result(state, ImmutableList<Message>.Empty);
+			}
 			// Create messages
 			var messages = ImmutableList.CreateBuilder<Message>();
-			// Try to get command match
-			try
+			// Run through reactions
+			for (int i = 0; i < reactions.Value.Length; i++)
 			{
-				// Try to get command match
-				var commandMatch = Commands.TryGetMatch(input);
-				// Check if command match exists
-				if (commandMatch != null)
-				{
-					// Get command
-					var command = commandMatch.Command;
-					// Try to get reaction
-					var reaction = Reactions.TryGet(command);
-					// Check if reaction exists
-					if (reaction != null)
-					{
-						// Get command items
-						var commandItems = command.CommandItems;
-						// Run through command items
-						for (int i = 0; i < commandItems.Length; i++)
-						{
-							var commandItem = commandItems[i];
-							// Get item
-							var item = commandMatch.CommandItemToItemMappings[commandItem];
-							// Try to get next reaction
-							if (reaction.Next == null || !reaction.Next.TryGetValue(item.Symbol, out var reactionNext))
-							{
-								// Set no reaction
-								reaction = null;
-								// Stop loop
-								break;
-							}
-							// Set reaction
-							reaction = reactionNext;
-						}
-						// Check if reaction exists and matches exist
-						if (reaction != null && reaction.Reactions.HasValue)
-						{
-							// Get matches
-							var matches = reaction.Reactions.Value;
-							// Run through matches
-							for (int i = 0; i < matches.Length; i++)
-							{
-								var match = matches[i];
-								// Execute match
-								var result = match.Execute(state);
-								// Set state
-								state = result.State;
-								// Add messages
-								messages.AddRange(result.Messages);
-							}
-						}
-					}
-				}
-			}
-			catch (GenericException<AmbiguousCommandItemMatchError> exception)
-			{
-
-
-
-				// Discard exception
-				_ = exception;
-				// Throw error
-				throw;
-
-
-
+				var reaction = reactions.Value[i];
+				// Execute reaction
+				var result = reaction.Execute(state);
+				// Set state
+				state = result.State;
+				// Add messages
+				messages.AddRange(result.Messages);
 			}
 			// Return result
 			return new Result(state, messages.ToImmutable());

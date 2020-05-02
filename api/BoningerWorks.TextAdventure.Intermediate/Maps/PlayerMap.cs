@@ -3,12 +3,14 @@ using BoningerWorks.TextAdventure.Core.Utilities;
 using BoningerWorks.TextAdventure.Intermediate.Errors;
 using BoningerWorks.TextAdventure.Json.Inputs;
 using System.Collections.Immutable;
+using System.Linq;
 
 namespace BoningerWorks.TextAdventure.Intermediate.Maps
 {
 	public class PlayerMap
 	{
 		public Symbol PlayerSymbol { get; }
+		public Names PlayerNames { get; }
 		public Symbol AreaSymbol { get; }
 
 		internal ImmutableArray<ItemMap> ItemMaps { get; }
@@ -27,6 +29,15 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 			// Try to create player
 			try
 			{
+				// Check if names does not exist
+				if (player.Names == null || player.Names.Count == 0)
+				{
+					// Throw error
+					throw new ValidationError("Names cannot be null or empty.");
+				}
+				// Set player names
+				PlayerNames = Names.TryCreate(player.Names?.Select(n => Name.TryCreate(n) ?? throw new ValidationError($"Name ({n}) is not valid.")))
+					?? throw new ValidationError("Names is not valid.");
 				// Set area symbol
 				AreaSymbol = Symbol.TryCreate(player.AreaSymbol) ?? throw new ValidationError($"Area symbol ({player.AreaSymbol}) is not valid.");
 				// Set item maps

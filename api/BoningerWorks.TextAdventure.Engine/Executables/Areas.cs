@@ -27,6 +27,12 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		public Area Get(Symbol symbol) => _areas.Get(symbol);
 		public Area Get(Name name) => _areas.Get(name);
 
+		public Area? TryGet(Symbol symbol) => _areas.TryGet(symbol);
+
+		public ImmutableArray<Area> GetAll(Name name) => _areas.GetAll(name);
+
+		public ImmutableArray<Area>? TryGetAll(Name? name) => _areas.TryGetAll(name);
+
 		public bool Contains(Symbol? symbol) => _areas.Contains(symbol);
 		public int Contains(Name? name) => _areas.Contains(name);
 	}

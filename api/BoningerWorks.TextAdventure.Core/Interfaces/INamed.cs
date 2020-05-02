@@ -2,7 +2,7 @@
 
 namespace BoningerWorks.TextAdventure.Core.Interfaces
 {
-	public interface INamed : IId
+	public interface INamed : IIdentifiable
 	{
 		public Names Names { get; }
 	}

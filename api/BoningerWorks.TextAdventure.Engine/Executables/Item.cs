@@ -1,5 +1,4 @@
-﻿using BoningerWorks.TextAdventure.Core.Interfaces;
-using BoningerWorks.TextAdventure.Core.Utilities;
+﻿using BoningerWorks.TextAdventure.Core.Utilities;
 using BoningerWorks.TextAdventure.Engine.Interfaces;
 using BoningerWorks.TextAdventure.Intermediate.Errors;
 using BoningerWorks.TextAdventure.Intermediate.Maps;
@@ -9,7 +8,7 @@ using System.Collections.Immutable;
 
 namespace BoningerWorks.TextAdventure.Engine.Executables
 {
-	public class Item : INamed, IEntity
+	public class Item : IEntity
 	{
 		private static readonly Symbol _datumActive = new Symbol("ACTIVE");
 		private static readonly Symbol _datumLocation = new Symbol("LOCATION");

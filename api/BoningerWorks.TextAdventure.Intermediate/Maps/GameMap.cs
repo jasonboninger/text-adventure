@@ -75,7 +75,7 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 				throw new ValidationError("Not all item symbols are unique.");
 			}
 			// Check if not all item names are unique
-			if (ItemMaps.Select(im => im.ItemName).Distinct().Count() != ItemMaps.Length)
+			if (ItemMaps.Select(im => im.ItemNames.Name).Distinct().Count() != ItemMaps.Length)
 			{
 				// Throw error
 				throw new ValidationError("Not all item names are unique.");

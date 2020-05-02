@@ -1,5 +1,4 @@
-﻿using BoningerWorks.TextAdventure.Core.Interfaces;
-using BoningerWorks.TextAdventure.Core.Utilities;
+﻿using BoningerWorks.TextAdventure.Core.Utilities;
 using BoningerWorks.TextAdventure.Engine.Interfaces;
 using BoningerWorks.TextAdventure.Intermediate.Errors;
 using BoningerWorks.TextAdventure.Intermediate.Maps;
@@ -7,7 +6,7 @@ using BoningerWorks.TextAdventure.Json.Outputs;
 
 namespace BoningerWorks.TextAdventure.Engine.Executables
 {
-	public class Area : INamed, IEntity
+	public class Area : IEntity
 	{
 		public Symbol Symbol { get; }
 		public Names Names { get; }

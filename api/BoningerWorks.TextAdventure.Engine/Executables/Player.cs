@@ -13,6 +13,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		private static readonly Symbol _datumArea = new Symbol("AREA");
 
 		public Symbol Symbol { get; }
+		public Names Names { get; }
 
 		private readonly Symbol _area;
 		private readonly Areas _areas;
@@ -23,6 +24,8 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			_areas = areas;
 			// Set symbol
 			Symbol = playerMap.PlayerSymbol ?? throw new ValidationError("Player symbol cannot be null.");
+			// Set names
+			Names = playerMap.PlayerNames ?? throw new ValidationError("Player names cannot be null.");
 			// Set area
 			_area = playerMap.AreaSymbol ?? throw new ValidationError("Player area cannot be null.");
 			// Check if area does not exist
