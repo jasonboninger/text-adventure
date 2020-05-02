@@ -41,30 +41,32 @@ namespace BoningerWorks.TextAdventure.Core.Utilities
 		public int Count => _names.Length;
 		public Name this[int index] => _names[index];
 
+		public Name Name { get; }
 		public string RegularExpression { get; }
 
 		private readonly ImmutableArray<Name> _names;
 		private readonly IEnumerable<Name> _namesEnumerable;
 
-		public Names(IEnumerable<Name> names) : this(names?.ToImmutableArray() ?? ImmutableArray<Name>.Empty) { }
-		public Names(ImmutableArray<Name> names)
+		public Names(IEnumerable<Name> names)
 		{
+			// Set names
+			_names = names?.Distinct().ToImmutableArray() ?? ImmutableArray<Name>.Empty;
+			// Set enumerable names
+			_namesEnumerable = _names;
 			// Check if no names exist
-			if (names.Length == 0)
+			if (_names.Length == 0)
 			{
 				// Throw error
 				throw new ArgumentException("At least one name is required.", nameof(names));
 			}
 			// Check if any names do not exist
-			if (names.Any(n => n == null))
+			if (_names.Any(n => n == null))
 			{
 				// Throw error
 				throw new ArgumentException("No names can be null.", nameof(names));
 			}
-			// Set names
-			_names = names;
-			// Set enumerable names
-			_namesEnumerable = _names;
+			// Set name
+			Name = _names.First();
 			// Set regular expression
 			RegularExpression = _CreateRegularExpression(_names);
 		}
@@ -77,7 +79,7 @@ namespace BoningerWorks.TextAdventure.Core.Utilities
 			return regularExpression;
 		}
 
-		public IEnumerator<Name> GetEnumerator() => _namesEnumerable.GetEnumerator();
 		IEnumerator IEnumerable.GetEnumerator() => _namesEnumerable.GetEnumerator();
+		public IEnumerator<Name> GetEnumerator() => _namesEnumerable.GetEnumerator();
 	}
 }
