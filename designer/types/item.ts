@@ -1,4 +1,4 @@
-import { IOneOrArray, IDictionary } from "./core";
+import { IOneOrArray } from "./core";
 import { IReaction } from "./reaction";
 
 export interface IItem {

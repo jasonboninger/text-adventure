@@ -1,5 +1,5 @@
 import { ILineSpecial, SSpecial } from "../types/message";
-import { XCondition, IConditionSingle, IConditionMany, SComparison, SOperator } from "../types/condition";
+import { ICondition, IConditionSingle, IConditionMany, SComparison, SOperator } from "../types/condition";
 import { ICommandPartItem, ICommandPartArea } from "../types/command";
 import { IReactionInput } from "../types/reaction";
 
@@ -38,11 +38,11 @@ export function not(left: string, right: string): IConditionSingle {
 	return _condition(left, "NOT", right);
 }
 
-export function all(...conditions: XCondition[]): IConditionMany {
+export function all(...conditions: ICondition[]): IConditionMany {
 	return _conditions("ALL", conditions);
 }
 
-export function any(...conditions: XCondition[]): IConditionMany {
+export function any(...conditions: ICondition[]): IConditionMany {
 	return _conditions("ANY", conditions);
 }
 
@@ -60,7 +60,7 @@ function _condition(left: string, comparison: SComparison, right: string): ICond
 	};
 }
 
-function _conditions(operator: SOperator, conditions: XCondition[]): IConditionMany {
+function _conditions(operator: SOperator, conditions: ICondition[]): IConditionMany {
 	return {
 		operator,
 		conditions

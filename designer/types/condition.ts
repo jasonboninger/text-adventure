@@ -1,7 +1,7 @@
 export type SComparison = "IS" | "NOT";
 export type SOperator = "ALL" | "ANY";
 
-export type XCondition = IConditionSingle | IConditionMany
+export type ICondition = IConditionSingle | IConditionMany
 
 export interface IConditionSingle {
 	left: string;
@@ -16,5 +16,5 @@ export interface IConditionMany {
 	comparison?: never;
 	right?: never;
 	operator: SOperator;
-	conditions: XCondition[];
+	conditions: ICondition[];
 };
