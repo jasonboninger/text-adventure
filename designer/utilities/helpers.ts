@@ -1,5 +1,26 @@
 import { ILineSpecial, SSpecial } from "../types/message";
 import { XCondition, IConditionSingle, IConditionMany, SComparison, SOperator } from "../types/condition";
+import { ICommandPartItem, ICommandPartArea } from "../types/command";
+import { IReactionInput } from "../types/reaction";
+
+export function area(area: string): ICommandPartArea {
+	return {
+		area
+	};
+}
+
+export function item(item: string): ICommandPartItem {
+	return {
+		item
+	};
+}
+
+export function input(input: string, value: string): IReactionInput {
+	return {
+		input,
+		value
+	};
+}
 
 export function blank(): ILineSpecial {
 	return _special("BLANK");

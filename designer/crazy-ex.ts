@@ -1,5 +1,5 @@
 import { IGame } from "./types/game";
-import { horizontalRule, blank, is, not } from "./utilities/helpers";
+import { horizontalRule, blank, is, not, item, input } from "./utilities/helpers";
 
 export const CRAZY_EX: IGame = {
 	commands: [
@@ -7,9 +7,7 @@ export const CRAZY_EX: IGame = {
 			id: "INSPECT",
 			parts: [
 				["Inspect", "Ins", "Look at", "Lookat", "Look", "Observe", "Check"],
-				{
-					item: "ITEM"
-				}
+				item("ITEM")
 			]
 		},
 		{
@@ -22,22 +20,16 @@ export const CRAZY_EX: IGame = {
 			id: "USE",
 			parts: [
 				["Use"],
-				{
-					item: "ITEM"
-				}
+				item("ITEM")
 			]
 		},
 		{
 			id: "USE_ON",
 			parts: [
 				["Use", "Utilize", "Put", "Hold"],
-				{
-					item: "ITEM_TO_USE"
-				},
+				item("ITEM_TO_USE"),
 				["On", "With"],
-				{
-					item: "ITEM_TO_USE_ON"
-				}
+				item("ITEM_TO_USE_ON")
 			]
 		}
 	],
@@ -74,6 +66,16 @@ export const CRAZY_EX: IGame = {
 								"You hit it against the wall.",
 								"Weird that didn't help. Sometimes that works..."
 							]
+						}
+					},
+					{
+						command: "USE_ON",
+						inputs: [
+							input("ITEM_TO_USE", "PHONE"),
+							input("ITEM_TO_USE_ON", "WALLET")
+						],
+						actions: {
+							messages: "You hold your phone against your wallet... yeah that was dumb."
 						}
 					}
 				]

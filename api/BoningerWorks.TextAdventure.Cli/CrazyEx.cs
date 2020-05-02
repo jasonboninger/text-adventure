@@ -123,6 +123,22 @@ namespace BoningerWorks.TextAdventure.Cli
 								""Weird that didn't help. Sometimes that works...""
 							]
 						}
+					},
+					{
+						""command"": ""USE_ON"",
+						""inputs"": [
+							{
+								""input"": ""ITEM_TO_USE"",
+								""value"": ""PHONE""
+							},
+							{
+								""input"": ""ITEM_TO_USE_ON"",
+								""value"": ""WALLET""
+							}
+						],
+						""actions"": {
+							""messages"": ""You hold your phone against your wallet... yeah that was dumb.""
+						}
 					}
 				]
 			},
