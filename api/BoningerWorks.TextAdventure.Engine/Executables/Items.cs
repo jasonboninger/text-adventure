@@ -18,7 +18,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		public Items(Player player, Areas areas, ImmutableArray<ItemMap> itemMaps)
 		{
 			// Set items
-			_items = new GroupNamed<Item>(itemMaps.Select(im => new Item(player, areas, im)));
+			_items = new GroupNamed<Item>(itemMaps.Select(im => new Item(player, areas, im)).OrderBy(i => i.Names.Name));
 		}
 
 		IEnumerator IEnumerable.GetEnumerator() => _items.GetEnumerator();

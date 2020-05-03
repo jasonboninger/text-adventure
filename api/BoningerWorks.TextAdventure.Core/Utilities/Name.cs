@@ -3,10 +3,14 @@ using System.Text.RegularExpressions;
 
 namespace BoningerWorks.TextAdventure.Core.Utilities
 {
-	public sealed class Name : IEquatable<Name>
+	public sealed class Name : IEquatable<Name>, IComparable<Name>
 	{
 		public static bool operator ==(Name? left, Name? right) => Equals(left, null) ? Equals(right, null) : left.Equals(right);
 		public static bool operator !=(Name? left, Name? right) => !(left == right);
+		public static bool operator <(Name left, Name right) => left is null ? right is object : left.CompareTo(right) < 0;
+		public static bool operator <=(Name left, Name right) => left is null || left.CompareTo(right) <= 0;
+		public static bool operator >(Name left, Name right) => left is object && left.CompareTo(right) > 0;
+		public static bool operator >=(Name left, Name right) => left is null ? right is null : left.CompareTo(right) >= 0;
 
 		private static readonly Regex _regularExpressionSpaces = new Regex(@" {2,}", RegexOptions.Singleline);
 		private static readonly Regex _regularExpressionValid = new Regex(@"^[a-zA-Z0-9 ]*[a-zA-Z0-9]+[a-zA-Z0-9 ]*$", RegexOptions.Singleline);
@@ -76,6 +80,8 @@ namespace BoningerWorks.TextAdventure.Core.Utilities
 
 		public override bool Equals(object? obj) => obj is Name name && Equals(name);
 		public bool Equals(Name? other) => !Equals(other, null) && other._value.Equals(_value);
+
+		public int CompareTo(Name? other) => _value.CompareTo(other?._value);
 
 		private static string _CreateRegularExpression(string value)
 		{

@@ -3,13 +3,17 @@ using System.Text.RegularExpressions;
 
 namespace BoningerWorks.TextAdventure.Core.Utilities
 {
-	public sealed class Symbol : IEquatable<Symbol>
+	public sealed class Symbol : IEquatable<Symbol>, IComparable<Symbol>
 	{
 		public static Symbol True { get; }
 		public static Symbol False { get; }
 
 		public static bool operator ==(Symbol? left, Symbol? right) => Equals(left, null) ? Equals(right, null) : left.Equals(right);
 		public static bool operator !=(Symbol? left, Symbol? right) => !(left == right);
+		public static bool operator <(Symbol left, Symbol right) => left is null ? right is object : left.CompareTo(right) < 0;
+		public static bool operator <=(Symbol left, Symbol right) => left is null || left.CompareTo(right) <= 0;
+		public static bool operator >(Symbol left, Symbol right) => left is object && left.CompareTo(right) > 0;
+		public static bool operator >=(Symbol left, Symbol right) => left is null ? right is null : left.CompareTo(right) >= 0;
 
 		private static readonly Regex _regularExpressionValid = new Regex(@"^[A-Z0-9_]+$", RegexOptions.Singleline);
 
@@ -73,5 +77,7 @@ namespace BoningerWorks.TextAdventure.Core.Utilities
 
 		public override bool Equals(object? obj) => obj is Symbol symbol && Equals(symbol);
 		public bool Equals(Symbol? other) => !Equals(other, null) && other._value.Equals(_value);
+
+		public int CompareTo(Symbol? other) => _value.CompareTo(other?._value);
 	}
 }

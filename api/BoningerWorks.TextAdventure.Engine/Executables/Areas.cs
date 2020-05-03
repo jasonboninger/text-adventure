@@ -18,7 +18,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		public Areas(ImmutableArray<AreaMap> areaMaps)
 		{
 			// Set areas
-			_areas = new GroupNamed<Area>(areaMaps.Select(am => new Area(am)));
+			_areas = new GroupNamed<Area>(areaMaps.Select(am => new Area(am)).OrderBy(a => a.Names.Name));
 		}
 
 		IEnumerator IEnumerable.GetEnumerator() => _areas.GetEnumerator();
