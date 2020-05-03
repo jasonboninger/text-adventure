@@ -3,7 +3,6 @@ using BoningerWorks.TextAdventure.Core.Static;
 using BoningerWorks.TextAdventure.Core.Utilities;
 using BoningerWorks.TextAdventure.Engine.Interfaces;
 using BoningerWorks.TextAdventure.Intermediate.Maps;
-using BoningerWorks.TextAdventure.Json.Outputs;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -110,7 +109,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			return Symbol.ToString();
 		}
 
-		public CommandMatch? TryGetMatch(Game game, State state, string? input)
+		public CommandMatch? TryGetMatch(string? input)
 		{
 			// Check if input exists
 			if (input != null)
@@ -138,27 +137,8 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 						var entityName = new Name(group.Value);
 						// Get entities
 						var entities = getEntitiesByName(entityName);
-						// Create entities in context
-						var entitiesInContext = ImmutableList.CreateBuilder<IEntity>();
-						// Run through entities
-						for (int k = 0; k < entities.Count; k++)
-						{
-							var entity = entities[k];
-							// Check if entity is in context
-							if (entity.IsInContext(game, state))
-							{
-								// Add entity in context
-								entitiesInContext.Add(entity);
-							}
-						}
-						// Check if no entities in context
-						if (entitiesInContext.Count == 0)
-						{
-							// Return no match
-							return null;
-						}
 						// Create part
-						var part = new CommandMatchPart(commandInput, entitiesInContext.ToImmutable());
+						var part = new CommandMatchPart(commandInput, entities);
 						// Add part
 						parts.Add(part);
 

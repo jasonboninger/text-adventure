@@ -1,15 +1,7 @@
-export type XChange = IChangeStandard | IChangeCustom;
+export type XChange = IChange;
 
-export interface IChangeStandard {
+export interface IChange {
 	target: string;
-	standard: string;
-	custom?: never;
-	value: string;
-}
-
-export interface IChangeCustom {
-	target: string;
-	standard?: never;
-	custom: string;
+	datum: string;
 	value: string;
 }

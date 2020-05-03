@@ -1,15 +1,19 @@
 ﻿using BoningerWorks.TextAdventure.Core.Utilities;
 using BoningerWorks.TextAdventure.Engine.Interfaces;
-using BoningerWorks.TextAdventure.Intermediate.Errors;
 using BoningerWorks.TextAdventure.Intermediate.Maps;
-using BoningerWorks.TextAdventure.Json.Outputs;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 
 namespace BoningerWorks.TextAdventure.Engine.Executables
 {
 	public class Area : IEntity
 	{
+		private static readonly Symbol _datumId = new Symbol("ID");
+		private static readonly Symbol _datumName = new Symbol("NAME");
+
 		public Symbol Symbol { get; }
 		public Names Names { get; }
+		public ImmutableDictionary<Symbol, string> Metadata { get; }
 
 		public Area(AreaMap areaMap)
 		{
@@ -17,30 +21,18 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			Symbol = areaMap.AreaSymbol;
 			// Set names
 			Names = areaMap.AreaNames;
+			// Create metadata
+			Metadata = ImmutableDictionary.CreateRange(new KeyValuePair<Symbol, string>[]
+			{
+				KeyValuePair.Create(_datumId, Symbol.ToString()),
+				KeyValuePair.Create(_datumName, Names.Name.ToString())
+			});
 		}
 
-		Entity IEntity.Create()
+		public override string ToString()
 		{
-			// Return entity
-			return new Entity(null);
-		}
-
-		bool IEntity.HasData(Symbol symbol)
-		{
-			// Return if data
-			return false;
-		}
-
-		void IEntity.EnsureValidData(Symbol symbol, Symbol value)
-		{
-			// Throw error
-			throw new ValidationError($"Area data ({symbol}) could not be found.");
-		}
-
-		bool IEntity.IsInContext(Game game, State state)
-		{
-			// Return if player is in area
-			return game.Player.GetArea(state) == Symbol;
+			// Return string
+			return Symbol.ToString();
 		}
 	}
 }

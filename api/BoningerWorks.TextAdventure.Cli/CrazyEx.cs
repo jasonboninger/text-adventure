@@ -90,16 +90,7 @@ namespace BoningerWorks.TextAdventure.Cli
 					""item"": ""ITEM"",
 					""actions"": [
 						{
-							""changes"": [
-								{
-									""target"": ""WALLET"",
-									""standard"": ""ACTIVE"",
-									""value"": ""FALSE""
-								}
-							]
-						},
-						{
-							""messages"": ""There is an item called ${ITEM>ACTIVE} in this world!""
+							""messages"": ""There is an item called ${ITEM>NAME} in this world!""
 						}
 					]
 				}
@@ -236,7 +227,7 @@ namespace BoningerWorks.TextAdventure.Cli
 										{
 											""changes"": {
 												""target"": ""DOOR"",
-												""custom"": ""USED"",
+												""datum"": ""USED"",
 												""value"": ""TRUE""
 											}
 										},

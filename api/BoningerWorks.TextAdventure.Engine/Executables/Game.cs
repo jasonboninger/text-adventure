@@ -26,12 +26,12 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				// Throw error
 				throw new ArgumentException("Game map cannot be null.", nameof(gameMap));
 			}
+			// Set player
+			Player = new Player(gameMap.PlayerMap);
 			// Set areas
 			Areas = new Areas(gameMap.AreaMaps);
-			// Set player
-			Player = new Player(Areas, gameMap.PlayerMap);
 			// Set items
-			Items = new Items(Player, Areas, gameMap.ItemMaps);
+			Items = new Items(gameMap.ItemMaps);
 			// Set entities
 			Entities = new Entities(Player, Areas, Items);
 			// Set commands
@@ -47,9 +47,8 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			// Run through entities
 			for (int i = 0; i < Entities.Count; i++)
 			{
-				var entity = Entities[i];
 				// Add entity
-				entities.Add(entity.Symbol, entity.Create());
+				entities.Add(Entities[i].Symbol, new Entity());
 			}
 			// Create state
 			var state = new State(entities.ToImmutable());
@@ -60,7 +59,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		public Result Execute(State state, string? input)
 		{
 			// Try to get match
-			var match = Commands.TryGetMatch(this, state, input);
+			var match = Commands.TryGetMatch(input);
 			// Check if match does not exist
 			if (match == null)
 			{

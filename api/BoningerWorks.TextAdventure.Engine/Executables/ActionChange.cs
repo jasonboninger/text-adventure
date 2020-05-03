@@ -9,8 +9,16 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 	{
 		public static Action<ResultBuilder> Create(Func<Symbol, Symbol> replacer, Entities entities, ChangeMap changeMap)
 		{
+			// Get path
+			var path = changeMap.Path;
+			// Check if metadata
+			if (path.Metadata)
+			{
+				// Throw error
+				throw new ArgumentException("Metadata cannot be changed.", nameof(changeMap));
+			}
 			// Get target
-			var target = changeMap.Path.Target;
+			var target = path.Target;
 			// Replace target
 			target = replacer(target);
 			// Check if entity does not exist
@@ -20,50 +28,25 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				throw new ValidationError($"Entity for symbol ({target}) could not be found.");
 			}
 			// Get datum
-			var datum = changeMap.Path.Datum;
-			// Check if custom
-			if (changeMap.Path.Custom)
+			var datum = path.Datum;
+			// Get replaceable
+			var replaceable = new Replaceable(replacer, entities, changeMap.Value);
+			// Return execute
+			return result =>
 			{
-				// Get replaceable
-				var replaceable = new Replaceable(replacer, entities, changeMap.Value);
-				// Return execute
-				return result =>
-				{
-					// Get state
-					var state = result.State;
-					// Get entity
-					var entity = state.Entities[target];
-					// Get value
-					var value = replaceable.Replace(state);
-					// Update entity
-					entity = entity.UpdateCustomData(datum, value);
-					// Update state
-					state = state.UpdateEntity(target, entity);
-					// Set state
-					result.State = state;
-				};
-			}
-			else
-			{
-				// Create value
-				var value = Symbol.TryCreate(changeMap.Value) ?? throw new ValidationError($"Data value ({changeMap.Value}) is not a valid symbol.");
-				// Ensure valid data
-				entities.Get(target).EnsureValidData(datum, value);
-				// Return execute
-				return result =>
-				{
-					// Get state
-					var state = result.State;
-					// Get entity
-					var entity = state.Entities[target];
-					// Update entity
-					entity = entity.UpdateData(datum, value);
-					// Update state
-					state = state.UpdateEntity(target, entity);
-					// Set state
-					result.State = state;
-				};
-			}
+				// Get state
+				var state = result.State;
+				// Get entity
+				var entity = state.Entities[target];
+				// Get value
+				var value = replaceable.Replace(state);
+				// Update entity
+				entity = entity.UpdateData(datum, value);
+				// Update state
+				state = state.UpdateEntity(target, entity);
+				// Set state
+				result.State = state;
+			};
 		}
 	}
 }

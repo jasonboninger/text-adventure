@@ -21,46 +21,23 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 			// Try to create change
 			try
 			{
-				// Set value
-				Value = change.Value ?? throw new ValidationError("Value cannot be null.");
 				// Check if target does not exist
-				if (change.Target == null)
+				if (string.IsNullOrWhiteSpace(change.Target))
 				{
 					// Throw error
-					throw new ValidationError("Target cannot be null.");
+					throw new ValidationError("Target cannot be null, empty or whitespace.");
 				}
-				// Check if standard exists
-				if (change.Standard != null)
+				// Check if datum does not exist
+				if (string.IsNullOrWhiteSpace(change.Datum))
 				{
-					// Check if custom exists
-					if (change.Custom != null)
-					{
-						// Throw error
-						throw new ValidationError("When standard exists, custom must be null.");
-					}
-					// Set path
-					Path = Path.TryCreate(change.Target, change.Standard, custom: false)
-						?? throw new ValidationError($"Path with target ({change.Target}) and standard ({change.Standard}) is not valid.");
-					// Return
-					return;
+					// Throw error
+					throw new ValidationError("Datum cannot be null, empty or whitespace.");
 				}
-				// Check if custom exists
-				if (change.Custom != null)
-				{
-					// Check if standard exists
-					if (change.Standard != null)
-					{
-						// Throw error
-						throw new ValidationError("When custom exists, standard must be null.");
-					}
-					// Set path
-					Path = Path.TryCreate(change.Target, change.Custom, custom: true)
-						?? throw new ValidationError($"Path with target ({change.Target}) and custom ({change.Custom}) is not valid.");
-					// Return
-					return;
-				}
-				// Throw error
-				throw new ValidationError("Standard or custom must be provided.");
+				// Set path
+				Path = Path.TryCreate(change.Target, change.Datum, metadata: false)
+					?? throw new ValidationError($"Path with target ({change.Target}) and datum ({change.Datum}) is not valid.");
+				// Set value
+				Value = change.Value ?? throw new ValidationError("Value cannot be null.");
 			}
 			catch (GenericException<ValidationError> exception)
 			{

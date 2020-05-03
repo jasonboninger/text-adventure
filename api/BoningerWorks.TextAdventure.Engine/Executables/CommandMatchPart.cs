@@ -1,15 +1,15 @@
 ﻿using BoningerWorks.TextAdventure.Engine.Interfaces;
 using System;
-using System.Collections.Immutable;
+using System.Collections.Generic;
 
 namespace BoningerWorks.TextAdventure.Engine.Executables
 {
 	public class CommandMatchPart
 	{
 		public CommandInput Input { get; }
-		public ImmutableList<IEntity> Entities { get; }
+		public IReadOnlyList<IEntity> Entities { get; }
 
-		public CommandMatchPart(CommandInput input, ImmutableList<IEntity> entities)
+		public CommandMatchPart(CommandInput input, IReadOnlyList<IEntity> entities)
 		{
 			// Set input
 			Input = input ?? throw new ArgumentException("Input cannot be null.", nameof(input));

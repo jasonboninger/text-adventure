@@ -15,10 +15,10 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 
 		private readonly GroupNamed<Item> _items;
 
-		public Items(Player player, Areas areas, ImmutableArray<ItemMap> itemMaps)
+		public Items(ImmutableArray<ItemMap> itemMaps)
 		{
 			// Set items
-			_items = new GroupNamed<Item>(itemMaps.Select(im => new Item(player, areas, im)).OrderBy(i => i.Names.Name));
+			_items = new GroupNamed<Item>(itemMaps.Select(im => new Item(im)).OrderBy(i => i.Names.Name));
 		}
 
 		IEnumerator IEnumerable.GetEnumerator() => _items.GetEnumerator();

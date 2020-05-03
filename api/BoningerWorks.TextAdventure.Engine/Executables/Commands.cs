@@ -1,6 +1,5 @@
 ﻿using BoningerWorks.TextAdventure.Core.Utilities;
 using BoningerWorks.TextAdventure.Intermediate.Maps;
-using BoningerWorks.TextAdventure.Json.Outputs;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -28,14 +27,14 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 
 		public Command? TryGet(Symbol? symbol) => _commands.TryGet(symbol);
 
-		public CommandMatch? TryGetMatch(Game game, State state, string? input)
+		public CommandMatch? TryGetMatch(string? input)
 		{
 			// Run through commands
 			for (int i = 0; i < _commands.Count; i++)
 			{
 				var command = _commands[i];
 				// Try to get match
-				var match = command.TryGetMatch(game, state, input);
+				var match = command.TryGetMatch(input);
 				// Check if match exists
 				if (match != null)
 				{

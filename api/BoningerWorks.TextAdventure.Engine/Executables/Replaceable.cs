@@ -46,33 +46,33 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 						var datum = path.Datum;
 						// Create replace
 						Action<State, StringBuilder> replace;
-						// Check if custom
-						if (path.Custom)
+						// Check if metadata
+						if (path.Metadata)
 						{
-							// Return replace
+							// Check if datum does not exist
+							if (!entity.Metadata.ContainsKey(datum))
+							{
+								// Throw error
+								throw new ValidationError($"Entity ({entity.Symbol}) metadata ({target}) does not exist.");
+							}
+							// Set metadata
+							var metadata = entity.Metadata;
+							// Set replace
 							replace = (state, stringBuilder) =>
 							{
-								// Get custom data
-								var customData = state.Entities[target].CustomData;
 								// Replace value
-								stringBuilder.Replace(value, customData.TryGetValue(datum, out var custom) ? custom : string.Empty);
+								stringBuilder.Replace(value, metadata[datum].ToString());
 							};
 						}
 						else
 						{
-							// Check if datum does not exist
-							if (!entity.HasData(datum))
-							{
-								// Throw error
-								throw new ValidationError($"Entity ({entity.Symbol}) data ({target}) does not exist.");
-							}
-							// Return replace
+							// Set replace
 							replace = (state, stringBuilder) =>
 							{
 								// Get data
 								var data = state.Entities[target].Data;
 								// Replace value
-								stringBuilder.Replace(value, data[datum].ToString());
+								stringBuilder.Replace(value, data.TryGetValue(datum, out var replacement) ? replacement : string.Empty);
 							};
 						}
 						// Return replace

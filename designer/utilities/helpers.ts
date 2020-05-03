@@ -2,7 +2,7 @@ import { ILineSpecial, XSpecial } from "../types/message";
 import { XCondition, IConditionSingle, IConditionMany, XComparison, XOperator } from "../types/condition";
 import { ICommandPartItem, ICommandPartArea } from "../types/command";
 import { IReactionInput } from "../types/reaction";
-import { IChangeStandard, IChangeCustom } from "../types/change";
+import { IChange } from "../types/change";
 
 export function area(area: string): ICommandPartArea {
 	return {
@@ -23,18 +23,10 @@ export function input(input: string, value: string): IReactionInput {
 	};
 }
 
-export function standard(target: string, standard: string, value: string): IChangeStandard {
+export function change(target: string, datum: string, value: string): IChange {
 	return {
 		target,
-		standard,
-		value
-	};
-}
-
-export function custom(target: string, custom: string, value: string): IChangeCustom {
-	return {
-		target,
-		custom,
+		datum,
 		value
 	};
 }
