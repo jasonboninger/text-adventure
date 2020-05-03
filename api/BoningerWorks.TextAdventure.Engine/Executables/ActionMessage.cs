@@ -1,4 +1,5 @@
-﻿using BoningerWorks.TextAdventure.Intermediate.Maps;
+﻿using BoningerWorks.TextAdventure.Core.Utilities;
+using BoningerWorks.TextAdventure.Intermediate.Maps;
 using BoningerWorks.TextAdventure.Json.Outputs;
 using System;
 using System.Collections.Immutable;
@@ -8,10 +9,10 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 {
 	public static class ActionMessage
 	{
-		public static Action<ResultBuilder> Create(Entities entities, MessageMap messageMap)
+		public static Action<ResultBuilder> Create(Func<Symbol, Symbol> replacer, Entities entities, MessageMap messageMap)
 		{
 			// Set line actions
-			var actionsLine = messageMap.LineMaps.Select(lm => ActionLine.Create(entities, lm)).ToImmutableArray();
+			var actionsLine = messageMap.LineMaps.Select(lm => ActionLine.Create(replacer, entities, lm)).ToImmutableArray();
 			// Return action
 			return result =>
 			{

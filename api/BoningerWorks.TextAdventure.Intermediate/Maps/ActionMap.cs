@@ -8,6 +8,7 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 {
 	public class ActionMap
 	{
+		public ImmutableArray<IteratorMap>? IteratorMaps { get; }
 		public IfMap<ActionMap>? IfMap { get; }
 		public ImmutableArray<MessageMap>? MessageMaps { get; }
 		public ImmutableArray<ChangeMap>? ChangeMaps { get; }
@@ -26,6 +27,20 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 			{
 				// Create count
 				var count = 0;
+				// Check if iterators exists
+				if (action.Iterators != null)
+				{
+					// Increase count
+					count++;
+					// Check if iterators is empty
+					if (action.Iterators.Count == 0)
+					{
+						// Throw error
+						throw new ValidationError("Iterators cannot be empty.");
+					}
+					// Set iterator maps
+					IteratorMaps = action.Iterators.Select(i => new IteratorMap(i)).ToImmutableArray();
+				}
 				// Check if if exists
 				if (action.If != null)
 				{
@@ -81,11 +96,17 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 					// Set trigger maps
 					TriggerMaps = action.Triggers.Select(t => new TriggerMap(t)).ToImmutableArray();
 				}
+				// Check if count is zero
+				if (count == 0)
+				{
+					// Throw error
+					throw new ValidationError("No action was provided.");
+				}
 				// Check if count is not one
 				if (count != 1)
 				{
 					// Throw error
-					throw new ValidationError($"Exactly one action is required, but instead has {count}.");
+					throw new ValidationError($"Only one type (iterators, if, messages, changes, or triggers) is allowed at a time.");
 				}
 			}
 			catch (GenericException<ValidationError> exception)

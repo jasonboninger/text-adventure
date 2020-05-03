@@ -7,10 +7,12 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 {
 	public static class ActionChange
 	{
-		public static Action<ResultBuilder> Create(Entities entities, ChangeMap changeMap)
+		public static Action<ResultBuilder> Create(Func<Symbol, Symbol> replacer, Entities entities, ChangeMap changeMap)
 		{
 			// Get target
 			var target = changeMap.Path.Target;
+			// Replace target
+			target = replacer(target);
 			// Check if entity does not exist
 			if (entities.TryGet(target) == null)
 			{
@@ -23,7 +25,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			if (changeMap.Path.Custom)
 			{
 				// Get replaceable
-				var replaceable = new Replaceable(entities, changeMap.Value);
+				var replaceable = new Replaceable(replacer, entities, changeMap.Value);
 				// Return execute
 				return result =>
 				{

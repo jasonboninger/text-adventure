@@ -35,9 +35,9 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			// Set entities
 			Entities = new Entities(Player, Areas, Items);
 			// Set commands
-			Commands = new Commands(Areas, Items, gameMap.CommandMaps);
+			Commands = new Commands(Entities, gameMap.CommandMaps);
 			// Set reactions
-			Reactions = new Reactions(Entities, Items, Commands, gameMap.ReactionMaps);
+			Reactions = new Reactions(Entities, Commands, gameMap.ReactionMaps);
 		}
 
 		public State New()

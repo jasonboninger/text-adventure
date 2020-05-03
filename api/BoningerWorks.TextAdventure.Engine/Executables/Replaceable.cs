@@ -17,7 +17,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		private readonly string _value;
 		private readonly ImmutableArray<Action<State, StringBuilder>> _replaces;
 
-		public Replaceable(Entities entities, string value)
+		public Replaceable(Func<Symbol, Symbol> replacer, Entities entities, string value)
 		{
 			// Set value
 			_value = value;
@@ -38,6 +38,8 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 						var path = Path.TryCreate(capture) ?? throw new ValidationError($"Replacement path ({value}) is not valid.");
 						// Get target
 						var target = path.Target;
+						// Replace target
+						target = replacer(target);
 						// Get entity
 						var entity = entities.TryGet(target) ?? throw new ValidationError($"Entity for symbol ({target}) could not be found.");
 						// Get datum

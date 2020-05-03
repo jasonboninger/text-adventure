@@ -1,4 +1,5 @@
-﻿using BoningerWorks.TextAdventure.Intermediate.Maps;
+﻿using BoningerWorks.TextAdventure.Core.Utilities;
+using BoningerWorks.TextAdventure.Intermediate.Maps;
 using BoningerWorks.TextAdventure.Json.Outputs;
 using System;
 using System.Collections.Immutable;
@@ -8,10 +9,10 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 {
 	public static class ActionLineInlined
 	{
-		public static Func<State, Line> Create(Entities entities, LineInlinedMap lineInlinedMap)
+		public static Func<State, Line> Create(Func<Symbol, Symbol> replacer, Entities entities, LineInlinedMap lineInlinedMap)
 		{
 			// Create text actions
-			var actionsText = lineInlinedMap.TextMaps.Select(tm => ActionText.Create(entities, tm)).ToImmutableArray();
+			var actionsText = lineInlinedMap.TextMaps.Select(tm => ActionText.Create(replacer, entities, tm)).ToImmutableArray();
 			// Return action
 			return state =>
 			{

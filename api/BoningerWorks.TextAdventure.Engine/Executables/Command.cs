@@ -34,7 +34,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		private readonly Regex _regularExpression;
 		private readonly ImmutableArray<CommandInputMetadatum> _commandInputMetadata;
 
-		public Command(Areas areas, Items items, CommandMap commandMap)
+		public Command(Entities entities, CommandMap commandMap)
 		{
 			// Set symbol
 			Symbol = commandMap.CommandSymbol;
@@ -60,6 +60,8 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				// Check if area exists
 				if (commandPartMap.Area != null)
 				{
+					// Get areas
+					var areas = entities.Areas;
 					// Get area
 					var area = commandPartMap.Area;
 					// Create command input metadatum
@@ -76,6 +78,8 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				// Check if item exists
 				if (commandPartMap.Item != null)
 				{
+					// Get items
+					var items = entities.Items;
 					// Get item
 					var item = commandPartMap.Item;
 					// Create command input metadatum

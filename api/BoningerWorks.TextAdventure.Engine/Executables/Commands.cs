@@ -15,10 +15,10 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 
 		private readonly Group<Command> _commands;
 
-		public Commands(Areas areas, Items items, ImmutableArray<CommandMap> commandMaps)
+		public Commands(Entities entities, ImmutableArray<CommandMap> commandMaps)
 		{
 			// Set commands
-			_commands = new Group<Command>(commandMaps.Select(cm => new Command(areas, items, cm)).OrderBy(c => c.Symbol.ToString()));
+			_commands = new Group<Command>(commandMaps.Select(cm => new Command(entities, cm)).OrderBy(c => c.Symbol.ToString()));
 		}
 
 		IEnumerator IEnumerable.GetEnumerator() => _commands.GetEnumerator();

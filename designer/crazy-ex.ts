@@ -1,5 +1,5 @@
 import { IGame } from "./types/game";
-import { horizontalRule, blank, is, not, item, input, custom } from "./utilities/helpers";
+import { horizontalRule, blank, is, not, item, input, custom, standard } from "./utilities/helpers";
 
 export const CRAZY_EX: IGame = {
 	commands: [
@@ -31,12 +31,36 @@ export const CRAZY_EX: IGame = {
 				["On", "With"],
 				item("ITEM_TO_USE_ON")
 			]
+		},
+		{
+			id: "INVENTORY",
+			parts: [
+				["Inventory", "Stuff"]
+			]
 		}
 	],
 	player: {
 		id: "PLAYER",
 		names: ["Self", "Myself"],
 		area: "HOTEL_ROOM",
+		reactions: {
+			command: "INVENTORY",
+			actions: {
+				iterators: {
+					item: "ITEM",
+					actions: [
+						{
+							changes: [
+								standard("WALLET", "ACTIVE", "FALSE")
+							]
+						},
+						{
+							messages: "There is an item called ${ITEM>ACTIVE} in this world!"
+						}
+					]
+				}
+			}
+		},
 		items: [
 			{
 				id: "PHONE",

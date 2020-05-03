@@ -15,10 +15,10 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		private readonly IEnumerable<Reaction> _reactionsEnumerable;
 		private readonly ImmutableDictionary<Command, ReactionTree> _commandToReactionTreeMappings;
 
-		public Reactions(Entities entities, Items items, Commands commands, ImmutableArray<ReactionMap> reactionMaps)
+		public Reactions(Entities entities, Commands commands, ImmutableArray<ReactionMap> reactionMaps)
 		{
 			// Set reactions
-			_reactions = reactionMaps.Select(rm => new Reaction(entities, items, commands, rm)).ToImmutableArray();
+			_reactions = reactionMaps.Select(rm => new Reaction(entities, commands, rm)).ToImmutableArray();
 			// Set enumerable reactions
 			_reactionsEnumerable = _reactions;
 			// Set command symbol to reaction tree mappings

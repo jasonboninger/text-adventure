@@ -15,7 +15,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 
 		private readonly ImmutableArray<Action<ResultBuilder>> _actions;
 
-		public Reaction(Entities entities, Items items, Commands commands, ReactionMap reactionMap)
+		public Reaction(Entities entities, Commands commands, ReactionMap reactionMap)
 		{
 			// Set command
 			Command = commands.TryGet(reactionMap.CommandSymbol) 
@@ -78,7 +78,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 							.ToImmutableList()
 					);
 				// Set actions
-				_actions = reactionMap.ActionMaps.SelectMany(am => Action.Create(entities, items, am)).ToImmutableArray();
+				_actions = reactionMap.ActionMaps.SelectMany(am => Action.Create(s => s, entities, am)).ToImmutableArray();
 			}
 			catch (GenericException<ValidationError> exception)
 			{

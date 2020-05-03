@@ -1,4 +1,5 @@
 ﻿using BoningerWorks.TextAdventure.Core.Extensions;
+using BoningerWorks.TextAdventure.Core.Utilities;
 using BoningerWorks.TextAdventure.Intermediate.Maps;
 using System;
 using System.Collections.Generic;
@@ -8,13 +9,19 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 {
 	public static class Action
 	{
-		public static IEnumerable<Action<ResultBuilder>> Create(Entities entities, Items items, ActionMap actionMap)
+		public static IEnumerable<Action<ResultBuilder>> Create(Func<Symbol, Symbol> replacer, Entities entities, ActionMap actionMap)
 		{
+			// Check if iterator maps exists
+			if (actionMap.IteratorMaps.HasValue)
+			{
+				// Return iterator actions
+				return actionMap.IteratorMaps.Value.SelectMany(im => ActionIterator.Create(replacer, entities, im));
+			}
 			// Check if if map exists
 			if (actionMap.IfMap != null)
 			{
 				// Create if action
-				var actionIf = ActionIf<Action<ResultBuilder>>.Create(entities, actionMap.IfMap, am => Create(entities, items, am));
+				var actionIf = ActionIf<Action<ResultBuilder>>.Create(replacer, entities, actionMap.IfMap, am => Create(replacer, entities, am));
 				// Create action
 				Action<ResultBuilder> action = result =>
 				{
@@ -34,13 +41,13 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			if (actionMap.MessageMaps.HasValue)
 			{
 				// Return message actions
-				return actionMap.MessageMaps.Value.Select(mm => ActionMessage.Create(entities, mm));
+				return actionMap.MessageMaps.Value.Select(mm => ActionMessage.Create(replacer, entities, mm));
 			}
 			// Check if change maps exist
 			if (actionMap.ChangeMaps.HasValue)
 			{
 				// Return change actions
-				return actionMap.ChangeMaps.Value.Select(cm => ActionChange.Create(entities, cm));
+				return actionMap.ChangeMaps.Value.Select(cm => ActionChange.Create(replacer, entities, cm));
 			}
 			// Check if trigger maps exist
 			if (actionMap.TriggerMaps.HasValue)

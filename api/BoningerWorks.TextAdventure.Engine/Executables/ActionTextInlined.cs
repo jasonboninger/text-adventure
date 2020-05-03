@@ -1,4 +1,5 @@
-﻿using BoningerWorks.TextAdventure.Intermediate.Maps;
+﻿using BoningerWorks.TextAdventure.Core.Utilities;
+using BoningerWorks.TextAdventure.Intermediate.Maps;
 using BoningerWorks.TextAdventure.Json.Outputs;
 using System;
 
@@ -6,10 +7,10 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 {
 	public static class ActionTextInlined
 	{
-		public static Func<State, Text> Create(Entities entities, TextInlinedMap textInlinedMap)
+		public static Func<State, Text> Create(Func<Symbol, Symbol> replacer, Entities entities, TextInlinedMap textInlinedMap)
 		{
 			// Create replaceable
-			var replaceable = new Replaceable(entities, textInlinedMap.Value);
+			var replaceable = new Replaceable(replacer, entities, textInlinedMap.Value);
 			// Return action
 			return state =>
 			{

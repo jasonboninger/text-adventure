@@ -1,4 +1,5 @@
-﻿using BoningerWorks.TextAdventure.Intermediate.Enums;
+﻿using BoningerWorks.TextAdventure.Core.Utilities;
+using BoningerWorks.TextAdventure.Intermediate.Enums;
 using BoningerWorks.TextAdventure.Intermediate.Maps;
 using BoningerWorks.TextAdventure.Json.Outputs;
 using System;
@@ -9,15 +10,15 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 {
 	public static class ActionCondition
 	{
-		public static Func<State, bool> Create(Entities entities, ConditionMap conditionMap)
+		public static Func<State, bool> Create(Func<Symbol, Symbol> replacer, Entities entities, ConditionMap conditionMap)
 		{
 			// Check if single
 			if (conditionMap.SingleMap != null)
 			{
 				// Get left
-				var left = new Replaceable(entities, conditionMap.SingleMap.Left);
+				var left = new Replaceable(replacer, entities, conditionMap.SingleMap.Left);
 				// Get right
-				var right = new Replaceable(entities, conditionMap.SingleMap.Right);
+				var right = new Replaceable(replacer, entities, conditionMap.SingleMap.Right);
 				// Get comparison
 				var comparison = conditionMap.SingleMap.Comparison;
 				// Check if is
@@ -39,7 +40,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			if (conditionMap.ManyMap != null)
 			{
 				// Get condition actions
-				var actionsCondition = conditionMap.ManyMap.ConditionMaps.Select(cm => Create(entities, cm)).ToImmutableArray();
+				var actionsCondition = conditionMap.ManyMap.ConditionMaps.Select(cm => Create(replacer, entities, cm)).ToImmutableArray();
 				// Get operator
 				var @operator = conditionMap.ManyMap.Operator;
 				// Check if all

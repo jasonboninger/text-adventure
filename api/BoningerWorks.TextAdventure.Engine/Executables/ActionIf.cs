@@ -1,4 +1,5 @@
-﻿using BoningerWorks.TextAdventure.Intermediate.Maps;
+﻿using BoningerWorks.TextAdventure.Core.Utilities;
+using BoningerWorks.TextAdventure.Intermediate.Maps;
 using BoningerWorks.TextAdventure.Json.Outputs;
 using System;
 using System.Collections.Generic;
@@ -11,13 +12,14 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 	{
 		public static Func<State, ImmutableArray<TOutput>> Create<TMap>
 		(
+			Func<Symbol, Symbol> replacer,
 			Entities entities, 
 			IfMap<TMap> ifMap,
 			Func<TMap, IEnumerable<TOutput>> create
 		)
 		{
 			// Create condition action
-			var actionCondition = ActionCondition.Create(entities, ifMap.ConditionMap);
+			var actionCondition = ActionCondition.Create(replacer, entities, ifMap.ConditionMap);
 			// Create true actions
 			var actionsTrue = ifMap.MapsTrue.GetValueOrDefault(ImmutableArray<TMap>.Empty).SelectMany(create).ToImmutableArray();
 			// Create false actions

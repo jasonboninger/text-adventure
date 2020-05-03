@@ -65,6 +65,15 @@ namespace BoningerWorks.TextAdventure.Cli
 					""item"": ""ITEM_TO_USE_ON""
 				}
 			]
+		},
+		{
+			""id"": ""INVENTORY"",
+			""parts"": [
+				[
+					""Inventory"",
+					""Stuff""
+				]
+			]
 		}
 	],
 	""player"": {
@@ -74,6 +83,28 @@ namespace BoningerWorks.TextAdventure.Cli
 			""Myself""
 		],
 		""area"": ""HOTEL_ROOM"",
+		""reactions"": {
+			""command"": ""INVENTORY"",
+			""actions"": {
+				""iterators"": {
+					""item"": ""ITEM"",
+					""actions"": [
+						{
+							""changes"": [
+								{
+									""target"": ""WALLET"",
+									""standard"": ""ACTIVE"",
+									""value"": ""FALSE""
+								}
+							]
+						},
+						{
+							""messages"": ""There is an item called ${ITEM>ACTIVE} in this world!""
+						}
+					]
+				}
+			}
+		},
 		""items"": [
 			{
 				""id"": ""PHONE"",
