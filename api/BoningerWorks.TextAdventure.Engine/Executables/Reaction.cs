@@ -24,7 +24,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			try
 			{
 				// Check if reaction map has no input symbol to entity symbol mappings
-				if (reactionMap.InputSymbolToEntitySymbolMappings.Count == 0)
+				if (reactionMap.InputMap.InputSymbolToEntitySymbolMappings.Count == 0)
 				{
 					// Check if command has more than one input
 					if (Command.Inputs.Length > 1)
@@ -36,7 +36,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				else
 				{
 					// Check if reaction map does not have an input symbol for each command input
-					if (Command.Inputs.Any(i => !reactionMap.InputSymbolToEntitySymbolMappings.ContainsKey(i.Symbol)))
+					if (Command.Inputs.Any(i => !reactionMap.InputMap.InputSymbolToEntitySymbolMappings.ContainsKey(i.Symbol)))
 					{
 						// Throw error
 						throw new ValidationError($"Some inputs are missing.");
@@ -51,7 +51,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 								(i =>
 								{
 									// Try to get entity symbol for input symbol
-									if (!reactionMap.InputSymbolToEntitySymbolMappings.TryGetValue(i.Symbol, out var entitySymbol))
+									if (!reactionMap.InputMap.InputSymbolToEntitySymbolMappings.TryGetValue(i.Symbol, out var entitySymbol))
 									{
 										// Set entity symbol
 										entitySymbol = reactionMap.EntitySymbol;

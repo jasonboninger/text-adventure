@@ -150,11 +150,11 @@ namespace BoningerWorks.TextAdventure.Cli
 						""command"": ""USE_ON"",
 						""inputs"": [
 							{
-								""input"": ""ITEM_TO_USE"",
+								""key"": ""ITEM_TO_USE"",
 								""value"": ""PHONE""
 							},
 							{
-								""input"": ""ITEM_TO_USE_ON"",
+								""key"": ""ITEM_TO_USE_ON"",
 								""value"": ""WALLET""
 							}
 						],
@@ -234,8 +234,9 @@ namespace BoningerWorks.TextAdventure.Cli
 										{
 											""triggers"": {
 												""command"": ""USE"",
-												""items"": {
-													""ITEM"": ""DOOR""
+												""inputs"": {
+													""key"": ""ITEM"",
+													""value"": ""DOOR""
 												}
 											}
 										}

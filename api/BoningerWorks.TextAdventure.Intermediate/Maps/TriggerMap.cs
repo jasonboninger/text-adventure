@@ -2,14 +2,13 @@
 using BoningerWorks.TextAdventure.Core.Utilities;
 using BoningerWorks.TextAdventure.Intermediate.Errors;
 using BoningerWorks.TextAdventure.Json.Inputs;
-using System.Collections.Immutable;
 
 namespace BoningerWorks.TextAdventure.Intermediate.Maps
 {
 	public class TriggerMap
 	{
 		public Symbol CommandSymbol { get; }
-		public ImmutableDictionary<Symbol, Symbol> CommandItemSymbolToItemSymbolMappings { get; }
+		public InputMap InputMap { get; }
 
 		internal TriggerMap(Trigger? trigger)
 		{
@@ -25,14 +24,8 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 				// Set command symbol
 				CommandSymbol = Symbol.TryCreate(trigger.CommandSymbol)
 					?? throw new ValidationError($"Command symbol ({trigger.CommandSymbol}) is not valid.");
-				// Set command item symbol to item symbol mappings
-				CommandItemSymbolToItemSymbolMappings = trigger.CommandItemSymbolToItemSymbolMappings?
-					.ToImmutableDictionary
-						(
-							kv => Symbol.TryCreate(kv.Key) ?? throw new ValidationError($"Command item symbol ({kv.Key}) is not valid."),
-							kv => Symbol.TryCreate(kv.Value) ?? throw new ValidationError($"Item symbol ({kv.Value}) is not valid.")
-						)
-					?? ImmutableDictionary<Symbol, Symbol>.Empty;
+				// Set input map
+				InputMap = new InputMap(trigger.Inputs);
 			}
 			catch (GenericException<ValidationError> exception)
 			{

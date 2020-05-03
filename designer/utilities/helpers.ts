@@ -1,7 +1,7 @@
 import { ILineSpecial, XSpecial } from "../types/message";
 import { XCondition, IConditionSingle, IConditionMany, XComparison, XOperator } from "../types/condition";
 import { ICommandPartItem, ICommandPartArea } from "../types/command";
-import { IReactionInput } from "../types/reaction";
+import { IInput } from "../types/input";
 import { IChange } from "../types/change";
 
 export function area(area: string): ICommandPartArea {
@@ -16,9 +16,9 @@ export function item(item: string): ICommandPartItem {
 	};
 }
 
-export function input(input: string, value: string): IReactionInput {
+export function input(key: string, value: string): IInput {
 	return {
-		input,
+		key,
 		value
 	};
 }

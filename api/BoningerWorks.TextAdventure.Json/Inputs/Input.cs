@@ -2,9 +2,9 @@
 
 namespace BoningerWorks.TextAdventure.Json.Inputs
 {
-	public class ReactionInput
+	public class Input
 	{
-		[JsonPropertyName("input")] public string? Input { get; set; }
+		[JsonPropertyName("key")] public string? Key { get; set; }
 		[JsonPropertyName("value")] public string? Value { get; set; }
 	}
 }

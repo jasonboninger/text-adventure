@@ -1,6 +1,7 @@
-import { XDictionary } from "./core";
+import { XOneOrArray } from "./core";
+import { IInput } from "./input";
 
 export interface ITrigger {
 	command: string;
-	items?: XDictionary<string>;
+	inputs?: XOneOrArray<IInput>;
 }
