@@ -1,8 +1,8 @@
-export type ICommandPart = string[] | ICommandPartWord | ICommandPartArea | ICommandPartItem
+export type XCommandPart = string[] | ICommandPartWord | ICommandPartArea | ICommandPartItem
 
 export interface ICommand {
 	id: string;
-	parts: ICommandPart[];
+	parts: XCommandPart[];
 }
 
 export interface ICommandPartWord {

@@ -1,10 +1,10 @@
-import { IOneOrArray } from "./core";
+import { XOneOrArray } from "./core";
 import { IReaction } from "./reaction";
 
 export interface IItem {
 	id: string;
 	names: string[];
 	active?: boolean;
-	reactions?: IOneOrArray<IReaction>;
+	reactions?: XOneOrArray<IReaction>;
 	items?: IItem[];
 }

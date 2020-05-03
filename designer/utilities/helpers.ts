@@ -1,7 +1,8 @@
-import { ILineSpecial, SSpecial } from "../types/message";
-import { ICondition, IConditionSingle, IConditionMany, SComparison, SOperator } from "../types/condition";
+import { ILineSpecial, XSpecial } from "../types/message";
+import { XCondition, IConditionSingle, IConditionMany, XComparison, XOperator } from "../types/condition";
 import { ICommandPartItem, ICommandPartArea } from "../types/command";
 import { IReactionInput } from "../types/reaction";
+import { IChangeStandard, IChangeCustom } from "../types/change";
 
 export function area(area: string): ICommandPartArea {
 	return {
@@ -22,6 +23,22 @@ export function input(input: string, value: string): IReactionInput {
 	};
 }
 
+export function standard(target: string, standard: string, value: string): IChangeStandard {
+	return {
+		target,
+		standard,
+		value
+	};
+}
+
+export function custom(target: string, custom: string, value: string): IChangeCustom {
+	return {
+		target,
+		custom,
+		value
+	};
+}
+
 export function blank(): ILineSpecial {
 	return _special("BLANK");
 }
@@ -38,21 +55,21 @@ export function not(left: string, right: string): IConditionSingle {
 	return _condition(left, "NOT", right);
 }
 
-export function all(...conditions: ICondition[]): IConditionMany {
+export function all(...conditions: XCondition[]): IConditionMany {
 	return _conditions("ALL", conditions);
 }
 
-export function any(...conditions: ICondition[]): IConditionMany {
+export function any(...conditions: XCondition[]): IConditionMany {
 	return _conditions("ANY", conditions);
 }
 
-function _special(special: SSpecial): ILineSpecial {
+function _special(special: XSpecial): ILineSpecial {
 	return {
 		special
 	};
 }
 
-function _condition(left: string, comparison: SComparison, right: string): IConditionSingle {
+function _condition(left: string, comparison: XComparison, right: string): IConditionSingle {
 	return {
 		left,
 		comparison,
@@ -60,7 +77,7 @@ function _condition(left: string, comparison: SComparison, right: string): ICond
 	};
 }
 
-function _conditions(operator: SOperator, conditions: ICondition[]): IConditionMany {
+function _conditions(operator: XOperator, conditions: XCondition[]): IConditionMany {
 	return {
 		operator,
 		conditions

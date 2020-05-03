@@ -1,5 +1,5 @@
 import { IGame } from "./types/game";
-import { horizontalRule, blank, is, not, item, input } from "./utilities/helpers";
+import { horizontalRule, blank, is, not, item, input, custom } from "./utilities/helpers";
 
 export const CRAZY_EX: IGame = {
 	commands: [
@@ -129,9 +129,7 @@ export const CRAZY_EX: IGame = {
 											messages: "You glance at the door. Something looks a bit strange."
 										},
 										{
-											changes: {
-												"DOOR.USED": "TRUE"
-											}
+											changes: custom("DOOR", "USED", "TRUE")
 										},
 										{
 											triggers: {

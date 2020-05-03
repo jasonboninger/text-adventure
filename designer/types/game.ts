@@ -1,4 +1,4 @@
-import { IOneOrArray } from "./core";
+import { XOneOrArray } from "./core";
 import { ICommand } from "./command";
 import { IPlayer } from "./player";
 import { IArea } from "./area";
@@ -8,6 +8,6 @@ export interface IGame {
 	commands: ICommand[];
 	player: IPlayer;
 	areas: IArea[];
-	start?: IOneOrArray<XAction>;
-	end?: IOneOrArray<XAction>;
+	start?: XOneOrArray<XAction>;
+	end?: XOneOrArray<XAction>;
 }

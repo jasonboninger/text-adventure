@@ -1,4 +1,4 @@
-import { IOneOrArray } from "./core";
+import { XOneOrArray } from "./core";
 import { IItem } from "./item";
 import { IReaction } from "./reaction";
 
@@ -7,5 +7,5 @@ export interface IPlayer {
 	names: string[];
 	area: string;
 	items?: IItem[];
-	reactions?: IOneOrArray<IReaction>;
+	reactions?: XOneOrArray<IReaction>;
 }

@@ -204,7 +204,9 @@ namespace BoningerWorks.TextAdventure.Cli
 										},
 										{
 											""changes"": {
-												""DOOR.USED"": ""TRUE""
+												""target"": ""DOOR"",
+												""custom"": ""USED"",
+												""value"": ""TRUE""
 											}
 										},
 										{

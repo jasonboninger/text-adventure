@@ -1,5 +1,6 @@
 import { XMessage } from "./message";
-import { IOneOrArray, IDictionary, IIf } from "./core";
+import { XOneOrArray, IIf } from "./core";
+import { XChange } from "./change";
 import { ITrigger } from "./trigger";
 
 export type XAction = IActionIf | IActionMessage | IActionChanges | IActionTriggers;
@@ -13,7 +14,7 @@ export interface IActionIf {
 
 export interface IActionMessage {
 	if?: never;
-	messages: IOneOrArray<XMessage>;
+	messages: XOneOrArray<XMessage>;
 	changes?: never;
 	triggers?: never;
 }
@@ -21,7 +22,7 @@ export interface IActionMessage {
 export interface IActionChanges {
 	if?: never;
 	messages?: never;
-	changes: IDictionary<string>;
+	changes: XOneOrArray<XChange>;
 	triggers?: never;
 }
 
@@ -29,5 +30,5 @@ export interface IActionTriggers {
 	if?: never;
 	messages?: never;
 	changes?: never;
-	triggers: IOneOrArray<ITrigger>;
+	triggers: XOneOrArray<ITrigger>;
 }

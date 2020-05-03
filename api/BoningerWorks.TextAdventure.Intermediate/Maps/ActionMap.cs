@@ -53,19 +53,19 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 					// Set message maps
 					MessageMaps = action.Messages.Select(m => new MessageMap(m)).ToImmutableArray();
 				}
-				// Check if change path to new value mappings exists
-				if (action.ChangePathToNewValueMappings != null)
+				// Check if changes exists
+				if (action.Changes != null)
 				{
 					// Increase count
 					count++;
-					// Check if change path to new value mappings is empty
-					if (action.ChangePathToNewValueMappings.Count == 0)
+					// Check if changes is empty
+					if (action.Changes.Count == 0)
 					{
 						// Throw error
 						throw new ValidationError("Changes cannot be empty.");
 					}
 					// Set change maps
-					ChangeMaps = action.ChangePathToNewValueMappings.Select(kv => new ChangeMap(kv.Key, kv.Value)).ToImmutableArray();
+					ChangeMaps = action.Changes.Select(c => new ChangeMap(c)).ToImmutableArray();
 				}
 				// Check if triggers exists
 				if (action.Triggers != null)

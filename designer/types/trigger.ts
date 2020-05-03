@@ -1,6 +1,6 @@
-import { IDictionary } from "./core";
+import { XDictionary } from "./core";
 
 export interface ITrigger {
 	command: string;
-	items?: IDictionary<string>;
+	items?: XDictionary<string>;
 }
