@@ -13,8 +13,22 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			// Check if if map exists
 			if (actionMap.IfMap != null)
 			{
-				// Return if action
-				return ActionIf.Create(entities, items, actionMap.IfMap).ToEnumerable();
+				// Create if action
+				var actionIf = ActionIf<Action<ResultBuilder>>.Create(entities, actionMap.IfMap, am => Create(entities, items, am));
+				// Create action
+				Action<ResultBuilder> action = result =>
+				{
+					// Get actions
+					var actions = actionIf(result.State);
+					// Run through actions
+					for (int i = 0; i < actions.Length; i++)
+					{
+						// Execute action
+						actions[i](result);
+					}
+				};
+				// Return action
+				return action.ToEnumerable();
 			}
 			// Check if message maps exist
 			if (actionMap.MessageMaps.HasValue)

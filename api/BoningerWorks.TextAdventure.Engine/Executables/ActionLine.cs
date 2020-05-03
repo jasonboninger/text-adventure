@@ -3,6 +3,7 @@ using BoningerWorks.TextAdventure.Intermediate.Maps;
 using BoningerWorks.TextAdventure.Json.Outputs;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BoningerWorks.TextAdventure.Engine.Executables
 {
@@ -13,14 +14,10 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			// Check if if map exists
 			if (lineMap.IfMap != null)
 			{
-
-
-
-				// Throw error
-				throw new InvalidOperationException("Line map if is not implemented.");
-
-
-
+				// Create if action
+				var actionIf = ActionIf<Func<State, IEnumerable<Line>>>.Create(entities, lineMap.IfMap, lm => Create(entities, lm).ToEnumerable());
+				// Return action
+				return state => actionIf(state).SelectMany(a => a(state));
 			}
 			// Check if special map exists
 			if (lineMap.SpecialMap != null)

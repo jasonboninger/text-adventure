@@ -3,6 +3,7 @@ using BoningerWorks.TextAdventure.Intermediate.Maps;
 using BoningerWorks.TextAdventure.Json.Outputs;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BoningerWorks.TextAdventure.Engine.Executables
 {
@@ -13,14 +14,10 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			// Check if if map exists
 			if (textMap.IfMap != null)
 			{
-
-
-
-				// Throw error
-				throw new InvalidOperationException("Text map if is not implemented.");
-
-
-
+				// Create if action
+				var actionIf = ActionIf<Func<State, IEnumerable<Text>>>.Create(entities, textMap.IfMap, tm => Create(entities, tm).ToEnumerable());
+				// Return action
+				return state => actionIf(state).SelectMany(a => a(state));
 			}
 			// Check if inlined map exists
 			if (textMap.InlinedMap != null)
