@@ -13,7 +13,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		public Command Command { get; }
 		public ReactionPath Path { get; }
 
-		private readonly ImmutableArray<Action<ResultBuilder>> _actions;
+		private readonly Action<ResultBuilder> _action;
 
 		public Reaction(Entities entities, Commands commands, ReactionMap reactionMap)
 		{
@@ -77,8 +77,8 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 								})
 							.ToImmutableList()
 					);
-				// Set actions
-				_actions = reactionMap.ActionMaps.SelectMany(am => Action.Create(s => s, entities, am)).ToImmutableArray();
+				// Set action
+				_action = Actions.Create(entities, reactionMap.ActionMaps);
 			}
 			catch (GenericException<ValidationError> exception)
 			{
@@ -91,12 +91,8 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		{
 			// Create result
 			var result = new ResultBuilder(state);
-			// Run through actions
-			for (int i = 0; i < _actions.Length; i++)
-			{
-				// Execute action
-				_actions[i](result);
-			}
+			// Execute action
+			_action(result);
 			// Return result
 			return result.ToImmutable();
 		}

@@ -17,6 +17,8 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		public Entities Entities { get; }
 		public Commands Commands { get; }
 		public Reactions Reactions { get; }
+		public Action<ResultBuilder> Start { get; }
+		public Action<ResultBuilder> End { get; }
 
 		private Game(GameMap gameMap)
 		{
@@ -38,9 +40,13 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			Commands = new Commands(Entities, gameMap.CommandMaps);
 			// Set reactions
 			Reactions = new Reactions(Entities, Commands, gameMap.ReactionMaps);
+			// Set start
+			Start = Actions.Create(Entities, gameMap.ActionMapsStart);
+			// Set end
+			End = Actions.Create(Entities, gameMap.ActionMapsEnd);
 		}
 
-		public State New()
+		public Result New()
 		{
 			// Create entities
 			var entities = ImmutableDictionary.CreateBuilder<Symbol, Entity>();
@@ -52,8 +58,12 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			}
 			// Create state
 			var state = new State(entities.ToImmutable());
-			// Return state
-			return state;
+			// Create result
+			var result = new ResultBuilder(state);
+			// Execute start
+			Start(result);
+			// Return result
+			return result.ToImmutable();
 		}
 
 		public Result Execute(State state, string? input)
