@@ -3,13 +3,23 @@ using BoningerWorks.TextAdventure.Engine.Interfaces;
 using BoningerWorks.TextAdventure.Intermediate.Maps;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 
 namespace BoningerWorks.TextAdventure.Engine.Executables
 {
 	public static class ActionIterator
 	{
-		public static IEnumerable<Action<ResultBuilder>> Create(Func<Symbol, Symbol> replacer, Entities entities, IteratorMap iteratorMap)
+		public static IEnumerable<Action<ResultBuilder>> Create
+		(
+			Func<Symbol, Symbol> replacer,
+			Triggers? triggers,
+			Entities entities,
+			Commands commands,
+			ImmutableArray<ReactionPath> reactionPaths,
+			ReactionPath? reactionPath,
+			IteratorMap iteratorMap
+		)
 		{
 			// Create replace
 			Symbol replace;
@@ -46,7 +56,8 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				// Set iterator replacer
 				replacerIterator = s => s == replace ? symbol : replacer(s);
 				// Return actions
-				return iteratorMap.ActionMaps.SelectMany(am => Action.Create(replacerIterator, entities, am));
+				return iteratorMap.ActionMaps
+					.SelectMany(am => Action.Create(replacerIterator, triggers, entities, commands, reactionPaths, reactionPath, am));
 			});
 		}
 	}

@@ -3,25 +3,42 @@ using BoningerWorks.TextAdventure.Core.Utilities;
 using BoningerWorks.TextAdventure.Intermediate.Maps;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 
 namespace BoningerWorks.TextAdventure.Engine.Executables
 {
 	public static class Action
 	{
-		public static IEnumerable<Action<ResultBuilder>> Create(Func<Symbol, Symbol> replacer, Entities entities, ActionMap actionMap)
+		public static IEnumerable<Action<ResultBuilder>> Create
+		(
+			Func<Symbol, Symbol> replacer,
+			Triggers? triggers,
+			Entities entities,
+			Commands commands,
+			ImmutableArray<ReactionPath> reactionPaths,
+			ReactionPath? reactionPath,
+			ActionMap actionMap
+		)
 		{
 			// Check if iterator maps exists
 			if (actionMap.IteratorMaps.HasValue)
 			{
 				// Return iterator actions
-				return actionMap.IteratorMaps.Value.SelectMany(im => ActionIterator.Create(replacer, entities, im));
+				return actionMap.IteratorMaps.Value
+					.SelectMany(im => ActionIterator.Create(replacer, triggers, entities, commands, reactionPaths, reactionPath, im));
 			}
 			// Check if if map exists
 			if (actionMap.IfMap != null)
 			{
 				// Create if action
-				var actionIf = ActionIf<Action<ResultBuilder>>.Create(replacer, entities, actionMap.IfMap, am => Create(replacer, entities, am));
+				var actionIf = ActionIf<Action<ResultBuilder>>.Create
+					(
+						replacer, 
+						entities, 
+						actionMap.IfMap,
+						am => Create(replacer, triggers, entities, commands, reactionPaths, reactionPath, am)
+					);
 				// Create action
 				Action<ResultBuilder> action = result =>
 				{
@@ -52,13 +69,8 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			// Check if trigger maps exist
 			if (actionMap.TriggerMaps.HasValue)
 			{
-
-
-
-				return Enumerable.Empty<Action<ResultBuilder>>();
-
-
-
+				// Return trigger actions
+				return actionMap.TriggerMaps.Value.Select(tm => ActionTrigger.Create(triggers, commands, reactionPaths, reactionPath, tm));
 			}
 			// Throw error
 			throw new InvalidOperationException("Action map could not be parsed.");

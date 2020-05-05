@@ -7,7 +7,7 @@ namespace BoningerWorks.TextAdventure.Json.Inputs
 {
 	public class Game
 	{
-		public static Game Deserialize(string json) => JsonSerializerExecutor.Deserialize<Game>(json);
+		public static Game? Deserialize(string json) => JsonSerializerExecutor.Deserialize<Game?>(json);
 
 		[JsonPropertyName("commands")] public List<Command?>? Commands { get; set; }
 		[JsonPropertyName("player")] public Player? Player { get; set; }

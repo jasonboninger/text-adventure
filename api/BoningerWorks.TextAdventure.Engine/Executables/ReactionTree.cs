@@ -12,7 +12,12 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		{
 			// Return command to reaction tree mappings
 			return reactions
-				.GroupBy(r => r.Command, (c, rs) => KeyValuePair.Create(c, new ReactionTree(c, rs.ToImmutableList(), index: 0)))
+				.GroupBy
+					(
+						r => r.Path.Command, 
+						(c, rs) => KeyValuePair.Create(c, new ReactionTree(c, rs.ToImmutableList(), index: 0)),
+						IdentifiableEqualityComparer<Command>.Instance
+					)
 				.ToImmutableDictionary(IdentifiableEqualityComparer<Command>.Instance);
 		}
 
@@ -43,7 +48,8 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				.GroupBy
 					(
 						r => r.Path.Parts[index].Entity,
-						(e, r) => KeyValuePair.Create(e, new ReactionTree(command, r.ToImmutableList(), indexNext))
+						(e, r) => KeyValuePair.Create(e, new ReactionTree(command, r.ToImmutableList(), indexNext)),
+						IdentifiableEqualityComparer<IEntity>.Instance
 					)
 				.ToImmutableDictionary(IdentifiableEqualityComparer<IEntity>.Instance);
 			// Return next

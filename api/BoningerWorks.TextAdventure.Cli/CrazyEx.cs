@@ -225,13 +225,6 @@ namespace BoningerWorks.TextAdventure.Cli
 											""messages"": ""You glance at the door. Something looks a bit strange.""
 										},
 										{
-											""changes"": {
-												""target"": ""DOOR"",
-												""datum"": ""USED"",
-												""value"": ""TRUE""
-											}
-										},
-										{
 											""triggers"": {
 												""command"": ""USE"",
 												""inputs"": {
@@ -246,6 +239,21 @@ namespace BoningerWorks.TextAdventure.Cli
 									}
 								}
 							}
+						},
+						{
+							""command"": ""USE"",
+							""actions"": [
+								{
+									""messages"": ""Bro!""
+								},
+								{
+									""changes"": {
+										""target"": ""DOOR"",
+										""datum"": ""USED"",
+										""value"": ""TRUE""
+									}
+								}
+							]
 						}
 					]
 				},

@@ -1,7 +1,7 @@
 ﻿using BoningerWorks.TextAdventure.Core.Utilities;
+using BoningerWorks.TextAdventure.Engine.Interfaces;
 using BoningerWorks.TextAdventure.Intermediate.Maps;
 using BoningerWorks.TextAdventure.Json.Outputs;
-using System;
 using System.Collections.Immutable;
 using System.Text;
 
@@ -17,17 +17,9 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		public Entities Entities { get; }
 		public Commands Commands { get; }
 		public Reactions Reactions { get; }
-		public Action<ResultBuilder> Start { get; }
-		public Action<ResultBuilder> End { get; }
 
 		private Game(GameMap gameMap)
 		{
-			// Check if game map does not exist
-			if (gameMap == null)
-			{
-				// Throw error
-				throw new ArgumentException("Game map cannot be null.", nameof(gameMap));
-			}
 			// Set player
 			Player = new Player(gameMap.PlayerMap);
 			// Set areas
@@ -39,11 +31,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			// Set commands
 			Commands = new Commands(Entities, gameMap.CommandMaps);
 			// Set reactions
-			Reactions = new Reactions(Entities, Commands, gameMap.ReactionMaps);
-			// Set start
-			Start = Actions.Create(Entities, gameMap.ActionMapsStart);
-			// Set end
-			End = Actions.Create(Entities, gameMap.ActionMapsEnd);
+			Reactions = new Reactions(Entities, Commands, gameMap.ReactionMaps, gameMap.ActionMapsStart, gameMap.ActionMapsEnd);
 		}
 
 		public Result New()
@@ -59,9 +47,9 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			// Create state
 			var state = new State(entities.ToImmutable());
 			// Create result
-			var result = new ResultBuilder(state);
+			var result = new ResultBuilder(this, state);
 			// Execute start
-			Start(result);
+			Reactions.ExecuteStart(result);
 			// Return result
 			return result.ToImmutable();
 		}
@@ -78,23 +66,23 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			}
 			// Get match parts
 			var matchParts = match.Parts;
-			// Create path parts
-			var pathParts = ImmutableList.CreateBuilder<ReactionPathPart>();
+			// Create path entities
+			var entitiesPath = ImmutableList.CreateBuilder<IEntity>();
 			// Run through match parts
 			for (int i = 0; i < matchParts.Count; i++)
 			{
 				var matchPart = matchParts[i];
-				// Get entities
-				var entities = matchPart.Entities;
-				// Check if more than one entity
-				if (entities.Count > 1)
+				// Get match entities
+				var entitiesMatch = matchPart.Entities;
+				// Check if more than one match entity
+				if (entitiesMatch.Count > 1)
 				{
 					// Create text
 					var text = new StringBuilder("Input matched more than one entity. Did you mean ");
-					// Run through entities
-					for (int k = 0; k < entities.Count; k++)
+					// Run through match entities
+					for (int k = 0; k < entitiesMatch.Count; k++)
 					{
-						var entity = entities[k];
+						var entityMatch = entitiesMatch[k];
 						// Check if not first
 						if (k > 0)
 						{
@@ -102,13 +90,13 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 							text.Append(", ");
 						}
 						// Check if last
-						if (k == entities.Count - 1)
+						if (k == entitiesMatch.Count - 1)
 						{
 							// Add or
 							text.Append("or ");
 						}
 						// Add name
-						text.Append(entity.Names.Name);
+						text.Append(entityMatch.Names.Name);
 					}
 					// Add question mark
 					text.Append("?");
@@ -117,38 +105,24 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 					// Return result
 					return new Result(state, ImmutableList.Create(message));
 				}
-				// Create path part
-				var pathPart = new ReactionPathPart(matchPart.Input, entities[0]);
-				// Add path part
-				pathParts.Add(pathPart);
+				// Add path entity
+				entitiesPath.Add(entitiesMatch[0]);
 			}
-			// Get command
-			var command = match.Command;
-			// Create path
-			var path = new ReactionPath(command, pathParts.ToImmutable());
-			// Try to get reactions
-			var reactions = Reactions.TryGet(path);
-			// Check if reactions exists
-			if (!reactions.HasValue)
-			{
-				// Return result
-				return new Result(state, ImmutableList<Message>.Empty);
-			}
-			// Create messages
-			var messages = ImmutableList.CreateBuilder<Message>();
+			// Create reaction query
+			var reactionQuery = new ReactionQuery(match.Command, entitiesPath.ToImmutable());
+			// Match reactions
+			var reactions = Reactions.Match(reactionQuery);
+			// Create result
+			var result = new ResultBuilder(this, state);
 			// Run through reactions
-			for (int i = 0; i < reactions.Value.Length; i++)
+			for (int i = 0; i < reactions.Length; i++)
 			{
-				var reaction = reactions.Value[i];
+				var reaction = reactions[i];
 				// Execute reaction
-				var result = reaction.Execute(state);
-				// Set state
-				state = result.State;
-				// Add messages
-				messages.AddRange(result.Messages);
+				reaction.Execute(result);
 			}
 			// Return result
-			return new Result(state, messages.ToImmutable());
+			return result.ToImmutable();
 		}
 	}
 }

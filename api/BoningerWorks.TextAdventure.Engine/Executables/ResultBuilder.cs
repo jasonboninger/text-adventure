@@ -7,10 +7,15 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 	{
 		public State State { get; set; }
 
-		public ImmutableList<Message>.Builder Messages { get; } = ImmutableList.CreateBuilder<Message>();
+		public Game Game { get; }
+		public ImmutableList<Message>.Builder Messages { get; }
 
-		public ResultBuilder(State state)
+		public ResultBuilder(Game game, State state)
 		{
+			// Set game
+			Game = game;
+			// Set messages
+			Messages = ImmutableList.CreateBuilder<Message>();
 			// Set state
 			State = state;
 		}

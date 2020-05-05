@@ -148,9 +148,6 @@ export const CRAZY_EX: IGame = {
 											messages: "You glance at the door. Something looks a bit strange."
 										},
 										{
-											changes: change("DOOR", "USED", "TRUE")
-										},
-										{
 											triggers: {
 												command: "USE",
 												inputs: input("ITEM", "DOOR")
@@ -162,6 +159,17 @@ export const CRAZY_EX: IGame = {
 									}
 								}
 							}
+						},
+						{
+							command: "USE",
+							actions: [
+								{
+									messages: "Bro!"
+								},
+								{
+									changes: change("DOOR", "USED", "TRUE")
+								}
+							]
 						}
 					]
 				},
