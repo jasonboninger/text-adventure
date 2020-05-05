@@ -13,16 +13,21 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 	public class Replaceable
 	{
 		private const string _GROUP_PATH = "PATH";
+		
+		private static readonly Regex _regularExpressionReplacements = new Regex
+			(
+				@"\${" + RegularExpressions.CreateCaptureGroup(_GROUP_PATH, @"[^}]+") + @"}"
+			);
 
 		private readonly string _value;
-		private readonly ImmutableArray<Action<State, StringBuilder>> _replaces;
+		private readonly ImmutableList<Action<State, StringBuilder>> _replaces;
 
 		public Replaceable(Func<Symbol, Symbol> replacer, Entities entities, string value)
 		{
 			// Set value
 			_value = value;
 			// Set replaces
-			_replaces = new Regex(@"\${" + RegularExpressions.CreateCaptureGroup(_GROUP_PATH, @"[^}]+") + @"}")
+			_replaces = _regularExpressionReplacements
 				.Matches(_value)
 				.GroupBy(m => m.Value)
 				.Select
@@ -61,7 +66,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 							replace = (state, stringBuilder) =>
 							{
 								// Replace value
-								stringBuilder.Replace(value, metadata[datum].ToString());
+								stringBuilder.Replace(value, metadata[datum]);
 							};
 						}
 						else
@@ -78,7 +83,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 						// Return replace
 						return replace;
 					})
-				.ToImmutableArray();
+				.ToImmutableList();
 		}
 
 		public string Replace(State state)
@@ -86,7 +91,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			// Create string builder
 			var stringBuilder = new StringBuilder(_value);
 			// Run through replaces
-			for (int i = 0; i < _replaces.Length; i++)
+			for (int i = 0; i < _replaces.Count; i++)
 			{
 				// Execute replace
 				_replaces[i](state, stringBuilder);
