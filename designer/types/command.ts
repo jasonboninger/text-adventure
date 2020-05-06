@@ -1,8 +1,12 @@
+import { XOneOrArray } from "./core";
+import { XAction } from "./action";
+
 export type XCommandPart = string[] | ICommandPartWord | ICommandPartArea | ICommandPartItem
 
 export interface ICommand {
 	id: string;
 	parts: XCommandPart[];
+	fail?: XOneOrArray<XAction>;
 }
 
 export interface ICommandPartWord {

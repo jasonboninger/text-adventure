@@ -43,7 +43,10 @@ namespace BoningerWorks.TextAdventure.Cli
 				{
 					""item"": ""ITEM""
 				}
-			]
+			],
+			""fail"": {
+				""messages"": ""There isn't really much to do with ${ITEM>NAME}...""
+			}
 		},
 		{
 			""id"": ""USE_ON"",
@@ -349,6 +352,9 @@ namespace BoningerWorks.TextAdventure.Cli
 				""lines"": ""Don't be, you say, it was a long time coming.""
 			}
 		]
+	},
+	""fail"": {
+		""messages"": ""Well, that didn't match a lick o' anything!""
 	}
 }";
 	}
