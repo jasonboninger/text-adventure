@@ -1,4 +1,5 @@
-﻿using BoningerWorks.TextAdventure.Intermediate.Maps;
+﻿using BoningerWorks.TextAdventure.Core.Utilities;
+using BoningerWorks.TextAdventure.Intermediate.Maps;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,32 +13,28 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		public Reaction this[int index] => _reactions[index];
 		public int Count => _reactions.Length;
 
+		private readonly Entities _entities;
+		private readonly Commands _commands;
+		private readonly ImmutableArray<ReactionPath> _reactionPaths;
 		private readonly ImmutableArray<Reaction> _reactions;
 		private readonly IEnumerable<Reaction> _reactionsEnumerable;
 		private readonly ImmutableDictionary<Command, ReactionTree> _commandToReactionTreeMappings;
-		private readonly Action<ResultBuilder> _actionStart;
-		private readonly Action<ResultBuilder> _actionEnd;
-		private readonly Action<ResultBuilder> _actionFail;
 
-		public Reactions
-		(
-			Entities entities, 
-			Commands commands, 
-			ImmutableArray<ReactionMap> reactionMaps,
-			ImmutableArray<ActionMap> actionMapsStart,
-			ImmutableArray<ActionMap> actionMapsEnd,
-			ImmutableArray<ActionMap> actionMapsFail
-		)
+		public Reactions(Entities entities, Commands commands, ImmutableArray<ReactionMap> reactionMaps)
 		{
+			// Set entities
+			_entities = entities;
+			// Set commands
+			_commands = commands;
 			// Create triggers
 			var triggers = new Triggers();
-			// Create reaction paths
-			var reactionPaths = reactionMaps
-				.Select(rm => new ReactionPath(entities, commands, rm))
+			// Set reaction paths
+			_reactionPaths = reactionMaps
+				.Select(rm => new ReactionPath(_entities, _commands, rm))
 				.ToImmutableArray();
 			// Set reactions
 			_reactions = reactionMaps
-				.Select((rm, i) => new Reaction(triggers, entities, commands, reactionPaths, reactionPaths[i], rm.ActionMaps))
+				.Select((rm, i) => new Reaction(triggers, _entities, _commands, _reactionPaths, _reactionPaths[i], rm.ActionMaps))
 				.ToImmutableArray();
 			// Validate trigger paths
 			triggers.Validate();
@@ -45,18 +42,12 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			_reactionsEnumerable = _reactions;
 			// Set command symbol to reaction tree mappings
 			_commandToReactionTreeMappings = ReactionTree.Create(_reactions);
-			// Set start action
-			_actionStart = Actions.Create(triggers: null, entities, commands, reactionPaths, reactionPath: null, actionMapsStart);
-			// Set end action
-			_actionEnd = Actions.Create(triggers: null, entities, commands, reactionPaths, reactionPath: null, actionMapsEnd);
-			// Set fail action
-			_actionFail = Actions.Create(triggers: null, entities, commands, reactionPaths, reactionPath: null, actionMapsFail);
 		}
 
 		IEnumerator IEnumerable.GetEnumerator() => _reactionsEnumerable.GetEnumerator();
 		public IEnumerator<Reaction> GetEnumerator() => _reactionsEnumerable.GetEnumerator();
 
-		public ImmutableArray<Reaction> Match(ReactionQuery reactionQuery)
+		public ImmutableArray<Reaction> GetMatches(ReactionQuery reactionQuery)
 		{
 			// Check if reaction query does not exist
 			if (reactionQuery == null)
@@ -93,22 +84,12 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			return reactions ?? ImmutableArray<Reaction>.Empty;
 		}
 
-		public void ExecuteStart(ResultBuilder result)
+		public Action<ResultBuilder> CreateAction(ImmutableArray<ActionMap> actionMaps, Func<Symbol, Symbol>? replacer = null)
 		{
-			// Execute start action
-			_actionStart(result);
-		}
-
-		public void ExecuteEnd(ResultBuilder result)
-		{
-			// Execute end action
-			_actionEnd(result);
-		}
-
-		public void ExecuteFail(ResultBuilder result)
-		{
-			// Execute fail action
-			_actionFail(result);
+			// Create action
+			var action = Actions.Create(triggers: null, _entities, _commands, _reactionPaths, reactionPath: null, actionMaps, replacer);
+			// Return action
+			return action;
 		}
 	}
 }

@@ -75,7 +75,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				{
 					var reactionQuery = reactionQueries[i];
 					// Match reactions
-					var reactions = game.Reactions.Match(reactionQuery);
+					var reactions = game.Reactions.GetMatches(reactionQuery);
 					// Get reactions length
 					var reactionsLength = reactions.Length;
 					// Run through reactions

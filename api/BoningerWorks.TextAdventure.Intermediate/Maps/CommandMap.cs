@@ -12,6 +12,7 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 	{
 		public Symbol CommandSymbol { get; }
 		public ImmutableArray<CommandPartMap> CommandPartMaps { get; }
+		public ImmutableArray<ActionMap> ActionMapsFail { get; }
 
 		internal CommandMap(Command? command)
 		{
@@ -47,6 +48,8 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 					// Throw error
 					throw new ValidationError("Not all command part symbols are unique.");
 				}
+				// Set fail action maps
+				ActionMapsFail = command.ActionsFail?.Select(a => new ActionMap(a)).ToImmutableArray() ?? ImmutableArray<ActionMap>.Empty;
 			}
 			catch (GenericException<ValidationError> exception)
 			{

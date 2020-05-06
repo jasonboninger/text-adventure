@@ -32,6 +32,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 
 		private readonly Regex _regularExpression;
 		private readonly ImmutableArray<CommandInputMetadatum> _commandInputMetadata;
+		private readonly ImmutableArray<ActionMap> _actionMapsFail;
 
 		public Command(Entities entities, CommandMap commandMap)
 		{
@@ -101,6 +102,8 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			_regularExpression = new Regex(@"^" + string.Join(@" +", regularExpressions) + @"$", RegexOptions.IgnoreCase | RegexOptions.Singleline);
 			// Set inputs
 			Inputs = _commandInputMetadata.Select(cim => cim.CommandInput).ToImmutableArray();
+			// Set fail action maps
+			_actionMapsFail = commandMap.ActionMapsFail;
 		}
 
 		public override string ToString()
@@ -149,6 +152,58 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			}
 			// Return no match
 			return null;
+		}
+
+		public void CheckFail(Entities entities, Reactions reactions)
+		{
+			// Get parts
+			var parts = Inputs.Select(i => entities.FirstOrDefault(e => i.IsValid(e))).ToImmutableList();
+			// Check if parts exist
+			if (parts.All(p => p != null))
+			{
+				// Create fail action
+				_CreateFail(parts, reactions);
+			}
+		}
+
+		public void ExecuteFail(ResultBuilder result, ImmutableList<IEntity> parts)
+		{
+			// Create fail action
+			var actionFail = _CreateFail(parts, result.Game.Reactions);
+			// Execute fail action
+			actionFail(result);
+		}
+
+		private Action<ResultBuilder> _CreateFail(ImmutableList<IEntity> parts, Reactions reactions)
+		{
+			// Get inputs
+			var inputs = Inputs;
+			// Get inputs length
+			var inputsLength = inputs.Length;
+			// Check if parts count does not match inputs length
+			if (parts.Count != inputsLength)
+			{
+				// Throw error
+				throw new ArgumentException($"Parts count ({parts.Count}) must match input length ({inputsLength}).", nameof(parts));
+			}
+			// Create replacer
+			Symbol replacer(Symbol symbol)
+			{
+				// Run through inputs
+				for (int i = 0; i < inputsLength; i++)
+				{
+					// Check if symbol matches input
+					if (inputs[i].Symbol == symbol)
+					{
+						// Return part symbol
+						return parts[i].Symbol;
+					}
+				}
+				// Return symbol
+				return symbol;
+			}
+			// Return action
+			return reactions.CreateAction(_actionMapsFail, replacer);
 		}
 	}
 }

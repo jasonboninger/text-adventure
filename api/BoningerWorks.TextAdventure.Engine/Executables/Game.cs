@@ -2,6 +2,7 @@
 using BoningerWorks.TextAdventure.Engine.Interfaces;
 using BoningerWorks.TextAdventure.Intermediate.Maps;
 using BoningerWorks.TextAdventure.Json.Outputs;
+using System;
 using System.Collections.Immutable;
 using System.Text;
 
@@ -18,6 +19,10 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		public Commands Commands { get; }
 		public Reactions Reactions { get; }
 
+		private readonly Action<ResultBuilder> _actionStart;
+		private readonly Action<ResultBuilder> _actionEnd;
+		private readonly Action<ResultBuilder> _actionFail;
+
 		private Game(GameMap gameMap)
 		{
 			// Set player
@@ -31,15 +36,19 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			// Set commands
 			Commands = new Commands(Entities, gameMap.CommandMaps);
 			// Set reactions
-			Reactions = new Reactions
-				(
-					Entities, 
-					Commands, 
-					gameMap.ReactionMaps, 
-					gameMap.ActionMapsStart, 
-					gameMap.ActionMapsEnd, 
-					gameMap.ActionMapsFail
-				);
+			Reactions = new Reactions(Entities, Commands, gameMap.ReactionMaps);
+			// Run through commands
+			foreach (var command in Commands)
+			{
+				// Check command fail action
+				command.CheckFail(Entities, Reactions);
+			}
+			// Set start action
+			_actionStart = Reactions.CreateAction(gameMap.ActionMapsStart);
+			// Set end action
+			_actionEnd = Reactions.CreateAction(gameMap.ActionMapsEnd);
+			// Set fail action
+			_actionFail = Reactions.CreateAction(gameMap.ActionMapsFail);
 		}
 
 		public Result New()
@@ -57,7 +66,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			// Create result
 			var result = new ResultBuilder(this, state);
 			// Execute start
-			Reactions.ExecuteStart(result);
+			_actionStart(result);
 			// Return result
 			return result.ToImmutable();
 		}
@@ -72,7 +81,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				// Create fail result
 				var resultFail = new ResultBuilder(this, state);
 				// Execute fail
-				Reactions.ExecuteFail(resultFail);
+				_actionFail(resultFail);
 				// Return result
 				return resultFail.ToImmutable();
 			}
@@ -122,8 +131,18 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			}
 			// Create reaction query
 			var reactionQuery = new ReactionQuery(match.Command, entitiesPath.ToImmutable());
-			// Match reactions
-			var reactions = Reactions.Match(reactionQuery);
+			// Get reactions
+			var reactions = Reactions.GetMatches(reactionQuery);
+			// Check if no reactions
+			if (reactions.Length == 0)
+			{
+				// Create fail result
+				var resultFail = new ResultBuilder(this, state);
+				// Execute fail
+				reactionQuery.Command.ExecuteFail(resultFail, reactionQuery.Parts);
+				// Return result
+				return resultFail.ToImmutable();
+			}
 			// Create result
 			var result = new ResultBuilder(this, state);
 			// Run through reactions

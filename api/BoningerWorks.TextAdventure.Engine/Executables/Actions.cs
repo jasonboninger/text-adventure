@@ -1,4 +1,5 @@
-﻿using BoningerWorks.TextAdventure.Intermediate.Maps;
+﻿using BoningerWorks.TextAdventure.Core.Utilities;
+using BoningerWorks.TextAdventure.Intermediate.Maps;
 using System;
 using System.Collections.Immutable;
 using System.Linq;
@@ -14,12 +15,15 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			Commands commands,
 			ImmutableArray<ReactionPath> reactionPaths,
 			ReactionPath? reactionPath,
-			ImmutableArray<ActionMap> actionMaps
+			ImmutableArray<ActionMap> actionMaps,
+			Func<Symbol, Symbol>? replacer = null
 		)
 		{
+			// Set replacer
+			replacer ??= s => s;
 			// Create actions
 			var actions = actionMaps
-				.SelectMany(am => Action.Create(s => s, triggers, entities, commands, reactionPaths, reactionPath, am))
+				.SelectMany(am => Action.Create(replacer, triggers, entities, commands, reactionPaths, reactionPath, am))
 				.ToArray();
 			// Get actions length
 			var actionsLength = actions.Length;
