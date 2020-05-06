@@ -31,7 +31,15 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			// Set commands
 			Commands = new Commands(Entities, gameMap.CommandMaps);
 			// Set reactions
-			Reactions = new Reactions(Entities, Commands, gameMap.ReactionMaps, gameMap.ActionMapsStart, gameMap.ActionMapsEnd);
+			Reactions = new Reactions
+				(
+					Entities, 
+					Commands, 
+					gameMap.ReactionMaps, 
+					gameMap.ActionMapsStart, 
+					gameMap.ActionMapsEnd, 
+					gameMap.ActionMapsFail
+				);
 		}
 
 		public Result New()
@@ -61,8 +69,12 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			// Check if match does not exist
 			if (match == null)
 			{
+				// Create fail result
+				var resultFail = new ResultBuilder(this, state);
+				// Execute fail
+				Reactions.ExecuteFail(resultFail);
 				// Return result
-				return new Result(state, ImmutableList<Message>.Empty);
+				return resultFail.ToImmutable();
 			}
 			// Get match parts
 			var matchParts = match.Parts;

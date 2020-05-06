@@ -17,6 +17,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		private readonly ImmutableDictionary<Command, ReactionTree> _commandToReactionTreeMappings;
 		private readonly Action<ResultBuilder> _actionStart;
 		private readonly Action<ResultBuilder> _actionEnd;
+		private readonly Action<ResultBuilder> _actionFail;
 
 		public Reactions
 		(
@@ -24,7 +25,8 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			Commands commands, 
 			ImmutableArray<ReactionMap> reactionMaps,
 			ImmutableArray<ActionMap> actionMapsStart,
-			ImmutableArray<ActionMap> actionMapsEnd
+			ImmutableArray<ActionMap> actionMapsEnd,
+			ImmutableArray<ActionMap> actionMapsFail
 		)
 		{
 			// Create triggers
@@ -43,10 +45,12 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			_reactionsEnumerable = _reactions;
 			// Set command symbol to reaction tree mappings
 			_commandToReactionTreeMappings = ReactionTree.Create(_reactions);
-			// Set start
+			// Set start action
 			_actionStart = Actions.Create(triggers: null, entities, commands, reactionPaths, reactionPath: null, actionMapsStart);
-			// Set end
+			// Set end action
 			_actionEnd = Actions.Create(triggers: null, entities, commands, reactionPaths, reactionPath: null, actionMapsEnd);
+			// Set fail action
+			_actionFail = Actions.Create(triggers: null, entities, commands, reactionPaths, reactionPath: null, actionMapsFail);
 		}
 
 		IEnumerator IEnumerable.GetEnumerator() => _reactionsEnumerable.GetEnumerator();
@@ -99,6 +103,12 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		{
 			// Execute end action
 			_actionEnd(result);
+		}
+
+		public void ExecuteFail(ResultBuilder result)
+		{
+			// Execute fail action
+			_actionFail(result);
 		}
 	}
 }

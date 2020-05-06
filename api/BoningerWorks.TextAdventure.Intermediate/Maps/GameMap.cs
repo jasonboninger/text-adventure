@@ -17,6 +17,7 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 		public ImmutableArray<ReactionMap> ReactionMaps { get; }
 		public ImmutableArray<ActionMap> ActionMapsStart { get; }
 		public ImmutableArray<ActionMap> ActionMapsEnd { get; }
+		public ImmutableArray<ActionMap> ActionMapsFail { get; }
 
 		private GameMap(Game? game)
 		{
@@ -84,6 +85,8 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 			ActionMapsStart = game.ActionsStart?.Select(a => new ActionMap(a)).ToImmutableArray() ?? ImmutableArray<ActionMap>.Empty;
 			// Set end action maps
 			ActionMapsEnd = game.ActionsEnd?.Select(a => new ActionMap(a)).ToImmutableArray() ?? ImmutableArray<ActionMap>.Empty;
+			// Set fail action maps
+			ActionMapsFail = game.ActionsFail?.Select(a => new ActionMap(a)).ToImmutableArray() ?? ImmutableArray<ActionMap>.Empty;
 			// Create symbols
 			var symbols = Enumerable.Empty<Symbol>()
 				.Concat(CommandMaps.Select(cm => cm.CommandSymbol))
