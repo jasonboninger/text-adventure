@@ -29,23 +29,23 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			}
 			// Get datum
 			var datum = path.Datum;
-			// Get replaceable
-			var replaceable = new Replaceable(replacer, entities, changeMap.Value);
-			// Return execute
-			return result =>
+			// Get replace
+			var replace = ActionReplace.Create(replacer, entities, changeMap.Value);
+			// Return action
+			return r =>
 			{
 				// Get state
-				var state = result.State;
+				var state = r.State;
 				// Get entity
 				var entity = state.Entities[target];
 				// Get value
-				var value = replaceable.Replace(state);
+				var value = replace(state);
 				// Update entity
 				entity = entity.UpdateData(datum, value);
 				// Update state
 				state = state.UpdateEntity(target, entity);
 				// Set state
-				result.State = state;
+				r.State = state;
 			};
 		}
 	}

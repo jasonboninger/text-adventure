@@ -3,14 +3,13 @@ using BoningerWorks.TextAdventure.Core.Utilities;
 using BoningerWorks.TextAdventure.Intermediate.Errors;
 using BoningerWorks.TextAdventure.Json.Outputs;
 using System;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
 namespace BoningerWorks.TextAdventure.Engine.Executables
 {
-	public class Replaceable
+	public static class ActionReplace
 	{
 		private const string _GROUP_PATH = "PATH";
 		
@@ -19,16 +18,11 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				@"\${" + RegularExpressions.CreateCaptureGroup(_GROUP_PATH, @"[^}]+") + @"}"
 			);
 
-		private readonly string _value;
-		private readonly ImmutableList<Action<State, StringBuilder>> _replaces;
-
-		public Replaceable(Func<Symbol, Symbol> replacer, Entities entities, string value)
+		public static Func<State, string> Create(Func<Symbol, Symbol> replacer, Entities entities, string value)
 		{
-			// Set value
-			_value = value;
-			// Set replaces
-			_replaces = _regularExpressionReplacements
-				.Matches(_value)
+			// Create replaces
+			var replaces = _regularExpressionReplacements
+				.Matches(value)
 				.GroupBy(m => m.Value)
 				.Select
 					(g =>
@@ -63,41 +57,39 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 							// Set metadata
 							var metadata = entity.Metadata;
 							// Set replace
-							replace = (state, stringBuilder) =>
-							{
-								// Replace value
-								stringBuilder.Replace(value, metadata[datum]);
-							};
+							replace = (s, sb) => sb.Replace(value, metadata[datum]);
 						}
 						else
 						{
 							// Set replace
-							replace = (state, stringBuilder) =>
+							replace = (s, sb) =>
 							{
 								// Get data
-								var data = state.Entities[target].Data;
+								var data = s.Entities[target].Data;
 								// Replace value
-								stringBuilder.Replace(value, data.TryGetValue(datum, out var replacement) ? replacement : string.Empty);
+								sb.Replace(value, data.TryGetValue(datum, out var replacement) ? replacement : string.Empty);
 							};
 						}
 						// Return replace
 						return replace;
 					})
-				.ToImmutableList();
-		}
-
-		public string Replace(State state)
-		{
-			// Create string builder
-			var stringBuilder = new StringBuilder(_value);
-			// Run through replaces
-			for (int i = 0; i < _replaces.Count; i++)
+				.ToList();
+			// Get replaces count
+			var replacesCount = replaces.Count;
+			// Return action
+			return s =>
 			{
-				// Execute replace
-				_replaces[i](state, stringBuilder);
-			}
-			// Return string
-			return stringBuilder.ToString();
+				// Create string builder
+				var stringBuilder = new StringBuilder(value);
+				// Run through replaces
+				for (int i = 0; i < replacesCount; i++)
+				{
+					// Execute replace
+					replaces[i](s, stringBuilder);
+				}
+				// Return string
+				return stringBuilder.ToString();
+			};
 		}
 	}
 }

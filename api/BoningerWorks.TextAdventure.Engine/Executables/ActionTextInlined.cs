@@ -9,13 +9,13 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 	{
 		public static Func<State, Text> Create(Func<Symbol, Symbol> replacer, Entities entities, TextInlinedMap textInlinedMap)
 		{
-			// Create replaceable
-			var replaceable = new Replaceable(replacer, entities, textInlinedMap.Value);
+			// Create replace
+			var replace = ActionReplace.Create(replacer, entities, textInlinedMap.Value);
 			// Return action
 			return state =>
 			{
 				// Create value
-				var value = replaceable.Replace(state);
+				var value = replace(state);
 				// Return text
 				return new Text(value);
 			};

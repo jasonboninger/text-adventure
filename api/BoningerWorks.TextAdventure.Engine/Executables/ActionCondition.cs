@@ -16,22 +16,22 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			if (conditionMap.SingleMap != null)
 			{
 				// Get left
-				var left = new Replaceable(replacer, entities, conditionMap.SingleMap.Left);
+				var left = ActionReplace.Create(replacer, entities, conditionMap.SingleMap.Left);
 				// Get right
-				var right = new Replaceable(replacer, entities, conditionMap.SingleMap.Right);
+				var right = ActionReplace.Create(replacer, entities, conditionMap.SingleMap.Right);
 				// Get comparison
 				var comparison = conditionMap.SingleMap.Comparison;
 				// Check if is
 				if (comparison == EConditionComparison.Is)
 				{
 					// Return action
-					return state => left.Replace(state) == right.Replace(state);
+					return state => left(state) == right(state);
 				}
 				// Check if not
 				if (comparison == EConditionComparison.Not)
 				{
 					// Return action
-					return state => left.Replace(state) != right.Replace(state);
+					return state => left(state) != right(state);
 				}
 				// Throw error
 				throw new InvalidOperationException($"Condition comparison ({conditionMap.SingleMap.Comparison}) could not be handled.");
