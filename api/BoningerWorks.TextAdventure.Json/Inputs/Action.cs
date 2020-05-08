@@ -10,5 +10,6 @@ namespace BoningerWorks.TextAdventure.Json.Inputs
 		[JsonPropertyName("messages")] public OneOrManyList<SFlexibleObject<Message>>? Messages { get; set; }
 		[JsonPropertyName("changes")] public OneOrManyList<Change?>? Changes { get; set; }
 		[JsonPropertyName("triggers")] public OneOrManyList<Trigger?>? Triggers { get; set; }
+		[JsonPropertyName("special")] public string? Special { get; set; }
 	}
 }

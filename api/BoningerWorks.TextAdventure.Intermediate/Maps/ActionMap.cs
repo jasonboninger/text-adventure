@@ -1,4 +1,5 @@
 ﻿using BoningerWorks.TextAdventure.Core.Exceptions;
+using BoningerWorks.TextAdventure.Intermediate.Enums;
 using BoningerWorks.TextAdventure.Intermediate.Errors;
 using System.Collections.Immutable;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 		public ImmutableArray<MessageMap>? MessageMaps { get; }
 		public ImmutableArray<ChangeMap>? ChangeMaps { get; }
 		public ImmutableArray<TriggerMap>? TriggerMaps { get; }
+		public EActionSpecial? Special { get; }
 
 		internal ActionMap(Action? action)
 		{
@@ -95,6 +97,18 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 					}
 					// Set trigger maps
 					TriggerMaps = action.Triggers.Select(t => new TriggerMap(t)).ToImmutableArray();
+				}
+				// Check if special exists
+				if (action.Special != null)
+				{
+					// Increase count
+					count++;
+					// Set special
+					Special = action.Special switch
+					{
+						"END" => EActionSpecial.End,
+						_ => throw new ValidationError($"Special action ({action.Special}) could not be found.")
+					};
 				}
 				// Check if count is zero
 				if (count == 0)

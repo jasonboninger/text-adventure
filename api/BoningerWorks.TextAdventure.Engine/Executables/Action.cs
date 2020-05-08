@@ -72,6 +72,12 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				// Return trigger actions
 				return actionMap.TriggerMaps.Value.Select(tm => ActionTrigger.Create(triggers, commands, reactionPaths, reactionPath, tm));
 			}
+			// Check if special exists
+			if (actionMap.Special.HasValue)
+			{
+				// Return special action
+				return ActionSpecial.Create(actionMap.Special.Value).ToEnumerable();
+			}
 			// Throw error
 			throw new InvalidOperationException("Action map could not be parsed.");
 		}

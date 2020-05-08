@@ -18,8 +18,8 @@ namespace BoningerWorks.TextAdventure.Cli
 			var state = result.State;
 			// Display messages
 			_DisplayMessages(result.Messages);
-			// Loop forever
-			while (true)
+			// Run game
+			while (!state.Complete)
 			{
 				// Write line
 				Console.WriteLine();
@@ -51,6 +51,12 @@ namespace BoningerWorks.TextAdventure.Cli
 				var messages = result.Messages;
 				// Display messages
 				_DisplayMessages(messages);
+			}
+			// Loop forever
+			while (true)
+			{
+				// Prevent input
+				Console.ReadKey(intercept: true);
 			}
 		}
 
