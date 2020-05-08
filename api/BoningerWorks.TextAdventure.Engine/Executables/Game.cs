@@ -63,7 +63,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				entities.Add(Entities[i].Symbol, new Entity());
 			}
 			// Create state
-			var state = new State(entities.ToImmutable());
+			var state = new State(entities.ToImmutable(), complete: false);
 			// Create result
 			var result = new ResultBuilder(this, state);
 			// Execute start
@@ -74,93 +74,117 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 
 		public Result Execute(State state, string? input)
 		{
-			// Try to get match
-			var match = Commands.TryGetMatch(input);
-			// Check if match does not exist
-			if (match == null)
+			// Check if state is complete
+			if (state.Complete)
 			{
-				// Create fail result
-				var resultFail = new ResultBuilder(this, state);
-				// Execute fail
-				_actionFail(resultFail);
 				// Return result
-				return resultFail.ToImmutable();
+				return new Result(state, ImmutableList<Message>.Empty);
 			}
-			// Get match parts
-			var matchParts = match.Parts;
-			// Create path entities
-			var entitiesPath = ImmutableList.CreateBuilder<IEntity>();
-			// Run through match parts
-			for (int i = 0; i < matchParts.Count; i++)
+			// Create execute
+			ResultBuilder execute()
 			{
-				var matchPart = matchParts[i];
-				// Get match entities
-				var entitiesMatch = matchPart.Entities;
-				// Check if more than one match entity
-				if (entitiesMatch.Count > 1)
+				// Try to get match
+				var match = Commands.TryGetMatch(input);
+				// Check if match does not exist
+				if (match == null)
 				{
-					// Create text
-					var text = new StringBuilder("Input matched more than one entity. Did you mean ");
-					// Run through match entities
-					for (int k = 0; k < entitiesMatch.Count; k++)
-					{
-						var entityMatch = entitiesMatch[k];
-						// Check if not first
-						if (k > 0)
-						{
-							// Add comma
-							text.Append(", ");
-						}
-						// Check if last
-						if (k == entitiesMatch.Count - 1)
-						{
-							// Add or
-							text.Append("or ");
-						}
-						// Add name
-						text.Append(entityMatch.Names.Name);
-					}
-					// Add question mark
-					text.Append("?");
-					// Create message
-					var message = new Message(text.ToString());
-					// Return result
-					return new Result(state, ImmutableList.Create(message));
-				}
-				// Add path entity
-				entitiesPath.Add(entitiesMatch[0]);
-			}
-			// Create reaction query
-			var reactionQuery = new ReactionQuery(match.Command, entitiesPath.ToImmutable());
-			// Get reaction result
-			var reactionResult = Reactions.GetResult(state, reactionQuery);
-			// Create result
-			var result = new ResultBuilder(this, state);
-			// Check reaction outcome
-			switch (reactionResult.Outcome)
-			{
-				case EReactionOutcome.Nothing:
-					// Execute command fail
-					reactionQuery.Command.ExecuteFail(result, reactionQuery.Parts);
-					break;
-				case EReactionOutcome.OutOfContext:
+					// Create fail result
+					var resultFail = new ResultBuilder(this, state);
 					// Execute fail
-					_actionFail(result);
-					break;
-				case EReactionOutcome.Success:
-					// Get reactions
-					var reactions = reactionResult.Reactions;
-					// Run through reactions
-					for (int i = 0; i < reactions.Length; i++)
+					_actionFail(resultFail);
+					// Return result
+					return resultFail;
+				}
+				// Get match parts
+				var matchParts = match.Parts;
+				// Create path entities
+				var entitiesPath = ImmutableList.CreateBuilder<IEntity>();
+				// Run through match parts
+				for (int i = 0; i < matchParts.Count; i++)
+				{
+					var matchPart = matchParts[i];
+					// Get match entities
+					var entitiesMatch = matchPart.Entities;
+					// Check if more than one match entity
+					if (entitiesMatch.Count > 1)
 					{
-						var reaction = reactions[i];
-						// Execute reaction
-						reaction.Execute(result);
+						// Create text
+						var text = new StringBuilder("Input matched more than one entity. Did you mean ");
+						// Run through match entities
+						for (int k = 0; k < entitiesMatch.Count; k++)
+						{
+							var entityMatch = entitiesMatch[k];
+							// Check if not first
+							if (k > 0)
+							{
+								// Add comma
+								text.Append(", ");
+							}
+							// Check if last
+							if (k == entitiesMatch.Count - 1)
+							{
+								// Add or
+								text.Append("or ");
+							}
+							// Add name
+							text.Append(entityMatch.Names.Name);
+						}
+						// Add question mark
+						text.Append("?");
+						// Create message
+						var message = new Message(text.ToString());
+						// Create ambiguous result
+						var resultAmbiguous = new ResultBuilder(this, state);
+						// Add message
+						resultAmbiguous.Messages.Add(message);
+						// Return result
+						return resultAmbiguous;
 					}
-					break;
-				default:
-					// Throw error
-					throw new InvalidOperationException($"Reaction result out come ({reactionResult.Outcome}) could not be handled.");
+					// Add path entity
+					entitiesPath.Add(entitiesMatch[0]);
+				}
+				// Create reaction query
+				var reactionQuery = new ReactionQuery(match.Command, entitiesPath.ToImmutable());
+				// Get reaction result
+				var reactionResult = Reactions.GetResult(state, reactionQuery);
+				// Create result
+				var result = new ResultBuilder(this, state);
+				// Check reaction outcome
+				switch (reactionResult.Outcome)
+				{
+					case EReactionOutcome.Nothing:
+						// Execute command fail
+						reactionQuery.Command.ExecuteFail(result, reactionQuery.Parts);
+						break;
+					case EReactionOutcome.OutOfContext:
+						// Execute fail
+						_actionFail(result);
+						break;
+					case EReactionOutcome.Success:
+						// Get reactions
+						var reactions = reactionResult.Reactions;
+						// Run through reactions
+						for (int i = 0; i < reactions.Length; i++)
+						{
+							var reaction = reactions[i];
+							// Execute reaction
+							reaction.Execute(result);
+						}
+						break;
+					default:
+						// Throw error
+						throw new InvalidOperationException($"Reaction result out come ({reactionResult.Outcome}) could not be handled.");
+				}
+				// Return result
+				return result;
+			}
+			// Get result
+			var result = execute();
+			// Check if complete
+			if (result.State.Complete)
+			{
+				// Execute end
+				_actionEnd(result);
 			}
 			// Return result
 			return result.ToImmutable();

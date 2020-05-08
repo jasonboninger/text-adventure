@@ -7,11 +7,14 @@ namespace BoningerWorks.TextAdventure.Json.Outputs
 	public class State
 	{
 		public ImmutableDictionary<Symbol, Entity> Entities { get; }
+		public bool Complete { get; }
 
-		public State(ImmutableDictionary<Symbol, Entity> entityStates)
+		public State(ImmutableDictionary<Symbol, Entity> entityStates, bool complete)
 		{
 			// Set entities
 			Entities = entityStates ?? ImmutableDictionary<Symbol, Entity>.Empty;
+			// Set complete
+			Complete = complete;
 		}
 
 		public State UpdateEntity(Symbol entitySymbol, Entity entityState)
@@ -25,7 +28,15 @@ namespace BoningerWorks.TextAdventure.Json.Outputs
 			// Set entity
 			var entities = Entities.SetItem(entitySymbol, entityState);
 			// Create state
-			var state = new State(entities);
+			var state = new State(entities, Complete);
+			// Return state
+			return state;
+		}
+
+		public State UpdateComplete(bool complete)
+		{
+			// Create state
+			var state = new State(Entities, complete);
 			// Return state
 			return state;
 		}
