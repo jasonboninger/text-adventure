@@ -1,4 +1,5 @@
-﻿using BoningerWorks.TextAdventure.Intermediate.Errors;
+﻿using BoningerWorks.TextAdventure.Engine.Enums;
+using BoningerWorks.TextAdventure.Intermediate.Errors;
 using BoningerWorks.TextAdventure.Intermediate.Maps;
 using System;
 using System.Collections.Immutable;
@@ -56,11 +57,9 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 						// Return reaction query
 						return reactionQuery;
 					})
-				.ToArray();
-			// Get reaction queries length
-			var reactionQueriesLength = reactionQueries.Length;
+				.ToList();
 			// Check if reaction queries does not exist
-			if (reactionQueriesLength == 0)
+			if (reactionQueries.Count == 0)
 			{
 				// Throw error
 				throw new ValidationError($"Trigger for command ({command}) does not match any reactions.");
@@ -70,19 +69,25 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			{
 				// Get game
 				var game = r.Game;
+				// Get state
+				var state = r.State;
 				// Run through reaction queries
-				for (int i = 0; i < reactionQueriesLength; i++)
+				for (int i = 0; i < reactionQueries.Count; i++)
 				{
 					var reactionQuery = reactionQueries[i];
-					// Match reactions
-					var reactions = game.Reactions.GetMatches(reactionQuery);
-					// Get reactions length
-					var reactionsLength = reactions.Length;
-					// Run through reactions
-					for (int k = 0; k < reactionsLength; k++)
+					// Get reaction result
+					var reactionResult = game.Reactions.GetResult(state, reactionQuery);
+					// Check if success
+					if (reactionResult.Outcome == EReactionOutcome.Success)
 					{
-						// Execute reaction
-						reactions[k].Execute(r);
+						// Get reactions
+						var reactions = reactionResult.Reactions;
+						// Run through reactions
+						for (int k = 0; k < reactions.Length; k++)
+						{
+							// Execute reaction
+							reactions[k].Execute(r);
+						}
 					}
 				}
 			};

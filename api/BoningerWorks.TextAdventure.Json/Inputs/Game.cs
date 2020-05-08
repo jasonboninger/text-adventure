@@ -15,5 +15,7 @@ namespace BoningerWorks.TextAdventure.Json.Inputs
 		[JsonPropertyName("start")] public OneOrManyList<Action?>? ActionsStart { get; set; }
 		[JsonPropertyName("end")] public OneOrManyList<Action?>? ActionsEnd { get; set; }
 		[JsonPropertyName("fail")] public OneOrManyList<Action?>? ActionsFail { get; set; }
+		[JsonPropertyName("areaInContext")] public ConditionArea? ConditionArea { get; set; }
+		[JsonPropertyName("itemInContext")] public ConditionItem? ConditionItem { get; set; }
 	}
 }

@@ -3,6 +3,16 @@ export type XOperator = "ALL" | "ANY";
 
 export type XCondition = IConditionSingle | IConditionMany
 
+export interface IConditionArea {
+	area: string;
+	condition: XCondition;
+}
+
+export interface IConditionItem {
+	item: string;
+	condition: XCondition;
+}
+
 export interface IConditionSingle {
 	left: string;
 	comparison: XComparison;

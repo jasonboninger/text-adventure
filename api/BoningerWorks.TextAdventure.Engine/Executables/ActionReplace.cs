@@ -52,7 +52,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 							if (!entity.Metadata.ContainsKey(datum))
 							{
 								// Throw error
-								throw new ValidationError($"Entity ({entity.Symbol}) metadata ({target}) does not exist.");
+								throw new ValidationError($"Entity ({entity.Symbol}) metadata ({datum}) does not exist.");
 							}
 							// Set metadata
 							var metadata = entity.Metadata;

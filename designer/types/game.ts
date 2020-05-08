@@ -3,6 +3,7 @@ import { ICommand } from "./command";
 import { IPlayer } from "./player";
 import { IArea } from "./area";
 import { XAction } from "./action";
+import { IConditionArea, IConditionItem } from "./condition";
 
 export interface IGame {
 	commands: ICommand[];
@@ -11,4 +12,6 @@ export interface IGame {
 	start?: XOneOrArray<XAction>;
 	end?: XOneOrArray<XAction>;
 	fail?: XOneOrArray<XAction>;
+	areaInContext?: IConditionArea;
+	itemInContext?: IConditionItem;
 }

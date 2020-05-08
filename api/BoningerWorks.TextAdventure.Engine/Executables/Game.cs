@@ -1,4 +1,5 @@
 ﻿using BoningerWorks.TextAdventure.Core.Utilities;
+using BoningerWorks.TextAdventure.Engine.Enums;
 using BoningerWorks.TextAdventure.Engine.Interfaces;
 using BoningerWorks.TextAdventure.Intermediate.Maps;
 using BoningerWorks.TextAdventure.Json.Outputs;
@@ -36,7 +37,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			// Set commands
 			Commands = new Commands(Entities, gameMap.CommandMaps);
 			// Set reactions
-			Reactions = new Reactions(Entities, Commands, gameMap.ReactionMaps);
+			Reactions = new Reactions(Entities, Commands, gameMap.ReactionMaps, gameMap.ConditionAreaMap, gameMap.ConditionItemMap);
 			// Run through commands
 			foreach (var command in Commands)
 			{
@@ -131,26 +132,35 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			}
 			// Create reaction query
 			var reactionQuery = new ReactionQuery(match.Command, entitiesPath.ToImmutable());
-			// Get reactions
-			var reactions = Reactions.GetMatches(reactionQuery);
-			// Check if no reactions
-			if (reactions.Length == 0)
-			{
-				// Create fail result
-				var resultFail = new ResultBuilder(this, state);
-				// Execute fail
-				reactionQuery.Command.ExecuteFail(resultFail, reactionQuery.Parts);
-				// Return result
-				return resultFail.ToImmutable();
-			}
+			// Get reaction result
+			var reactionResult = Reactions.GetResult(state, reactionQuery);
 			// Create result
 			var result = new ResultBuilder(this, state);
-			// Run through reactions
-			for (int i = 0; i < reactions.Length; i++)
+			// Check reaction outcome
+			switch (reactionResult.Outcome)
 			{
-				var reaction = reactions[i];
-				// Execute reaction
-				reaction.Execute(result);
+				case EReactionOutcome.Nothing:
+					// Execute command fail
+					reactionQuery.Command.ExecuteFail(result, reactionQuery.Parts);
+					break;
+				case EReactionOutcome.OutOfContext:
+					// Execute fail
+					_actionFail(result);
+					break;
+				case EReactionOutcome.Success:
+					// Get reactions
+					var reactions = reactionResult.Reactions;
+					// Run through reactions
+					for (int i = 0; i < reactions.Length; i++)
+					{
+						var reaction = reactions[i];
+						// Execute reaction
+						reaction.Execute(result);
+					}
+					break;
+				default:
+					// Throw error
+					throw new InvalidOperationException($"Reaction result out come ({reactionResult.Outcome}) could not be handled.");
 			}
 			// Return result
 			return result.ToImmutable();

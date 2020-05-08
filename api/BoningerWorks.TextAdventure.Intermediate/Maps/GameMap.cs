@@ -18,6 +18,8 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 		public ImmutableArray<ActionMap> ActionMapsStart { get; }
 		public ImmutableArray<ActionMap> ActionMapsEnd { get; }
 		public ImmutableArray<ActionMap> ActionMapsFail { get; }
+		public ConditionInputMap? ConditionAreaMap { get; }
+		public ConditionInputMap? ConditionItemMap { get; }
 
 		private GameMap(Game? game)
 		{
@@ -100,6 +102,10 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 				// Throw error
 				throw new ValidationError("Not all symbols are unique.");
 			}
+			// Set area condition map
+			ConditionAreaMap = game.ConditionArea == null ? null : new ConditionInputMap(game.ConditionArea);
+			// Set item condition map
+			ConditionItemMap = game.ConditionItem == null ? null : new ConditionInputMap(game.ConditionItem);
 		}
 	}
 }

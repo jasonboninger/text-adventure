@@ -1,5 +1,7 @@
 ﻿using BoningerWorks.TextAdventure.Core.Utilities;
+using BoningerWorks.TextAdventure.Engine.Interfaces;
 using BoningerWorks.TextAdventure.Intermediate.Maps;
+using BoningerWorks.TextAdventure.Json.Outputs;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,8 +21,16 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		private readonly ImmutableArray<Reaction> _reactions;
 		private readonly IEnumerable<Reaction> _reactionsEnumerable;
 		private readonly ImmutableDictionary<Command, ReactionTree> _commandToReactionTreeMappings;
+		private readonly ImmutableDictionary<Symbol, Func<State, bool>> _symbolToConditionMappings;
 
-		public Reactions(Entities entities, Commands commands, ImmutableArray<ReactionMap> reactionMaps)
+		public Reactions
+		(
+			Entities entities,
+			Commands commands,
+			ImmutableArray<ReactionMap> reactionMaps,
+			ConditionInputMap? conditionAreaMap,
+			ConditionInputMap? conditionItemMap
+		)
 		{
 			// Set entities
 			_entities = entities;
@@ -42,26 +52,57 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			_reactionsEnumerable = _reactions;
 			// Set command symbol to reaction tree mappings
 			_commandToReactionTreeMappings = ReactionTree.Create(_reactions);
+			// Set symbol to condition mappings
+			_symbolToConditionMappings = Enumerable.Empty<Tuple<ConditionInputMap, IEntity>>()
+				.Concat
+					(
+						conditionAreaMap == null
+						? Enumerable.Empty<Tuple<ConditionInputMap, IEntity>>()
+						: entities.Areas.Select(a => new Tuple<ConditionInputMap, IEntity>(conditionAreaMap, a))
+					)
+				.Concat
+					(
+						conditionItemMap == null
+						? Enumerable.Empty<Tuple<ConditionInputMap, IEntity>>()
+						: entities.Items.Select(i => new Tuple<ConditionInputMap, IEntity>(conditionItemMap, i))
+					)
+				.Select
+					(_ =>
+					{
+						// Get condition input map
+						var conditionInputMap = _.Item1;
+						// Get input symbol
+						var inputSymbol = conditionInputMap.InputSymbol;
+						// Get condition map
+						var conditionMap = conditionInputMap.ConditionMap;
+						// Get entity symbol
+						var entitySymbol = _.Item2.Symbol;
+						// Create condition action
+						var actionCondition = ActionCondition.Create(s => s == inputSymbol ? entitySymbol : s, entities, conditionMap);
+						// Return symbol to condition mappings
+						return KeyValuePair.Create(entitySymbol, actionCondition);
+					})
+				.ToImmutableDictionary();
 		}
 
 		IEnumerator IEnumerable.GetEnumerator() => _reactionsEnumerable.GetEnumerator();
 		public IEnumerator<Reaction> GetEnumerator() => _reactionsEnumerable.GetEnumerator();
 
-		public ImmutableArray<Reaction> GetMatches(ReactionQuery reactionQuery)
+		public ReactionResult GetResult(State state, ReactionQuery reactionQuery)
 		{
 			// Check if reaction query does not exist
 			if (reactionQuery == null)
 			{
-				// Return no reactions
-				return ImmutableArray<Reaction>.Empty;
+				// Return nothing
+				return ReactionResult.Nothing;
 			}
 			// Get command
 			var command = reactionQuery.Command;
 			// Try to get reaction tree
 			if (!_commandToReactionTreeMappings.TryGetValue(command, out var reactionTree))
 			{
-				// Return no reactions
-				return ImmutableArray<Reaction>.Empty;
+				// Return nothing
+				return ReactionResult.Nothing;
 			}
 			// Create reactions
 			var reactions = reactionTree.Reactions;
@@ -71,17 +112,29 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			for (int i = 0; i < parts.Count; i++)
 			{
 				var part = parts[i];
+				// Check if part is not in context
+				if (_symbolToConditionMappings.TryGetValue(part.Symbol, out var actionCondition) && !actionCondition(state))
+				{
+					// Return out of context
+					return ReactionResult.OutOfContext;
+				}
 				// Try to get next reaction tree
 				if (reactionTree.Next == null || !reactionTree.Next.TryGetValue(part, out reactionTree))
 				{
-					// Return no reactions
-					return ImmutableArray<Reaction>.Empty;
+					// Return nothing
+					return ReactionResult.Nothing;
 				}
 				// Set reactions
 				reactions = reactionTree.Reactions;
 			}
-			// Return reactions
-			return reactions ?? ImmutableArray<Reaction>.Empty;
+			// Check if reactions do not exist
+			if (!reactions.HasValue)
+			{
+				// Return nothing
+				return ReactionResult.Nothing;
+			}
+			// Return success
+			return ReactionResult.Success(reactions.Value);
 		}
 
 		public Action<ResultBuilder> CreateAction(ImmutableArray<ActionMap> actionMaps, Func<Symbol, Symbol>? replacer = null)
