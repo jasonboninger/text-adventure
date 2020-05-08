@@ -173,7 +173,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 						break;
 					default:
 						// Throw error
-						throw new InvalidOperationException($"Reaction result out come ({reactionResult.Outcome}) could not be handled.");
+						throw new InvalidOperationException($"Reaction result outcome ({reactionResult.Outcome}) could not be handled.");
 				}
 				// Return result
 				return result;
