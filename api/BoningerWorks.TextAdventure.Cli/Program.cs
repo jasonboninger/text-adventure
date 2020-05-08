@@ -8,8 +8,16 @@ namespace BoningerWorks.TextAdventure.Cli
 {
 	static class Program
 	{
+		private enum EColor
+		{
+			Normal,
+			Prompt
+		}
+
 		static void Main()
 		{
+			// Set color
+			_SetColor(EColor.Normal);
 			// Create game
 			var game = Game.Deserialize(CrazyEx.JSON);
 			// Start game
@@ -23,8 +31,12 @@ namespace BoningerWorks.TextAdventure.Cli
 			{
 				// Write line
 				Console.WriteLine();
+				// Set color
+				_SetColor(EColor.Prompt);
 				// Ask for input
 				Console.WriteLine("Give me some input...");
+				// Set color
+				_SetColor(EColor.Normal);
 				// Create input
 				string input;
 				// Get input
@@ -49,6 +61,12 @@ namespace BoningerWorks.TextAdventure.Cli
 				state = result.State;
 				// Get messages
 				var messages = result.Messages;
+				// Check if messages exist
+				if (messages.Count > 0)
+				{
+					// Write line
+					Console.WriteLine();
+				}
 				// Display messages
 				_DisplayMessages(messages);
 			}
@@ -123,6 +141,27 @@ namespace BoningerWorks.TextAdventure.Cli
 					// Throw error
 					throw new InvalidOperationException("Line could not be displayed.");
 				}
+			}
+		}
+
+		private static void _SetColor(EColor color)
+		{
+			// Check if color
+			switch (color)
+			{
+				case EColor.Prompt:
+					// Set color
+					Console.ForegroundColor = ConsoleColor.Black;
+					Console.BackgroundColor = ConsoleColor.Gray;
+					break;
+				case EColor.Normal:
+					// Set color
+					Console.ForegroundColor = ConsoleColor.Gray;
+					Console.BackgroundColor = ConsoleColor.Black;
+					break;
+				default:
+					// Throw error
+					throw new InvalidOperationException($"Color ({color}) could not be handled.");
 			}
 		}
 	}
