@@ -1,4 +1,4 @@
-﻿using BoningerWorks.TextAdventure.Engine.Executables;
+﻿using BoningerWorks.TextAdventure.Engine.Structural;
 using BoningerWorks.TextAdventure.Json.Outputs;
 using BoningerWorks.TextAdventure.Json.Outputs.Enums;
 using System;
