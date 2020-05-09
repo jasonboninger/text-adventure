@@ -12,6 +12,7 @@ export interface IGame {
 	start?: XOneOrArray<XAction>;
 	end?: XOneOrArray<XAction>;
 	fail?: XOneOrArray<XAction>;
+	prompt?: XOneOrArray<XAction>;
 	areaInContext?: IConditionArea;
 	itemInContext?: IConditionItem;
 }

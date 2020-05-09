@@ -23,6 +23,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		private readonly Action<ResultBuilder> _actionStart;
 		private readonly Action<ResultBuilder> _actionEnd;
 		private readonly Action<ResultBuilder> _actionFail;
+		private readonly Action<ResultBuilder> _actionPrompt;
 
 		private Game(GameMap gameMap)
 		{
@@ -50,9 +51,18 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			_actionEnd = Reactions.CreateAction(gameMap.ActionMapsEnd);
 			// Set fail action
 			_actionFail = Reactions.CreateAction(gameMap.ActionMapsFail);
+			// Set prompt action
+			_actionPrompt = Reactions.CreateAction(gameMap.ActionMapsPrompt);
 		}
 
 		public Result New()
+		{
+			// Create result
+			var result = _New();
+			// Return result
+			return _ExecutePrompt(result);
+		}
+		private Result _New()
 		{
 			// Create entities
 			var entities = ImmutableDictionary.CreateBuilder<Symbol, Entity>();
@@ -63,7 +73,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				entities.Add(Entities[i].Symbol, new Entity());
 			}
 			// Create state
-			var state = new State(entities.ToImmutable(), complete: false);
+			var state = new State(entities.ToImmutable(), ImmutableList<Message>.Empty, complete: false);
 			// Create result
 			var result = new ResultBuilder(this, state);
 			// Execute start
@@ -73,6 +83,13 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		}
 
 		public Result Execute(State state, string? input)
+		{
+			// Create result
+			var result = _Execute(state, input);
+			// Return result
+			return _ExecutePrompt(result);
+		}
+		private Result _Execute(State state, string? input)
 		{
 			// Check if state is complete
 			if (state.Complete)
@@ -188,6 +205,24 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			}
 			// Return result
 			return result.ToImmutable();
+		}
+
+		private Result _ExecutePrompt(Result result)
+		{
+			// Get messages
+			var messages = result.Messages;
+			// Create prompt result
+			var resultPrompt = new ResultBuilder(this, result.State);
+			// Execute prompt
+			_actionPrompt(resultPrompt);
+			// Create prompt messages
+			var messagesPrompt = resultPrompt.Messages.ToImmutable();
+			// Create final result
+			var resultFinal = new ResultBuilder(this, resultPrompt.State.SetPrompt(messagesPrompt));
+			// Add messages
+			resultFinal.Messages.AddRange(messages);
+			// Return final result
+			return resultFinal.ToImmutable();
 		}
 	}
 }

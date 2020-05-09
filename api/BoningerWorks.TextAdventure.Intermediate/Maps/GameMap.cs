@@ -1,6 +1,7 @@
 ﻿using BoningerWorks.TextAdventure.Core.Utilities;
 using BoningerWorks.TextAdventure.Intermediate.Errors;
 using BoningerWorks.TextAdventure.Json.Inputs;
+using BoningerWorks.TextAdventure.Json.Utilities;
 using System.Collections.Immutable;
 using System.Linq;
 
@@ -18,6 +19,7 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 		public ImmutableArray<ActionMap> ActionMapsStart { get; }
 		public ImmutableArray<ActionMap> ActionMapsEnd { get; }
 		public ImmutableArray<ActionMap> ActionMapsFail { get; }
+		public ImmutableArray<ActionMap> ActionMapsPrompt { get; }
 		public ConditionInputMap? ConditionAreaMap { get; }
 		public ConditionInputMap? ConditionItemMap { get; }
 
@@ -89,6 +91,32 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 			ActionMapsEnd = game.ActionsEnd?.Select(a => new ActionMap(a)).ToImmutableArray() ?? ImmutableArray<ActionMap>.Empty;
 			// Set fail action maps
 			ActionMapsFail = game.ActionsFail?.Select(a => new ActionMap(a)).ToImmutableArray() ?? ImmutableArray<ActionMap>.Empty;
+			// Set prompt action maps
+			ActionMapsPrompt = game.ActionsPrompt?
+				.Select(a => new ActionMap(a))
+				.ToImmutableArray() 
+				?? ImmutableArray.Create(new ActionMap(new Action
+				{
+					Messages = new OneOrManyList<SFlexibleObject<Message>>
+					{
+						new Message
+						{
+							Lines = new OneOrManyList<SFlexibleObject<Line>>
+							{
+								new Line
+								{
+									Texts = new OneOrManyList<SFlexibleObject<Text>>
+									{
+										new Text
+										{
+											Value = "What do you want to do next?"
+										}
+									}
+								}
+							}
+						}
+					}
+				}));
 			// Create symbols
 			var symbols = Enumerable.Empty<Symbol>()
 				.Concat(CommandMaps.Select(cm => cm.CommandSymbol))

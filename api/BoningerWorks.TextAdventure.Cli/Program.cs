@@ -33,8 +33,8 @@ namespace BoningerWorks.TextAdventure.Cli
 				Console.WriteLine();
 				// Set color
 				_SetColor(EColor.Prompt);
-				// Ask for input
-				Console.WriteLine("Give me some input...");
+				// Display prompt messages
+				_DisplayMessages(state.Prompt);
 				// Set color
 				_SetColor(EColor.Normal);
 				// Create input
