@@ -1,10 +1,8 @@
-﻿using BoningerWorks.TextAdventure.Core.Extensions;
-using BoningerWorks.TextAdventure.Core.Utilities;
+﻿using BoningerWorks.TextAdventure.Core.Utilities;
 using BoningerWorks.TextAdventure.Engine.Structural;
 using BoningerWorks.TextAdventure.Engine.Transient;
 using BoningerWorks.TextAdventure.Intermediate.Maps;
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
@@ -12,7 +10,29 @@ namespace BoningerWorks.TextAdventure.Engine.Executable
 {
 	public static class Action
 	{
-		public static IEnumerable<Action<ResultBuilder>> Create
+		public static Action<ResultBuilder> Create
+		(
+			Triggers? triggers,
+			Entities entities,
+			Commands commands,
+			ImmutableArray<ReactionPath> reactionPaths,
+			ReactionPath? reactionPath,
+			ImmutableArray<ActionMap> actionMaps,
+			Func<Id, Id>? replacer = null
+		)
+		{
+			// Create actions
+			var actions = actionMaps.Select(am => _Create(replacer ?? (id => id), triggers, entities, commands, reactionPaths, reactionPath, am));
+			// Test actions
+			_ = actions.ToList();
+			// Return action
+			return r =>
+			{
+				// Execute actions
+				foreach (var action in actions) action(r);
+			};
+		}
+		private static Action<ResultBuilder> _Create
 		(
 			Func<Id, Id> replacer,
 			Triggers? triggers,
@@ -32,16 +52,14 @@ namespace BoningerWorks.TextAdventure.Engine.Executable
 						replacer,
 						entities,
 						actionMap.IteratorMaps.Value,
-						(r, am) => Create(r, triggers, entities, commands, reactionPaths, reactionPath, am)
+						(r, am) => _Create(r, triggers, entities, commands, reactionPaths, reactionPath, am)
 					);
-				// Create action
-				Action<ResultBuilder> action = r =>
+				// Return action
+				return r =>
 				{
-					// Execute actions
+					// Execute iterator action
 					foreach (var action in actionIterator()) action(r);
 				};
-				// Return action
-				return action.ToEnumerable();
 			}
 			// Check if if map exists
 			if (actionMap.IfMap != null)
@@ -52,40 +70,70 @@ namespace BoningerWorks.TextAdventure.Engine.Executable
 						replacer, 
 						entities, 
 						actionMap.IfMap,
-						am => Create(replacer, triggers, entities, commands, reactionPaths, reactionPath, am)
+						am => _Create(replacer, triggers, entities, commands, reactionPaths, reactionPath, am)
 					);
-				// Create action
-				Action<ResultBuilder> action = r =>
+				// Return action
+				return r =>
 				{
-					// Execute actions
+					// Execute if action
 					foreach (var action in actionIf(r.State)) action(r);
 				};
-				// Return action
-				return action.ToEnumerable();
 			}
 			// Check if message maps exist
 			if (actionMap.MessageMaps.HasValue)
 			{
-				// Return message actions
-				return actionMap.MessageMaps.Value.Select(mm => ActionMessage.Create(replacer, entities, mm));
+				// Get message maps
+				var messageMaps = actionMap.MessageMaps.Value;
+				// Create message actions
+				var actionsMessage = messageMaps.Select(mm => ActionMessage.Create(replacer, entities, mm));
+				// Test message actions
+				_ = actionsMessage.ToList();
+				// Return action
+				return r =>
+				{
+					// Execute message actions
+					foreach (var actionMessage in actionsMessage) actionMessage(r);
+				};
 			}
 			// Check if change maps exist
 			if (actionMap.ChangeMaps.HasValue)
 			{
-				// Return change actions
-				return actionMap.ChangeMaps.Value.Select(cm => ActionChange.Create(replacer, entities, cm));
+				// Get change maps
+				var changeMaps = actionMap.ChangeMaps.Value;
+				// Create change actions
+				var actionsChange = changeMaps.Select(cm => ActionChange.Create(replacer, entities, cm));
+				// Test change actions
+				_ = actionsChange.ToList();
+				// Return action
+				return r =>
+				{
+					// Execute change actions
+					foreach (var actionChange in actionsChange) actionChange(r);
+				};
 			}
 			// Check if trigger maps exist
 			if (actionMap.TriggerMaps.HasValue)
 			{
+				// Get trigger maps
+				var triggerMaps = actionMap.TriggerMaps.Value;
+				// Create trigger actions
+				var actionsTrigger = triggerMaps.Select(tm => ActionTrigger.Create(triggers, commands, reactionPaths, reactionPath, tm));
+				// Test trigger actions
+				_ = actionsTrigger.ToList();
 				// Return trigger actions
-				return actionMap.TriggerMaps.Value.Select(tm => ActionTrigger.Create(triggers, commands, reactionPaths, reactionPath, tm));
+				return r =>
+				{
+					// Execute trigger actions
+					foreach (var actionTrigger in actionsTrigger) actionTrigger(r);
+				};
 			}
 			// Check if special exists
 			if (actionMap.Special.HasValue)
 			{
-				// Return special action
-				return ActionSpecial.Create(actionMap.Special.Value).ToEnumerable();
+				// Create special action
+				var actionSpecial = ActionSpecial.Create(actionMap.Special.Value);
+				// Return action
+				return r => actionSpecial(r);
 			}
 			// Throw error
 			throw new InvalidOperationException("Action map could not be parsed.");

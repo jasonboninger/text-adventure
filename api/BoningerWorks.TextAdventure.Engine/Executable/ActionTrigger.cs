@@ -33,16 +33,33 @@ namespace BoningerWorks.TextAdventure.Engine.Executable
 				.Where
 					(rp =>
 					{
-						// Return if reaction path matches trigger
-						return rp.Command == command
-							&& rp.Parts.Count == triggerMap.InputMap.InputIdToEntityIdMappings.Count
-							&& rp.Parts.All(p => triggerMap.InputMap.InputIdToEntityIdMappings.ContainsKey(p.Input.Id))
-							&& rp.Parts.All(p => triggerMap.InputMap.InputIdToEntityIdMappings[p.Input.Id] == p.Entity.Id);
+						// Check if command matches
+						if (rp.Command == command)
+						{
+							// Get input ID to entity ID mappings
+							var inputIdToEntityIdMappings = triggerMap.InputMap.InputIdToEntityIdMappings;
+							// Check if parts count and inputs count do not match
+							if (rp.Parts.Count != inputIdToEntityIdMappings.Count)
+							{
+								// Get inputs count
+								var countInputs = inputIdToEntityIdMappings.Count;
+								// Get parts count
+								var countParts = rp.Parts.Count;
+								// Create message
+								var message = $"Trigger input count ({countInputs}) must match command ({command}) parts count ({countParts}).";
+								// Throw error
+								throw new ValidationError(message);
+							}
+							// Return if all parts match inputs
+							return rp.Parts.All(p => inputIdToEntityIdMappings.TryGetValue(p.Input.Id, out var entityId) && entityId == p.Entity.Id);
+						}
+						// Return not match
+						return false;
 					})
 				.Select
 					(rp =>
 					{
-						// Check if triggers and reaction path do not both exist or both not exist
+						// Check if triggers and reaction path do not either both exist or both not exist
 						if (triggers == null != (reactionPath == null))
 						{
 							// Throw error
@@ -58,10 +75,11 @@ namespace BoningerWorks.TextAdventure.Engine.Executable
 						var reactionQuery = new ReactionQuery(command, rp.Parts.Select(p => p.Entity).ToImmutableList());
 						// Return reaction query
 						return reactionQuery;
-					})
-				.ToList();
+					});
+			// Test and count reaction queries
+			var reactionQueriesCount = reactionQueries.ToList().Count;
 			// Check if reaction queries does not exist
-			if (reactionQueries.Count == 0)
+			if (reactionQueriesCount == 0)
 			{
 				// Throw error
 				throw new ValidationError($"Trigger for command ({command}) does not match any reactions.");
@@ -74,9 +92,8 @@ namespace BoningerWorks.TextAdventure.Engine.Executable
 				// Get state
 				var state = r.State;
 				// Run through reaction queries
-				for (int i = 0; i < reactionQueries.Count; i++)
+				foreach (var reactionQuery in reactionQueries)
 				{
-					var reactionQuery = reactionQueries[i];
 					// Get reaction result
 					var reactionResult = game.Reactions.GetResult(state, reactionQuery);
 					// Check if success
@@ -85,10 +102,10 @@ namespace BoningerWorks.TextAdventure.Engine.Executable
 						// Get reactions
 						var reactions = reactionResult.Reactions;
 						// Run through reactions
-						for (int k = 0; k < reactions.Length; k++)
+						for (int i = 0; i < reactions.Length; i++)
 						{
 							// Execute reaction
-							reactions[k].Execute(r);
+							reactions[i].Execute(r);
 						}
 					}
 				}

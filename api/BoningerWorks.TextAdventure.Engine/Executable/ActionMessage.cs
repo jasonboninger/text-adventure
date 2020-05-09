@@ -14,7 +14,9 @@ namespace BoningerWorks.TextAdventure.Engine.Executable
 		public static Action<ResultBuilder> Create(Func<Id, Id> replacer, Entities entities, MessageMap messageMap)
 		{
 			// Set line actions
-			var actionsLine = messageMap.LineMaps.Select(lm => ActionLine.Create(replacer, entities, lm)).ToImmutableArray();
+			var actionsLine = messageMap.LineMaps.Select(lm => ActionLine.Create(replacer, entities, lm));
+			// Test line actions
+			_ = actionsLine.ToList();
 			// Return action
 			return result =>
 			{
@@ -23,10 +25,10 @@ namespace BoningerWorks.TextAdventure.Engine.Executable
 				// Create lines
 				var lines = ImmutableList.CreateBuilder<Line>();
 				// Run through line actions
-				for (int i = 0; i < actionsLine.Length; i++)
+				foreach (var actionLine in actionsLine)
 				{
 					// Add lines
-					lines.AddRange(actionsLine[i](state));
+					lines.AddRange(actionLine(state));
 				}
 				// Create message
 				var message = new Message(lines.ToImmutable());

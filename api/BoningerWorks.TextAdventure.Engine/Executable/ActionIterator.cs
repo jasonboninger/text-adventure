@@ -32,7 +32,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executable
 		)
 		{
 			// Create processor actions
-			var actionsProcessor = iteratorMaps.SelectMany(im =>
+			var actionsProcessor = iteratorMaps.Select(im =>
 			{
 				// Create replace
 				Id replace;
@@ -60,7 +60,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executable
 					throw new ArgumentException("Iterator entities could not be found.", nameof(im));
 				}
 				// Return processor actions
-				return entitiesIterable.SelectMany(e =>
+				return entitiesIterable.Select(e =>
 				{
 					// Get entity ID
 					var idEntity = e.Id;
@@ -73,9 +73,31 @@ namespace BoningerWorks.TextAdventure.Engine.Executable
 				});
 			});
 			// Test processor actions
-			_ = actionsProcessor.ToList();
+			foreach (var actionProcessor in actionsProcessor)
+			{
+				// Test only the first entity per processor because it is redundant to verify every entity of the same type
+				_ = actionProcessor.Take(1).SelectMany(@as => @as).ToList();
+			}
+			// Create action
+			IEnumerable<TOutput> action()
+			{
+				// Run through all actions
+				foreach (var actionAll in actionsProcessor)
+				{
+					// Run through entity actions
+					foreach (var actionsEntity in actionAll)
+					{
+						// Return entity actions
+						foreach (var actionEntity in actionsEntity)
+						{
+							// Return entity action
+							yield return actionEntity;
+						}
+					}
+				}
+			}
 			// Return action
-			return () => actionsProcessor;
+			return action;
 		}
 	}
 }

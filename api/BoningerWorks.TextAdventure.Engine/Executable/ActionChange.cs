@@ -31,8 +31,8 @@ namespace BoningerWorks.TextAdventure.Engine.Executable
 			}
 			// Get datum
 			var datum = path.Datum;
-			// Get replace
-			var replace = ActionReplace.Create(replacer, entities, changeMap.Value);
+			// Get replace action
+			var actionReplace = ActionReplace.Create(replacer, entities, changeMap.Value);
 			// Return action
 			return r =>
 			{
@@ -41,7 +41,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executable
 				// Get entity
 				var entity = state.Entities[target];
 				// Get value
-				var value = replace(state);
+				var value = actionReplace(state);
 				// Update entity
 				entity = entity.UpdateData(datum, value);
 				// Update state

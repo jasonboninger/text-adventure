@@ -13,17 +13,19 @@ namespace BoningerWorks.TextAdventure.Engine.Executable
 		public static Func<State, Line> Create(Func<Id, Id> replacer, Entities entities, LineInlinedMap lineInlinedMap)
 		{
 			// Create text actions
-			var actionsText = lineInlinedMap.TextMaps.Select(tm => ActionText.Create(replacer, entities, tm)).ToImmutableArray();
+			var actionsText = lineInlinedMap.TextMaps.Select(tm => ActionText.Create(replacer, entities, tm));
+			// Test text actions
+			_ = actionsText.ToList();
 			// Return action
 			return state =>
 			{
 				// Create texts
 				var texts = ImmutableList.CreateBuilder<Text>();
 				// Run through text actions
-				for (int i = 0; i < actionsText.Length; i++)
+				foreach (var actionText in actionsText)
 				{
 					// Add texts
-					texts.AddRange(actionsText[i](state));
+					texts.AddRange(actionText(state));
 				}
 				// Create line content
 				var lineContent = new LineContent(texts.ToImmutable());

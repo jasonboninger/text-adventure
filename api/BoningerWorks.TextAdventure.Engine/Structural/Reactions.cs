@@ -143,7 +143,7 @@ namespace BoningerWorks.TextAdventure.Engine.Structural
 		public Action<ResultBuilder> CreateAction(ImmutableArray<ActionMap> actionMaps, Func<Id, Id>? replacer = null)
 		{
 			// Create action
-			var action = Actions.Create(triggers: null, _entities, _commands, _reactionPaths, reactionPath: null, actionMaps, replacer);
+			var action = Executable.Action.Create(triggers: null, _entities, _commands, _reactionPaths, reactionPath: null, actionMaps, replacer);
 			// Return action
 			return action;
 		}

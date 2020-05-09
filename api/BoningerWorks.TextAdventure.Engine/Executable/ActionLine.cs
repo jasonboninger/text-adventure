@@ -61,7 +61,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executable
 			{
 				// Create special line action
 				var actionLineSpecial = ActionLineSpecial.Create(lineMap.SpecialMap);
-				// Return special line execute
+				// Return action
 				return s => actionLineSpecial(s).ToEnumerable();
 			}
 			// Check if inlined map exists

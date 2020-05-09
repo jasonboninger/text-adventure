@@ -1,5 +1,4 @@
 ﻿using BoningerWorks.TextAdventure.Core.Exceptions;
-using BoningerWorks.TextAdventure.Engine.Executable;
 using BoningerWorks.TextAdventure.Engine.Transient;
 using BoningerWorks.TextAdventure.Intermediate.Errors;
 using BoningerWorks.TextAdventure.Intermediate.Maps;
@@ -30,7 +29,7 @@ namespace BoningerWorks.TextAdventure.Engine.Structural
 				// Set path
 				Path = path;
 				// Set action
-				_action = Actions.Create(triggers, entities, commands, paths, path, actionMaps);
+				_action = Executable.Action.Create(triggers, entities, commands, paths, path, actionMaps);
 			}
 			catch (GenericException<ValidationError> exception)
 			{
