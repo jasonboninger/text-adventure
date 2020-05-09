@@ -14,15 +14,12 @@ namespace BoningerWorks.TextAdventure.Engine.Executable
 	{
 		private const string _GROUP_PATH = "PATH";
 		
-		private static readonly Regex _regularExpressionReplacements = new Regex
-			(
-				@"\${" + RegularExpressions.CreateCaptureGroup(_GROUP_PATH, @"[^}]+") + @"}"
-			);
+		private static readonly Regex _regularExpression = new Regex(@"\${" + RegularExpressions.CreateCaptureGroup(_GROUP_PATH, @"[^}]*") + @"}");
 
 		public static Func<State, string> Create(Func<Id, Id> replacer, Entities entities, string value)
 		{
 			// Create replaces
-			var replaces = _regularExpressionReplacements
+			var replaces = _regularExpression
 				.Matches(value)
 				.GroupBy(m => m.Value)
 				.Select
@@ -49,14 +46,14 @@ namespace BoningerWorks.TextAdventure.Engine.Executable
 						// Check if metadata
 						if (path.Metadata)
 						{
+							// Get metadata
+							var metadata = entity.Metadata;
 							// Check if datum does not exist
-							if (!entity.Metadata.ContainsKey(datum))
+							if (!metadata.ContainsKey(datum))
 							{
 								// Throw error
 								throw new ValidationError($"Entity ({entity.Id}) metadata ({datum}) does not exist.");
 							}
-							// Set metadata
-							var metadata = entity.Metadata;
 							// Set replace
 							replace = (s, sb) => sb.Replace(value, metadata[datum]);
 						}
@@ -68,22 +65,20 @@ namespace BoningerWorks.TextAdventure.Engine.Executable
 								// Get data
 								var data = s.Entities[target].Data;
 								// Replace value
-								sb.Replace(value, data.TryGetValue(datum, out var replacement) ? replacement : string.Empty);
+								sb.Replace(value, data.TryGetValue(datum, out var replaced) ? replaced : string.Empty);
 							};
 						}
 						// Return replace
 						return replace;
 					})
 				.ToList();
-			// Get replaces count
-			var replacesCount = replaces.Count;
 			// Return action
 			return s =>
 			{
 				// Create string builder
 				var stringBuilder = new StringBuilder(value);
 				// Run through replaces
-				for (int i = 0; i < replacesCount; i++)
+				for (int i = 0; i < replaces.Count; i++)
 				{
 					// Execute replace
 					replaces[i](s, stringBuilder);
