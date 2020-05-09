@@ -7,6 +7,7 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 {
 	public class LineMap
 	{
+		public ImmutableArray<IteratorMap<LineMap>>? IteratorMaps { get; }
 		public IfMap<LineMap>? IfMap { get; }
 		public LineSpecialMap? SpecialMap { get; }
 		public LineInlinedMap? InlinedMap { get; }
@@ -21,6 +22,20 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 			}
 			// Create count
 			var count = 0;
+			// Check if iterators exists
+			if (line.Iterators != null)
+			{
+				// Increase count
+				count++;
+				// Check if iterators is empty
+				if (line.Iterators.Count == 0)
+				{
+					// Throw error
+					throw new ValidationError("Iterators cannot be empty.");
+				}
+				// Set iterator maps
+				IteratorMaps = line.Iterators.Select(i => IteratorMap<LineMap>.Create(i, l => new LineMap(l))).ToImmutableArray();
+			}
 			// Check if if exists
 			if (line.If != null)
 			{

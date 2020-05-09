@@ -10,15 +10,12 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 {
 	public static class ActionIterator
 	{
-		public static IEnumerable<Action<ResultBuilder>> Create
+		public static ImmutableArray<TOutput> Create<TMap, TOutput>
 		(
 			Func<Id, Id> replacer,
-			Triggers? triggers,
 			Entities entities,
-			Commands commands,
-			ImmutableArray<ReactionPath> reactionPaths,
-			ReactionPath? reactionPath,
-			IteratorMap iteratorMap
+			IteratorMap<TMap> iteratorMap,
+			Func<Func<Id, Id>, TMap, IEnumerable<TOutput>> converter
 		)
 		{
 			// Create replace
@@ -47,18 +44,20 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				throw new ArgumentException("Iterator entities could not be found.", nameof(iteratorMap));
 			}
 			// Return actions
-			return iterable.SelectMany(e =>
-			{
-				// Get entity ID
-				var idEntity = e.Id;
-				// Create iterator replacer
-				var replacerIterator = replacer;
-				// Set iterator replacer
-				replacerIterator = id => id == replace ? idEntity : replacer(id);
-				// Return actions
-				return iteratorMap.ActionMaps
-					.SelectMany(am => Action.Create(replacerIterator, triggers, entities, commands, reactionPaths, reactionPath, am));
-			});
+			return iterable
+				.SelectMany
+					(e =>
+					{
+						// Get entity ID
+						var idEntity = e.Id;
+						// Create iterator replacer
+						var replacerIterator = replacer;
+						// Set iterator replacer
+						replacerIterator = id => id == replace ? idEntity : replacer(id);
+						// Return outputs
+						return iteratorMap.ProcessorMaps.SelectMany(pm => converter(replacerIterator, pm));
+					})
+				.ToImmutableArray();
 		}
 	}
 }

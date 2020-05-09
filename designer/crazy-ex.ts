@@ -49,13 +49,13 @@ export const CRAZY_EX: IGame = {
 		reactions: {
 			command: "INVENTORY",
 			actions: {
-				iterators: {
-					item: "ITEM",
-					actions: [
-						{
-							messages: "There is an item called ${ITEM>NAME} in this world!"
+				messages: {
+					lines: {
+						iterators: {
+							item: "ITEM",
+							processor: "There is an item called ${ITEM>NAME} in this world!"
 						}
-					]
+					}
 				}
 			}
 		},

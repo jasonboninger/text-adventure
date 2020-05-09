@@ -9,7 +9,7 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 {
 	public class ActionMap
 	{
-		public ImmutableArray<IteratorMap>? IteratorMaps { get; }
+		public ImmutableArray<IteratorMap<ActionMap>>? IteratorMaps { get; }
 		public IfMap<ActionMap>? IfMap { get; }
 		public ImmutableArray<MessageMap>? MessageMaps { get; }
 		public ImmutableArray<ChangeMap>? ChangeMaps { get; }
@@ -41,7 +41,7 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 						throw new ValidationError("Iterators cannot be empty.");
 					}
 					// Set iterator maps
-					IteratorMaps = action.Iterators.Select(i => new IteratorMap(i)).ToImmutableArray();
+					IteratorMaps = action.Iterators.Select(i => IteratorMap<ActionMap>.Create(i, a => new ActionMap(a))).ToImmutableArray();
 				}
 				// Check if if exists
 				if (action.If != null)

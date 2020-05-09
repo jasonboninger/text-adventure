@@ -25,8 +25,13 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			if (actionMap.IteratorMaps.HasValue)
 			{
 				// Return iterator actions
-				return actionMap.IteratorMaps.Value
-					.SelectMany(im => ActionIterator.Create(replacer, triggers, entities, commands, reactionPaths, reactionPath, im));
+				return actionMap.IteratorMaps.Value.SelectMany(im => ActionIterator.Create
+					(
+						replacer,
+						entities,
+						im,
+						(r, am) => Create(r, triggers, entities, commands, reactionPaths, reactionPath, am)
+					));
 			}
 			// Check if if map exists
 			if (actionMap.IfMap != null)

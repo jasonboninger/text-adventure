@@ -11,6 +11,7 @@ namespace BoningerWorks.TextAdventure.Json.Inputs
 			return new Text { Value = @string };
 		}
 
+		[JsonPropertyName("iterators")] public OneOrManyList<Iterator<SFlexibleObject<Text>>?>? Iterators { get; set; }
 		[JsonPropertyName("if")] public If<SFlexibleObject<Text>>? If { get; set; }
 		[JsonPropertyName("value")] public string? Value { get; set; }
 	}

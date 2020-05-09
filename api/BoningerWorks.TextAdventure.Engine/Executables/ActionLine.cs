@@ -12,6 +12,16 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 	{
 		public static Func<State, IEnumerable<Line>> Create(Func<Id, Id> replacer, Entities entities, LineMap lineMap)
 		{
+			// Check if iterator maps exists
+			if (lineMap.IteratorMaps.HasValue)
+			{
+				// Create line actions
+				var actionsLine = lineMap.IteratorMaps.Value
+					.SelectMany(im => ActionIterator.Create(replacer, entities, im, (r, lm) => Create(r, entities, lm).ToEnumerable()))
+					.ToList();
+				// Return action
+				return s => actionsLine.SelectMany(a => a(s));
+			}
 			// Check if if map exists
 			if (lineMap.IfMap != null)
 			{
@@ -19,12 +29,12 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				var actionIf = ActionIf<Func<State, IEnumerable<Line>>>.Create
 					(
 						replacer,
-						entities, 
-						lineMap.IfMap, 
+						entities,
+						lineMap.IfMap,
 						lm => Create(replacer, entities, lm).ToEnumerable()
 					);
 				// Return action
-				return state => actionIf(state).SelectMany(a => a(state));
+				return s => actionIf(s).SelectMany(a => a(s));
 			}
 			// Check if special map exists
 			if (lineMap.SpecialMap != null)
@@ -32,7 +42,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				// Create special line action
 				var actionLineSpecial = ActionLineSpecial.Create(lineMap.SpecialMap);
 				// Return special line execute
-				return state => actionLineSpecial(state).ToEnumerable();
+				return s => actionLineSpecial(s).ToEnumerable();
 			}
 			// Check if inlined map exists
 			if (lineMap.InlinedMap != null)
@@ -40,7 +50,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				// Create inlined line action
 				var actionLineInlined = ActionLineInlined.Create(replacer, entities, lineMap.InlinedMap);
 				// Return action
-				return state => actionLineInlined(state).ToEnumerable();
+				return s => actionLineInlined(s).ToEnumerable();
 			}
 			// Throw error
 			throw new InvalidOperationException("Line map could not be parsed.");

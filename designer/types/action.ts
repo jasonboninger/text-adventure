@@ -1,15 +1,14 @@
 import { XMessage } from "./message";
-import { XOneOrArray, IIf } from "./core";
+import { XOneOrArray, IIf, XIterator } from "./core";
 import { XChange } from "./change";
 import { ITrigger } from "./trigger";
-import { XIterator } from "./iterator";
 
 export type XActionSpecial = "END";
 
 export type XAction = IActionIterator | IActionIf | IActionMessage | IActionChanges | IActionTriggers | IActionSpecial;
 
 export interface IActionIterator {
-	iterators: XOneOrArray<XIterator>;
+	iterators: XOneOrArray<XIterator<XAction>>;
 	if?: never;
 	messages?: never;
 	changes?: never;

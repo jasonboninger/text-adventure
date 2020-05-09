@@ -12,6 +12,16 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 	{
 		public static Func<State, IEnumerable<Text>> Create(Func<Id, Id> replacer, Entities entities, TextMap textMap)
 		{
+			// Check if iterator maps exists
+			if (textMap.IteratorMaps.HasValue)
+			{
+				// Create text actions
+				var actionsText = textMap.IteratorMaps.Value
+					.SelectMany(im => ActionIterator.Create(replacer, entities, im, (r, lm) => Create(r, entities, lm).ToEnumerable()))
+					.ToList();
+				// Return action
+				return s => actionsText.SelectMany(a => a(s));
+			}
 			// Check if if map exists
 			if (textMap.IfMap != null)
 			{
@@ -24,7 +34,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 						tm => Create(replacer, entities, tm).ToEnumerable()
 					);
 				// Return action
-				return state => actionIf(state).SelectMany(a => a(state));
+				return s => actionIf(s).SelectMany(a => a(s));
 			}
 			// Check if inlined map exists
 			if (textMap.InlinedMap != null)
@@ -32,7 +42,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				// Create inlined text action
 				var actionTextInlined = ActionTextInlined.Create(replacer, entities, textMap.InlinedMap);
 				// Return action
-				return state => actionTextInlined(state).ToEnumerable();
+				return s => actionTextInlined(s).ToEnumerable();
 			}
 			// Throw error
 			throw new InvalidOperationException("Text map could not be parsed.");
