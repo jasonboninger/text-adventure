@@ -70,18 +70,19 @@ namespace BoningerWorks.TextAdventure.Engine.Executable
 						}
 						// Return replace
 						return replace;
-					})
-				.ToList();
+					});
+			// Test replaces
+			_ = replaces.ToList();
 			// Return action
 			return s =>
 			{
 				// Create string builder
 				var stringBuilder = new StringBuilder(value);
 				// Run through replaces
-				for (int i = 0; i < replaces.Count; i++)
+				foreach (var replace in replaces)
 				{
 					// Execute replace
-					replaces[i](s, stringBuilder);
+					replace(s, stringBuilder);
 				}
 				// Create string
 				var @string = stringBuilder.ToString();

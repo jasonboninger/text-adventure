@@ -27,15 +27,23 @@ namespace BoningerWorks.TextAdventure.Engine.Executable
 			if (textMap.IfMap != null)
 			{
 				// Create if action
-				var actionIf = ActionIf<Func<State, IEnumerable<Text>>>.Create
-					(
-						replacer,
-						entities,
-						textMap.IfMap, 
-						tm => Create(replacer, entities, tm).ToEnumerable()
-					);
+				var actionIf = ActionIf.Create(replacer, entities, textMap.IfMap, tm => Create(replacer, entities, tm));
+				// Create action
+				IEnumerable<Text> action(State state)
+				{
+					// Run through actions
+					foreach (var action in actionIf(state))
+					{
+						// Run through texts
+						foreach (var text in action(state))
+						{
+							// Return text
+							yield return text;
+						}
+					}
+				}
 				// Return action
-				return s => actionIf(s).SelectMany(a => a(s));
+				return action;
 			}
 			// Check if inlined map exists
 			if (textMap.InlinedMap != null)

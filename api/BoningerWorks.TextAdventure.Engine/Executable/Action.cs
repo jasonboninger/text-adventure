@@ -39,7 +39,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executable
 			if (actionMap.IfMap != null)
 			{
 				// Create if action
-				var actionIf = ActionIf<Action<ResultBuilder>>.Create
+				var actionIf = ActionIf.Create
 					(
 						replacer, 
 						entities, 
@@ -47,15 +47,13 @@ namespace BoningerWorks.TextAdventure.Engine.Executable
 						am => Create(replacer, triggers, entities, commands, reactionPaths, reactionPath, am)
 					);
 				// Create action
-				Action<ResultBuilder> action = result =>
+				Action<ResultBuilder> action = r =>
 				{
-					// Get actions
-					var actions = actionIf(result.State);
 					// Run through actions
-					for (int i = 0; i < actions.Length; i++)
+					foreach (var action in actionIf(r.State))
 					{
 						// Execute action
-						actions[i](result);
+						action(r);
 					}
 				};
 				// Return action

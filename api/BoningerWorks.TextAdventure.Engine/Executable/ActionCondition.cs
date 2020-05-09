@@ -4,7 +4,6 @@ using BoningerWorks.TextAdventure.Intermediate.Enums;
 using BoningerWorks.TextAdventure.Intermediate.Maps;
 using BoningerWorks.TextAdventure.Json.Outputs;
 using System;
-using System.Collections.Immutable;
 using System.Linq;
 
 namespace BoningerWorks.TextAdventure.Engine.Executable
@@ -16,76 +15,52 @@ namespace BoningerWorks.TextAdventure.Engine.Executable
 			// Check if single
 			if (conditionMap.SingleMap != null)
 			{
-				// Get left
-				var left = ActionReplace.Create(replacer, entities, conditionMap.SingleMap.Left);
-				// Get right
-				var right = ActionReplace.Create(replacer, entities, conditionMap.SingleMap.Right);
+				// Get left replace action
+				var actionReplaceLeft = ActionReplace.Create(replacer, entities, conditionMap.SingleMap.Left);
+				// Get right replace action
+				var actionReplaceRight = ActionReplace.Create(replacer, entities, conditionMap.SingleMap.Right);
 				// Get comparison
 				var comparison = conditionMap.SingleMap.Comparison;
-				// Check if is
-				if (comparison == EConditionComparison.Is)
+				// Return action
+				return comparison switch
 				{
-					// Return action
-					return state => left(state) == right(state);
-				}
-				// Check if not
-				if (comparison == EConditionComparison.Not)
-				{
-					// Return action
-					return state => left(state) != right(state);
-				}
-				// Throw error
-				throw new InvalidOperationException($"Condition comparison ({conditionMap.SingleMap.Comparison}) could not be handled.");
+					EConditionComparison.Is => s => actionReplaceLeft(s) == actionReplaceRight(s),
+					EConditionComparison.Not => s => actionReplaceLeft(s) != actionReplaceRight(s),
+					_ => throw new InvalidOperationException($"Condition comparison ({comparison}) could not be handled.")
+				};
 			}
 			// Check if many
 			if (conditionMap.ManyMap != null)
 			{
 				// Get condition actions
-				var actionsCondition = conditionMap.ManyMap.ConditionMaps.Select(cm => Create(replacer, entities, cm)).ToImmutableArray();
+				var actionsCondition = conditionMap.ManyMap.ConditionMaps.Select(cm => Create(replacer, entities, cm));
+				// Test condition actions
+				_ = actionsCondition.ToList();
 				// Get operator
 				var @operator = conditionMap.ManyMap.Operator;
-				// Check if all
-				if (@operator == EConditionOperator.All)
+				// Create stop
+				var stop = @operator switch
 				{
-					// Return action
-					return state =>
-					{
-						// Run through condition actions
-						for (int i = 0; i < actionsCondition.Length; i++)
-						{
-							// Check if not condition action
-							if (!actionsCondition[i](state))
-							{
-								// Return not
-								return false;
-							}
-						}
-						// Return is
-						return true;
-					};
-				}
-				// Check if any
-				if (@operator == EConditionOperator.Any)
+					EConditionOperator.All => false,
+					EConditionOperator.Any => true,
+					_ => throw new InvalidOperationException($"Condition operator ({@operator}) could not be handled.")
+				};
+				// Return action
+				return s =>
 				{
-					// Return action
-					return state =>
+					// Run through condition actions
+					foreach (var actionCondition in actionsCondition)
 					{
-						// Run through condition actions
-						for (int i = 0; i < actionsCondition.Length; i++)
+						// Check if stop
+						if (actionCondition(s) == stop)
 						{
-							// Check if condition action
-							if (actionsCondition[i](state))
-							{
-								// Return is
-								return true;
-							}
+							// Return stop
+							return stop;
 						}
-						// Return not
-						return false;
-					};
-				}
-				// Throw error
-				throw new InvalidOperationException($"Condition operator ({conditionMap.ManyMap.Operator}) could not be handled.");
+					}
+					// Return not stop
+					return !stop;
+				};
 			}
 			// Throw error
 			throw new InvalidOperationException("Condition map could not be parsed.");
