@@ -178,26 +178,30 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		{
 			// Get inputs
 			var inputs = Inputs;
-			// Get inputs length
-			var inputsLength = inputs.Length;
+			// Create input IDs
+			var inputIds = new Id[inputs.Length];
+			// Run through inputs
+			for (int i = 0; i < inputs.Length; i++)
+			{
+				// Set input ID
+				inputIds[i] = inputs[i].Id;
+			}
 			// Check if parts count does not match inputs length
-			if (parts.Count != inputsLength)
+			if (parts.Count != inputs.Length)
 			{
 				// Throw error
-				throw new ArgumentException($"Parts count ({parts.Count}) must match input length ({inputsLength}).", nameof(parts));
+				throw new ArgumentException($"Parts count ({parts.Count}) must match input length ({inputs.Length}).", nameof(parts));
 			}
 			// Create replacer
 			Id replacer(Id id)
 			{
-				// Run through inputs
-				for (int i = 0; i < inputsLength; i++)
+				// Get index
+				var index = Array.IndexOf(inputIds, id);
+				// Check if index exists
+				if (index != -1)
 				{
-					// Check if ID matches input
-					if (inputs[i].Id == id)
-					{
-						// Return part ID
-						return parts[i].Id;
-					}
+					// Return part ID
+					return parts[index].Id;
 				}
 				// Return ID
 				return id;
