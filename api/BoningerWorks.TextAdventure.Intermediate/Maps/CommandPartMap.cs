@@ -33,7 +33,10 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 						throw new ValidationError("When words is not null, area and item must be null.");
 					}
 					// Set words
-					Words = Names.TryCreate(commandPart.Words.Select(w => Name.TryCreate(w) ?? throw new ValidationError($"Word ({w}) is not valid.")))
+					Words = Names.TryCreate
+						(
+							commandPart.Words.Select(w => Name.TryCreate(w) ?? throw new ValidationError($"Word ({w}) is not valid."))
+						)
 						?? throw new ValidationError("Words is not valid.");
 					// Return
 					return;

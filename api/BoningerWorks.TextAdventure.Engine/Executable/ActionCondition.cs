@@ -52,11 +52,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executable
 					foreach (var actionCondition in actionsCondition)
 					{
 						// Check if stop
-						if (actionCondition(s) == stop)
-						{
-							// Return stop
-							return stop;
-						}
+						if (actionCondition(s) == stop) return stop;
 					}
 					// Return not stop
 					return !stop;

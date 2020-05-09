@@ -5,7 +5,6 @@ using BoningerWorks.TextAdventure.Intermediate.Maps;
 using BoningerWorks.TextAdventure.Json.Outputs;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace BoningerWorks.TextAdventure.Engine.Executable
 {
@@ -16,12 +15,24 @@ namespace BoningerWorks.TextAdventure.Engine.Executable
 			// Check if iterator maps exists
 			if (lineMap.IteratorMaps.HasValue)
 			{
-				// Create line actions
-				var actionsLine = lineMap.IteratorMaps.Value
-					.SelectMany(im => ActionIterator.Create(replacer, entities, im, (r, lm) => Create(r, entities, lm).ToEnumerable()))
-					.ToList();
+				// Create iterator action
+				var actionIterator = ActionIterator.Create(replacer, entities, lineMap.IteratorMaps.Value, (r, lm) => Create(r, entities, lm));
+				// Create action
+				IEnumerable<Line> action(State state)
+				{
+					// Run through actions
+					foreach (var action in actionIterator())
+					{
+						// Run through lines
+						foreach (var line in action(state))
+						{
+							// Return line
+							yield return line;
+						}
+					}
+				}
 				// Return action
-				return s => actionsLine.SelectMany(a => a(s));
+				return action;
 			}
 			// Check if if map exists
 			if (lineMap.IfMap != null)

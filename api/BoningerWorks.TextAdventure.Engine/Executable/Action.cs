@@ -26,14 +26,22 @@ namespace BoningerWorks.TextAdventure.Engine.Executable
 			// Check if iterator maps exists
 			if (actionMap.IteratorMaps.HasValue)
 			{
-				// Return iterator actions
-				return actionMap.IteratorMaps.Value.SelectMany(im => ActionIterator.Create
+				// Create iterator action
+				var actionIterator = ActionIterator.Create
 					(
 						replacer,
 						entities,
-						im,
+						actionMap.IteratorMaps.Value,
 						(r, am) => Create(r, triggers, entities, commands, reactionPaths, reactionPath, am)
-					));
+					);
+				// Create action
+				Action<ResultBuilder> action = r =>
+				{
+					// Execute actions
+					foreach (var action in actionIterator()) action(r);
+				};
+				// Return action
+				return action.ToEnumerable();
 			}
 			// Check if if map exists
 			if (actionMap.IfMap != null)
@@ -49,12 +57,8 @@ namespace BoningerWorks.TextAdventure.Engine.Executable
 				// Create action
 				Action<ResultBuilder> action = r =>
 				{
-					// Run through actions
-					foreach (var action in actionIf(r.State))
-					{
-						// Execute action
-						action(r);
-					}
+					// Execute actions
+					foreach (var action in actionIf(r.State)) action(r);
 				};
 				// Return action
 				return action.ToEnumerable();
