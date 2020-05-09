@@ -49,12 +49,7 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 					// Increase count
 					count++;
 					// Set if map
-					IfMap = new IfMap<ActionMap>
-						(
-							new ConditionMap(action.If.Condition),
-							action.If.ValuesTrue?.Select(a => new ActionMap(a)).ToImmutableArray(),
-							action.If.ValuesFalse?.Select(a => new ActionMap(a)).ToImmutableArray()
-						);
+					IfMap = IfMap<ActionMap>.Create(action.If, a => new ActionMap(a));
 				}
 				// Check if messages exists
 				if (action.Messages != null)

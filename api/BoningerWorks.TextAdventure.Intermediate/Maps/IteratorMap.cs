@@ -59,14 +59,14 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 					// Throw error
 					throw new ValidationError("Area and item cannot both be null.");
 				}
-				// Check if processor does not exist
-				if (iterator.Processor == null || iterator.Processor.Count == 0)
+				// Check if processor values does not exist
+				if (iterator.ValuesProcessor == null || iterator.ValuesProcessor.Count == 0)
 				{
 					// Throw error
 					throw new ValidationError("Processor cannot be null or empty.");
 				}
 				// Create processor maps
-				var processorMaps = iterator.Processor.Select(converter).ToImmutableArray();
+				var processorMaps = iterator.ValuesProcessor.Select(converter).ToImmutableArray();
 				// Return iterator map
 				return new IteratorMap<TMap>(area, item, processorMaps);
 			}

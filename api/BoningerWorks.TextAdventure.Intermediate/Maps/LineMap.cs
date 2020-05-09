@@ -42,12 +42,7 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 				// Increase count
 				count++;
 				// Set if map
-				IfMap = new IfMap<LineMap>
-					(
-						new ConditionMap(line.If.Condition),
-						line.If.ValuesTrue?.Select(l => new LineMap(l)).ToImmutableArray(),
-						line.If.ValuesFalse?.Select(l => new LineMap(l)).ToImmutableArray()
-					);
+				IfMap = IfMap<LineMap>.Create(line.If, l => new LineMap(l));
 			}
 			// Check if special exists
 			if (line.Special != null)

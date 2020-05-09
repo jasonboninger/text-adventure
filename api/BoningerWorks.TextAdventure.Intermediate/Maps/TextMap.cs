@@ -41,12 +41,7 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 				// Increase count
 				count++;
 				// Set if map
-				IfMap = new IfMap<TextMap>
-					(
-						new ConditionMap(text.If.Condition),
-						text.If.ValuesTrue?.Select(t => new TextMap(t)).ToImmutableArray(),
-						text.If.ValuesFalse?.Select(t => new TextMap(t)).ToImmutableArray()
-					);
+				IfMap = IfMap<TextMap>.Create(text.If, t => new TextMap(t));
 			}
 			// Check if value exists
 			if (text.Value != null)
