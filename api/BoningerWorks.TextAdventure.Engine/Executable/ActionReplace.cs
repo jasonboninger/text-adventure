@@ -83,8 +83,10 @@ namespace BoningerWorks.TextAdventure.Engine.Executable
 					// Execute replace
 					replaces[i](s, stringBuilder);
 				}
+				// Create string
+				var @string = stringBuilder.ToString();
 				// Return string
-				return stringBuilder.ToString();
+				return @string;
 			};
 		}
 	}

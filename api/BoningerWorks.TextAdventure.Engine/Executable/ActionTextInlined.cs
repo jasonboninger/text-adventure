@@ -10,15 +10,17 @@ namespace BoningerWorks.TextAdventure.Engine.Executable
 	{
 		public static Func<State, Text> Create(Func<Id, Id> replacer, Entities entities, TextInlinedMap textInlinedMap)
 		{
-			// Create replace
-			var replace = ActionReplace.Create(replacer, entities, textInlinedMap.Value);
+			// Create replace action
+			var actionReplace = ActionReplace.Create(replacer, entities, textInlinedMap.Value);
 			// Return action
-			return state =>
+			return s =>
 			{
 				// Create value
-				var value = replace(state);
+				var value = actionReplace(s);
+				// Create text
+				var text = new Text(value);
 				// Return text
-				return new Text(value);
+				return text;
 			};
 		}
 	}
