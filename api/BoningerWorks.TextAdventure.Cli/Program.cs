@@ -10,8 +10,8 @@ namespace BoningerWorks.TextAdventure.Cli
 	{
 		private enum EColor
 		{
-			Normal,
-			Prompt
+			Input,
+			Normal
 		}
 
 		static void Main()
@@ -31,12 +31,12 @@ namespace BoningerWorks.TextAdventure.Cli
 			{
 				// Write line
 				Console.WriteLine();
+				// Write line
+				Console.WriteLine();
 				// Set color
-				_SetColor(EColor.Prompt);
+				_SetColor(EColor.Input);
 				// Display prompt messages
 				_DisplayMessages(state.Prompt);
-				// Set color
-				_SetColor(EColor.Normal);
 				// Create input
 				string input;
 				// Get input
@@ -55,6 +55,8 @@ namespace BoningerWorks.TextAdventure.Cli
 					// Stop
 					break;
 				}
+				// Set color
+				_SetColor(EColor.Normal);
 				// Execute input
 				result = game.Execute(state, input);
 				// Set state
@@ -64,6 +66,8 @@ namespace BoningerWorks.TextAdventure.Cli
 				// Check if messages exist
 				if (messages.Count > 0)
 				{
+					// Write line
+					Console.WriteLine();
 					// Write line
 					Console.WriteLine();
 				}
@@ -131,7 +135,7 @@ namespace BoningerWorks.TextAdventure.Cli
 								break;
 							case ELineSpecialType.HorizontalRule:
 								// Write horizontal rule
-								Console.WriteLine("====================================");
+								Console.WriteLine(string.Empty.PadLeft(Console.WindowWidth, '='));
 								break;
 							default: throw new InvalidOperationException($"Special line type ({special.Type}) could not be handled.");
 						}
@@ -149,10 +153,10 @@ namespace BoningerWorks.TextAdventure.Cli
 			// Check if color
 			switch (color)
 			{
-				case EColor.Prompt:
+				case EColor.Input:
 					// Set color
-					Console.ForegroundColor = ConsoleColor.Black;
-					Console.BackgroundColor = ConsoleColor.Gray;
+					Console.ForegroundColor = ConsoleColor.DarkGray;
+					Console.BackgroundColor = ConsoleColor.Black;
 					break;
 				case EColor.Normal:
 					// Set color
