@@ -9,7 +9,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 {
 	public static class ActionMessage
 	{
-		public static Action<ResultBuilder> Create(Func<Symbol, Symbol> replacer, Entities entities, MessageMap messageMap)
+		public static Action<ResultBuilder> Create(Func<Id, Id> replacer, Entities entities, MessageMap messageMap)
 		{
 			// Set line actions
 			var actionsLine = messageMap.LineMaps.Select(lm => ActionLine.Create(replacer, entities, lm)).ToImmutableArray();

@@ -39,11 +39,11 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 			}
 			// Set command maps
 			CommandMaps = game.Commands.Select(c => new CommandMap(c)).ToImmutableArray();
-			// Check if not all command symbols are unqiue
-			if (CommandMaps.Select(cm => cm.CommandSymbol).Distinct().Count() != CommandMaps.Length)
+			// Check if not all command IDs are unqiue
+			if (CommandMaps.Select(cm => cm.CommandId).Distinct().Count() != CommandMaps.Length)
 			{
 				// Throw error
-				throw new ValidationError("Not all command symbols are unique.");
+				throw new ValidationError("Not all command IDs are unique.");
 			}
 			// Set player map
 			PlayerMap = new PlayerMap(game.Player);
@@ -55,11 +55,11 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 			}
 			// Set area maps
 			AreaMaps = game.Areas.Select(a => new AreaMap(a)).ToImmutableArray();
-			// Check if not all area symbols are unqiue
-			if (AreaMaps.Select(am => am.AreaSymbol).Distinct().Count() != AreaMaps.Length)
+			// Check if not all area IDs are unqiue
+			if (AreaMaps.Select(am => am.AreaId).Distinct().Count() != AreaMaps.Length)
 			{
 				// Throw error
-				throw new ValidationError("Not all area symbols are unique.");
+				throw new ValidationError("Not all area IDs are unique.");
 			}
 			// Set item maps
 			ItemMaps = Enumerable.Empty<ItemMap>() 
@@ -73,11 +73,11 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 				.Concat(AreaMaps.SelectMany(am => am.ReactionMaps))
 				.Concat(ItemMaps.SelectMany(im => im.ReactionMaps))
 				.ToImmutableArray();
-			// Check if not all item symbols are unique
-			if (ItemMaps.Select(im => im.ItemSymbol).Distinct().Count() != ItemMaps.Length)
+			// Check if not all item IDs are unique
+			if (ItemMaps.Select(im => im.ItemId).Distinct().Count() != ItemMaps.Length)
 			{
 				// Throw error
-				throw new ValidationError("Not all item symbols are unique.");
+				throw new ValidationError("Not all item IDs are unique.");
 			}
 			// Check if not all item names are unique
 			if (ItemMaps.Select(im => im.ItemNames.Name).Distinct().Count() != ItemMaps.Length)
@@ -117,18 +117,18 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 						}
 					}
 				}));
-			// Create symbols
-			var symbols = Enumerable.Empty<Symbol>()
-				.Concat(CommandMaps.Select(cm => cm.CommandSymbol))
-				.Append(PlayerMap.PlayerSymbol)
-				.Concat(AreaMaps.Select(am => am.AreaSymbol))
-				.Concat(ItemMaps.Select(im => im.ItemSymbol))
+			// Create IDs
+			var ids = Enumerable.Empty<Id>()
+				.Concat(CommandMaps.Select(cm => cm.CommandId))
+				.Append(PlayerMap.PlayerId)
+				.Concat(AreaMaps.Select(am => am.AreaId))
+				.Concat(ItemMaps.Select(im => im.ItemId))
 				.ToList();
-			// Check if not all symbols are unique
-			if (symbols.Distinct().Count() != symbols.Count)
+			// Check if not all IDs are unique
+			if (ids.Distinct().Count() != ids.Count)
 			{
 				// Throw error
-				throw new ValidationError("Not all symbols are unique.");
+				throw new ValidationError("Not all IDs are unique.");
 			}
 			// Set area condition map
 			ConditionAreaMap = game.ConditionArea == null ? null : new ConditionInputMap(game.ConditionArea);

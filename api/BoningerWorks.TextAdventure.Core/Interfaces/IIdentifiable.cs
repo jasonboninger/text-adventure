@@ -4,6 +4,6 @@ namespace BoningerWorks.TextAdventure.Core.Interfaces
 {
 	public interface IIdentifiable
 	{
-		public Symbol Symbol { get; }
+		public Id Id { get; }
 	}
 }

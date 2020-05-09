@@ -15,7 +15,7 @@ namespace BoningerWorks.TextAdventure.Core.Utilities
 
 		private readonly ImmutableArray<TValue> _values;
 		private readonly IEnumerable<TValue> _valuesEnumerable;
-		private readonly ImmutableDictionary<Symbol, TValue> _symbolToValueMappings;
+		private readonly ImmutableDictionary<Id, TValue> _idToValueMappings;
 
 		public Group(IEnumerable<TValue> values)
 		{
@@ -27,31 +27,31 @@ namespace BoningerWorks.TextAdventure.Core.Utilities
 				// Throw error
 				throw new ArgumentException("Value cannot be null.", nameof(values));
 			}
-			// Check if any symbol does not exist
-			if (_values.Any(v => v.Symbol == null))
+			// Check if any ID does not exist
+			if (_values.Any(v => v.Id == null))
 			{
 				// Throw error
-				throw new ArgumentException("Value symbol cannot be null.", nameof(values));
+				throw new ArgumentException("Value ID cannot be null.", nameof(values));
 			}
 			// Set enumerable values
 			_valuesEnumerable = _values;
-			// Create symbol to value mappings
-			_symbolToValueMappings = _values.ToImmutableDictionary(i => i.Symbol);
+			// Create ID to value mappings
+			_idToValueMappings = _values.ToImmutableDictionary(i => i.Id);
 		}
 
 		IEnumerator IEnumerable.GetEnumerator() => _valuesEnumerable.GetEnumerator();
 		public IEnumerator<TValue> GetEnumerator() => _valuesEnumerable.GetEnumerator();
 
-		public TValue Get(Symbol symbol)
+		public TValue Get(Id id)
 		{
 			// Return value
-			return TryGet(symbol) ?? throw new ArgumentException($"Symbol ({symbol}) does not match any values in the group.");
+			return TryGet(id) ?? throw new ArgumentException($"ID ({id}) does not match any values in the group.");
 		}
 
-		public TValue? TryGet(Symbol? symbol)
+		public TValue? TryGet(Id? id)
 		{
 			// Try to get value
-			if (symbol != null && _symbolToValueMappings.TryGetValue(symbol, out var value))
+			if (id != null && _idToValueMappings.TryGetValue(id, out var value))
 			{
 				// Return value
 				return value;
@@ -60,16 +60,16 @@ namespace BoningerWorks.TextAdventure.Core.Utilities
 			return null;
 		}
 
-		public bool Contains(Symbol? symbol)
+		public bool Contains(Id? id)
 		{
-			// Check if symbol does not exist
-			if (symbol == null)
+			// Check if ID does not exist
+			if (id == null)
 			{
 				// Return value does not exist
 				return false;
 			}
-			// Return if value with symbol exists
-			return _symbolToValueMappings.ContainsKey(symbol);
+			// Return if value with ID exists
+			return _idToValueMappings.ContainsKey(id);
 		}
 	}
 }

@@ -32,8 +32,8 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		IEnumerator IEnumerable.GetEnumerator() => _entities.GetEnumerator();
 		public IEnumerator<IEntity> GetEnumerator() => _entities.GetEnumerator();
 
-		public IEntity Get(Symbol symbol) => _entities.Get(symbol);
+		public IEntity Get(Id id) => _entities.Get(id);
 
-		public IEntity? TryGet(Symbol? symbol) => _entities.TryGet(symbol);
+		public IEntity? TryGet(Id? id) => _entities.TryGet(id);
 	}
 }

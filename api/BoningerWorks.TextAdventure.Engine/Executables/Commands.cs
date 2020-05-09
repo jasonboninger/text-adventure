@@ -17,15 +17,15 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		public Commands(Entities entities, ImmutableArray<CommandMap> commandMaps)
 		{
 			// Set commands
-			_commands = new Group<Command>(commandMaps.Select(cm => new Command(entities, cm)).OrderBy(c => c.Symbol.ToString()));
+			_commands = new Group<Command>(commandMaps.Select(cm => new Command(entities, cm)).OrderBy(c => c.Id.ToString()));
 		}
 
 		IEnumerator IEnumerable.GetEnumerator() => _commands.GetEnumerator();
 		public IEnumerator<Command> GetEnumerator() => _commands.GetEnumerator();
 
-		public Command Get(Symbol symbol) => _commands.Get(symbol);
+		public Command Get(Id id) => _commands.Get(id);
 
-		public Command? TryGet(Symbol? symbol) => _commands.TryGet(symbol);
+		public Command? TryGet(Id? id) => _commands.TryGet(id);
 
 		public CommandMatch? TryGetMatch(string? input)
 		{

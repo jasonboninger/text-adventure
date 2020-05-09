@@ -12,7 +12,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 	{
 		public static Func<State, ImmutableArray<TOutput>> Create<TMap>
 		(
-			Func<Symbol, Symbol> replacer,
+			Func<Id, Id> replacer,
 			Entities entities, 
 			IfMap<TMap> ifMap,
 			Func<TMap, IEnumerable<TOutput>> create

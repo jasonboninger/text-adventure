@@ -7,7 +7,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 {
 	public static class ActionChange
 	{
-		public static Action<ResultBuilder> Create(Func<Symbol, Symbol> replacer, Entities entities, ChangeMap changeMap)
+		public static Action<ResultBuilder> Create(Func<Id, Id> replacer, Entities entities, ChangeMap changeMap)
 		{
 			// Get path
 			var path = changeMap.Path;
@@ -25,7 +25,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			if (entities.TryGet(target) == null)
 			{
 				// Throw error
-				throw new ValidationError($"Entity for symbol ({target}) could not be found.");
+				throw new ValidationError($"Entity for ID ({target}) could not be found.");
 			}
 			// Get datum
 			var datum = path.Datum;

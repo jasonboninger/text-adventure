@@ -9,12 +9,12 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 {
 	public class InputMap
 	{
-		public ImmutableDictionary<Symbol, Symbol> InputSymbolToEntitySymbolMappings { get; }
+		public ImmutableDictionary<Id, Id> InputIdToEntityIdMappings { get; }
 
 		public InputMap(List<Input?>? inputs)
 		{
-			// Set input symbol to entity symbol mappings
-			InputSymbolToEntitySymbolMappings = inputs?
+			// Set input ID to entity ID mappings
+			InputIdToEntityIdMappings = inputs?
 				.Select(i => i ?? throw new ValidationError("Input cannot be null."))
 				.GroupBy
 					(
@@ -26,8 +26,8 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 								// Throw error
 								throw new ValidationError("Input key cannot be null.");
 							}
-							// Return input symbol
-							return Symbol.TryCreate(i.Key) ?? throw new ValidationError($"Input key ({i.Key}) is not valid.");
+							// Return input ID
+							return Id.TryCreate(i.Key) ?? throw new ValidationError($"Input key ({i.Key}) is not valid.");
 						},
 						(s, @is) =>
 						{
@@ -39,14 +39,14 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 							}
 							// Get value
 							var value = @is.Select(ri => ri.Value).Single();
-							// Get entity symbol
-							var entitySymbol = Symbol.TryCreate(value) ?? throw new ValidationError($"Input value ({value}) is not valid.");
-							// Return input symbol to entity symbol
-							return KeyValuePair.Create(s, entitySymbol);
+							// Get entity ID
+							var entityId = Id.TryCreate(value) ?? throw new ValidationError($"Input value ({value}) is not valid.");
+							// Return input ID to entity ID
+							return KeyValuePair.Create(s, entityId);
 						}
 					)
 				.ToImmutableDictionary()
-				?? ImmutableDictionary<Symbol, Symbol>.Empty;
+				?? ImmutableDictionary<Id, Id>.Empty;
 		}
 	}
 }

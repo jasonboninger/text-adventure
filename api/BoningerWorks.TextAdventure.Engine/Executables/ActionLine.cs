@@ -10,7 +10,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 {
 	public static class ActionLine
 	{
-		public static Func<State, IEnumerable<Line>> Create(Func<Symbol, Symbol> replacer, Entities entities, LineMap lineMap)
+		public static Func<State, IEnumerable<Line>> Create(Func<Id, Id> replacer, Entities entities, LineMap lineMap)
 		{
 			// Check if if map exists
 			if (lineMap.IfMap != null)

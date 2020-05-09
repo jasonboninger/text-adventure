@@ -25,8 +25,8 @@ namespace BoningerWorks.TextAdventure.Json.Static
 				new FlexibleObjectJsonConverter<Message>(createFromString: Message.CreateFromString),
 				new FlexibleObjectJsonConverter<Line>(createFromString: Line.CreateFromString),
 				new FlexibleObjectJsonConverter<Text>(createFromString: Text.CreateFromString),
-				new SymbolJsonConverter(),
-				new SymbolDictionaryJsonConverterFactory()
+				new IdJsonConverter(),
+				new IdDictionaryJsonConverterFactory()
 			);
 
 		public static JsonSerializerOptions Create()

@@ -10,7 +10,7 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 {
 	public class CommandMap
 	{
-		public Symbol CommandSymbol { get; }
+		public Id CommandId { get; }
 		public ImmutableArray<CommandPartMap> CommandPartMaps { get; }
 		public ImmutableArray<ActionMap> ActionMapsFail { get; }
 
@@ -22,8 +22,8 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 				// Throw error
 				throw new ValidationError("Command cannot be null.");
 			}
-			// Set command symbol
-			CommandSymbol = Symbol.TryCreate(command.Id) ?? throw new ValidationError($"Command symbol ({command.Id}) is not valid.");
+			// Set command ID
+			CommandId = Id.TryCreate(command.Id) ?? throw new ValidationError($"Command ID ({command.Id}) is not valid.");
 			// Try to create command map
 			try
 			{
@@ -35,18 +35,18 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 				}
 				// Set command part maps
 				CommandPartMaps = command.CommandParts.Select(cp => new CommandPartMap(cp)).ToImmutableArray();
-				// Get duplicate command part symbols
-				var commandPartSymbolDuplicates = CommandPartMaps
+				// Get duplicate command part IDs
+				var commandPartIdDuplicates = CommandPartMaps
 					.Where(cpm => cpm.Words == null)
-					.GroupBy(cpm => cpm.Area ?? cpm.Item ?? throw new InvalidOperationException("No symbol found."))
+					.GroupBy(cpm => cpm.Area ?? cpm.Item ?? throw new InvalidOperationException("No ID found."))
 					.Where(g => g.Count() > 1)
 					.Select(g => g.Key)
 					.ToList();
-				// Check if duplicate commard part symbols exist
-				if (commandPartSymbolDuplicates.Count != 0)
+				// Check if duplicate commard part IDs exist
+				if (commandPartIdDuplicates.Count != 0)
 				{
 					// Throw error
-					throw new ValidationError("Not all command part symbols are unique.");
+					throw new ValidationError("Not all command part IDs are unique.");
 				}
 				// Set fail action maps
 				ActionMapsFail = command.ActionsFail?.Select(a => new ActionMap(a)).ToImmutableArray() ?? ImmutableArray<ActionMap>.Empty;
@@ -54,7 +54,7 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 			catch (GenericException<ValidationError> exception)
 			{
 				// Throw error
-				throw new ValidationError($"Command ({CommandSymbol}) is not valid.").ToGenericException(exception);
+				throw new ValidationError($"Command ({CommandId}) is not valid.").ToGenericException(exception);
 			}
 		}
 	}

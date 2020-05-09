@@ -7,7 +7,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 {
 	public static class ActionTextInlined
 	{
-		public static Func<State, Text> Create(Func<Symbol, Symbol> replacer, Entities entities, TextInlinedMap textInlinedMap)
+		public static Func<State, Text> Create(Func<Id, Id> replacer, Entities entities, TextInlinedMap textInlinedMap)
 		{
 			// Create replace
 			var replace = ActionReplace.Create(replacer, entities, textInlinedMap.Value);

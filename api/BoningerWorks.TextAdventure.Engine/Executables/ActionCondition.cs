@@ -10,7 +10,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 {
 	public static class ActionCondition
 	{
-		public static Func<State, bool> Create(Func<Symbol, Symbol> replacer, Entities entities, ConditionMap conditionMap)
+		public static Func<State, bool> Create(Func<Id, Id> replacer, Entities entities, ConditionMap conditionMap)
 		{
 			// Check if single
 			if (conditionMap.SingleMap != null)

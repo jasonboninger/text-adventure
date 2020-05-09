@@ -15,13 +15,13 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		public ReactionPath(Entities entities, Commands commands, ReactionMap reactionMap)
 		{
 			// Set command
-			Command = commands.TryGet(reactionMap.CommandSymbol)
-				?? throw new InvalidOperationException($"No command with symbol ({reactionMap.CommandSymbol}) could be found.");
+			Command = commands.TryGet(reactionMap.CommandId)
+				?? throw new InvalidOperationException($"No command with ID ({reactionMap.CommandId}) could be found.");
 			// Try to create reaction path
 			try
 			{
-				// Check if reaction map has no input symbol to entity symbol mappings
-				if (reactionMap.InputMap.InputSymbolToEntitySymbolMappings.Count == 0)
+				// Check if reaction map has no input ID to entity ID mappings
+				if (reactionMap.InputMap.InputIdToEntityIdMappings.Count == 0)
 				{
 					// Check if command has more than one input
 					if (Command.Inputs.Length > 1)
@@ -32,8 +32,8 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				}
 				else
 				{
-					// Check if reaction map does not have an input symbol for each command input
-					if (Command.Inputs.Any(i => !reactionMap.InputMap.InputSymbolToEntitySymbolMappings.ContainsKey(i.Symbol)))
+					// Check if reaction map does not have an input ID for each command input
+					if (Command.Inputs.Any(i => !reactionMap.InputMap.InputIdToEntityIdMappings.ContainsKey(i.Id)))
 					{
 						// Throw error
 						throw new ValidationError($"Some inputs are missing.");
@@ -44,25 +44,25 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 					.Select
 						(i =>
 						{
-							// Try to get entity symbol for input symbol
-							if (!reactionMap.InputMap.InputSymbolToEntitySymbolMappings.TryGetValue(i.Symbol, out var entitySymbol))
+							// Try to get entity ID for input ID
+							if (!reactionMap.InputMap.InputIdToEntityIdMappings.TryGetValue(i.Id, out var entityId))
 							{
-								// Set entity symbol
-								entitySymbol = reactionMap.EntitySymbol;
+								// Set entity ID
+								entityId = reactionMap.EntityId;
 							}
 							// Try to get entity
-							var entity = entities.TryGet(entitySymbol);
+							var entity = entities.TryGet(entityId);
 							// Check if entity does not exist
 							if (entity == null)
 							{
 								// Throw error
-								throw new ValidationError($"No entity with symbol ({reactionMap.EntitySymbol}) could be found.");
+								throw new ValidationError($"No entity with ID ({reactionMap.EntityId}) could be found.");
 							}
 							// Check if entity is not valid
 							if (!i.IsValid(entity))
 							{
 								// Throw error
-								throw new ValidationError($"Entity ({entity}) is not compatible with input ({i.Symbol}).");
+								throw new ValidationError($"Entity ({entity}) is not compatible with input ({i.Id}).");
 							}
 							// Create part
 							var part = new ReactionPathPart(i, entity);
@@ -81,7 +81,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		public override string ToString()
 		{
 			// Return string
-			return $"{Command}[{string.Join(", ", Parts.Select(p => $"{p.Input.Symbol} = {p.Entity}"))}]";
+			return $"{Command}[{string.Join(", ", Parts.Select(p => $"{p.Input.Id} = {p.Entity}"))}]";
 		}
 	}
 }

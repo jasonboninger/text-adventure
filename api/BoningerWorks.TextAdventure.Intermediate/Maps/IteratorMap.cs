@@ -9,8 +9,8 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 {
 	public class IteratorMap
 	{
-		public Symbol? Area { get; }
-		public Symbol? Item { get; }
+		public Id? Area { get; }
+		public Id? Item { get; }
 		public ImmutableArray<ActionMap> ActionMaps { get; }
 
 		public IteratorMap(Iterator? iterator)
@@ -34,7 +34,7 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 						throw new ValidationError("When area exists, item must be null.");
 					}
 					// Set area
-					Area = Symbol.TryCreate(iterator.Area) ?? throw new ValidationError($"Area ({iterator.Area}) is not valid.");
+					Area = Id.TryCreate(iterator.Area) ?? throw new ValidationError($"Area ({iterator.Area}) is not valid.");
 				}
 				// Check if item exists
 				if (iterator.Item != null)
@@ -46,7 +46,7 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 						throw new ValidationError("When item exists, area must be null.");
 					}
 					// Set item
-					Item = Symbol.TryCreate(iterator.Item) ?? throw new ValidationError($"Item ({iterator.Item}) is not valid.");
+					Item = Id.TryCreate(iterator.Item) ?? throw new ValidationError($"Item ({iterator.Item}) is not valid.");
 				}
 				// Check if actions does not exist
 				if (iterator.Actions == null || iterator.Actions.Count == 0)

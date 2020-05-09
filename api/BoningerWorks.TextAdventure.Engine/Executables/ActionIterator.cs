@@ -12,7 +12,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 	{
 		public static IEnumerable<Action<ResultBuilder>> Create
 		(
-			Func<Symbol, Symbol> replacer,
+			Func<Id, Id> replacer,
 			Triggers? triggers,
 			Entities entities,
 			Commands commands,
@@ -22,7 +22,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		)
 		{
 			// Create replace
-			Symbol replace;
+			Id replace;
 			// Create iterable
 			IEnumerable<IEntity> iterable;
 			// Check if area
@@ -47,14 +47,14 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				throw new ArgumentException("Iterator entities could not be found.", nameof(iteratorMap));
 			}
 			// Return actions
-			return iterable.SelectMany(i =>
+			return iterable.SelectMany(e =>
 			{
-				// Get symbol
-				var symbol = i.Symbol;
+				// Get entity ID
+				var idEntity = e.Id;
 				// Create iterator replacer
 				var replacerIterator = replacer;
 				// Set iterator replacer
-				replacerIterator = s => s == replace ? symbol : replacer(s);
+				replacerIterator = id => id == replace ? idEntity : replacer(id);
 				// Return actions
 				return iteratorMap.ActionMaps
 					.SelectMany(am => Action.Create(replacerIterator, triggers, entities, commands, reactionPaths, reactionPath, am));

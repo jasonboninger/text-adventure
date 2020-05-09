@@ -7,7 +7,7 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 {
 	public class TriggerMap
 	{
-		public Symbol CommandSymbol { get; }
+		public Id CommandId { get; }
 		public InputMap InputMap { get; }
 
 		internal TriggerMap(Trigger? trigger)
@@ -21,18 +21,18 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 			// Try to create reaction
 			try
 			{
-				// Set command symbol
-				CommandSymbol = Symbol.TryCreate(trigger.CommandSymbol)
-					?? throw new ValidationError($"Command symbol ({trigger.CommandSymbol}) is not valid.");
+				// Set command ID
+				CommandId = Id.TryCreate(trigger.CommandId)
+					?? throw new ValidationError($"Command ID ({trigger.CommandId}) is not valid.");
 				// Set input map
 				InputMap = new InputMap(trigger.Inputs);
 			}
 			catch (GenericException<ValidationError> exception)
 			{
-				// Get command symbol
-				var commandSymbol = CommandSymbol == null ? string.Empty : $" ({CommandSymbol})";
+				// Get command ID
+				var commandId = CommandId == null ? string.Empty : $" ({CommandId})";
 				// Throw error
-				throw new ValidationError($"Trigger{commandSymbol} is not valid.").ToGenericException(exception);
+				throw new ValidationError($"Trigger{commandId} is not valid.").ToGenericException(exception);
 			}
 		}
 	}

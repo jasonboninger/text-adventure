@@ -24,16 +24,16 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		IEnumerator IEnumerable.GetEnumerator() => _areas.GetEnumerator();
 		public IEnumerator<Area> GetEnumerator() => _areas.GetEnumerator();
 
-		public Area Get(Symbol symbol) => _areas.Get(symbol);
+		public Area Get(Id id) => _areas.Get(id);
 		public Area Get(Name name) => _areas.Get(name);
 
-		public Area? TryGet(Symbol symbol) => _areas.TryGet(symbol);
+		public Area? TryGet(Id id) => _areas.TryGet(id);
 
 		public ImmutableArray<Area> GetAll(Name name) => _areas.GetAll(name);
 
 		public ImmutableArray<Area>? TryGetAll(Name? name) => _areas.TryGetAll(name);
 
-		public bool Contains(Symbol? symbol) => _areas.Contains(symbol);
+		public bool Contains(Id? id) => _areas.Contains(id);
 		public int Contains(Name? name) => _areas.Contains(name);
 	}
 }

@@ -6,6 +6,6 @@ namespace BoningerWorks.TextAdventure.Engine.Interfaces
 {
 	public interface IEntity : INamed
 	{
-		ImmutableDictionary<Symbol, string> Metadata { get; }
+		ImmutableDictionary<Id, string> Metadata { get; }
 	}
 }

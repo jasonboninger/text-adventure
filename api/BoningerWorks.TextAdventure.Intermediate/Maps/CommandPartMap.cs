@@ -9,8 +9,8 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 	public class CommandPartMap
 	{
 		public Names? Words { get; set; }
-		public Symbol? Area { get; set; }
-		public Symbol? Item { get; set; }
+		public Id? Area { get; set; }
+		public Id? Item { get; set; }
 
 		public CommandPartMap(CommandPart? commandPart)
 		{
@@ -48,7 +48,7 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 						throw new ValidationError("When area is not null, words and item must be null.");
 					}
 					// Set area
-					Area = Symbol.TryCreate(commandPart.Area) ?? throw new ValidationError($"Command area symbol ({commandPart.Area}) is not valid.");
+					Area = Id.TryCreate(commandPart.Area) ?? throw new ValidationError($"Command area ID ({commandPart.Area}) is not valid.");
 					// Return
 					return;
 				}
@@ -62,7 +62,7 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 						throw new ValidationError("When item is not null, words and area must be null.");
 					}
 					// Set item
-					Item = Symbol.TryCreate(commandPart.Item) ?? throw new ValidationError($"Command item symbol ({commandPart.Item}) is not valid.");
+					Item = Id.TryCreate(commandPart.Item) ?? throw new ValidationError($"Command item ID ({commandPart.Item}) is not valid.");
 					// Return
 					return;
 				}

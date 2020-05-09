@@ -10,7 +10,7 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 {
 	public class ReactionMap
 	{
-		internal static ImmutableArray<ReactionMap> Create(Symbol entitySymbol, OneOrManyList<Reaction?>? reactions)
+		internal static ImmutableArray<ReactionMap> Create(Id entityId, OneOrManyList<Reaction?>? reactions)
 		{
 			// Check if reactions does not exist
 			if (reactions == null)
@@ -19,20 +19,20 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 				return ImmutableArray<ReactionMap>.Empty;
 			}
 			// Create reaction maps
-			var reactionMaps = reactions.Select(r => new ReactionMap(entitySymbol, r)).ToImmutableArray();
+			var reactionMaps = reactions.Select(r => new ReactionMap(entityId, r)).ToImmutableArray();
 			// Return reaction maps
 			return reactionMaps;
 		}
 		
-		public Symbol EntitySymbol { get; }
-		public Symbol CommandSymbol { get; }
+		public Id EntityId { get; }
+		public Id CommandId { get; }
 		public InputMap InputMap { get; }
 		public ImmutableArray<ActionMap> ActionMaps { get; }
 
-		private ReactionMap(Symbol entitySymbol, Reaction? reaction)
+		private ReactionMap(Id entityId, Reaction? reaction)
 		{
-			// Set entity symbol
-			EntitySymbol = entitySymbol;
+			// Set entity ID
+			EntityId = entityId;
 			// Check if reaction does not exist
 			if (reaction == null)
 			{
@@ -42,9 +42,9 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 			// Try to create reaction
 			try
 			{
-				// Set command symbol
-				CommandSymbol = Symbol.TryCreate(reaction.CommandSymbol)
-					?? throw new ValidationError($"Command symbol ({reaction.CommandSymbol}) is not valid.");
+				// Set command ID
+				CommandId = Id.TryCreate(reaction.CommandId)
+					?? throw new ValidationError($"Command ID ({reaction.CommandId}) is not valid.");
 				// Set input map
 				InputMap = new InputMap(reaction.Inputs);
 				// Check if actions does not exist
@@ -58,10 +58,10 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 			}
 			catch (GenericException<ValidationError> exception)
 			{
-				// Get command symbol
-				var commandSymbol = CommandSymbol == null ? string.Empty : $" ({CommandSymbol})";
+				// Get command ID
+				var commandId = CommandId == null ? string.Empty : $" ({CommandId})";
 				// Throw error
-				throw new ValidationError($"Reaction{commandSymbol} is not valid.").ToGenericException(exception);
+				throw new ValidationError($"Reaction{commandId} is not valid.").ToGenericException(exception);
 			}
 		}
 	}

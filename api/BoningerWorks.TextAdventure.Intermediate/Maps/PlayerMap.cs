@@ -9,9 +9,9 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 {
 	public class PlayerMap
 	{
-		public Symbol PlayerSymbol { get; }
+		public Id PlayerId { get; }
 		public Names PlayerNames { get; }
-		public Symbol AreaSymbol { get; }
+		public Id AreaId { get; }
 
 		internal ImmutableArray<ItemMap> ItemMaps { get; }
 		internal ImmutableArray<ReactionMap> ReactionMaps { get; }
@@ -24,8 +24,8 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 				// Throw error
 				throw new ValidationError("Player cannot be null.");
 			}
-			// Set player symbol
-			PlayerSymbol = Symbol.TryCreate(player.Id) ?? throw new ValidationError($"Player symbol ({player.Id}) is not valid.");
+			// Set player ID
+			PlayerId = Id.TryCreate(player.Id) ?? throw new ValidationError($"Player ID ({player.Id}) is not valid.");
 			// Try to create player
 			try
 			{
@@ -38,12 +38,12 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 				// Set player names
 				PlayerNames = Names.TryCreate(player.Names?.Select(n => Name.TryCreate(n) ?? throw new ValidationError($"Name ({n}) is not valid.")))
 					?? throw new ValidationError("Names is not valid.");
-				// Set area symbol
-				AreaSymbol = Symbol.TryCreate(player.AreaSymbol) ?? throw new ValidationError($"Area symbol ({player.AreaSymbol}) is not valid.");
+				// Set area ID
+				AreaId = Id.TryCreate(player.AreaId) ?? throw new ValidationError($"Area ID ({player.AreaId}) is not valid.");
 				// Set item maps
-				ItemMaps = ItemMap.Create(player.Items, PlayerSymbol);
+				ItemMaps = ItemMap.Create(player.Items, PlayerId);
 				// Set reaction maps
-				ReactionMaps = ReactionMap.Create(PlayerSymbol, player.Reactions);
+				ReactionMaps = ReactionMap.Create(PlayerId, player.Reactions);
 			}
 			catch (GenericException<ValidationError> exception)
 			{

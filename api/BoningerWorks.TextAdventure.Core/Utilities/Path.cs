@@ -52,8 +52,8 @@ namespace BoningerWorks.TextAdventure.Core.Utilities
 			}
 		}
 
-		public Symbol Target { get; }
-		public Symbol Datum { get; }
+		public Id Target { get; }
+		public Id Datum { get; }
 		public bool Metadata { get; }
 
 		internal Path(string target, string datum, bool metadata) : this(target + (metadata ? _SEPARATOR_METADATA : _SEPARATOR_DATA) + datum) { }
@@ -84,9 +84,9 @@ namespace BoningerWorks.TextAdventure.Core.Utilities
 				throw new ArgumentException($"Path ({path}) must have exactly two parts, but instead has {parts.Length}.", nameof(path));
 			}
 			// Set target
-			Target = new Symbol(parts[0]);
+			Target = new Id(parts[0]);
 			// Set datum
-			Datum = new Symbol(parts[1]);
+			Datum = new Id(parts[1]);
 		}
 	}
 }

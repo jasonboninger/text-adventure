@@ -1,4 +1,5 @@
 ﻿using BoningerWorks.TextAdventure.Core.Utilities;
+using BoningerWorks.TextAdventure.Engine.Comparers;
 using BoningerWorks.TextAdventure.Engine.Interfaces;
 using BoningerWorks.TextAdventure.Intermediate.Maps;
 using BoningerWorks.TextAdventure.Json.Outputs;
@@ -21,7 +22,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		private readonly ImmutableArray<Reaction> _reactions;
 		private readonly IEnumerable<Reaction> _reactionsEnumerable;
 		private readonly ImmutableDictionary<Command, ReactionTree> _commandToReactionTreeMappings;
-		private readonly ImmutableDictionary<Symbol, Func<State, bool>> _symbolToConditionMappings;
+		private readonly ImmutableDictionary<IEntity, Func<State, bool>> _entityToConditionMappings;
 
 		public Reactions
 		(
@@ -50,10 +51,10 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			triggers.Validate();
 			// Set enumerable reactions
 			_reactionsEnumerable = _reactions;
-			// Set command symbol to reaction tree mappings
+			// Set command to reaction tree mappings
 			_commandToReactionTreeMappings = ReactionTree.Create(_reactions);
-			// Set symbol to condition mappings
-			_symbolToConditionMappings = Enumerable.Empty<Tuple<ConditionInputMap, IEntity>>()
+			// Set entity to condition mappings
+			_entityToConditionMappings = Enumerable.Empty<Tuple<ConditionInputMap, IEntity>>()
 				.Concat
 					(
 						conditionAreaMap == null
@@ -69,20 +70,20 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				.Select
 					(_ =>
 					{
-						// Get condition input map
-						var conditionInputMap = _.Item1;
-						// Get input symbol
-						var inputSymbol = conditionInputMap.InputSymbol;
+						// Get condition input map and entity
+						(var conditionInputMap, var entity) = _;
+						// Get input ID
+						var inputId = conditionInputMap.InputId;
 						// Get condition map
 						var conditionMap = conditionInputMap.ConditionMap;
-						// Get entity symbol
-						var entitySymbol = _.Item2.Symbol;
+						// Get entity ID
+						var entityId = entity.Id;
 						// Create condition action
-						var actionCondition = ActionCondition.Create(s => s == inputSymbol ? entitySymbol : s, entities, conditionMap);
-						// Return symbol to condition mappings
-						return KeyValuePair.Create(entitySymbol, actionCondition);
+						var actionCondition = ActionCondition.Create(id => id == inputId ? entityId : id, entities, conditionMap);
+						// Return ID to condition mappings
+						return KeyValuePair.Create(entity, actionCondition);
 					})
-				.ToImmutableDictionary();
+				.ToImmutableDictionary(IdentifiableEqualityComparer<IEntity>.Instance);
 		}
 
 		IEnumerator IEnumerable.GetEnumerator() => _reactionsEnumerable.GetEnumerator();
@@ -113,7 +114,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			{
 				var part = parts[i];
 				// Check if part is not in context
-				if (_symbolToConditionMappings.TryGetValue(part.Symbol, out var actionCondition) && !actionCondition(state))
+				if (_entityToConditionMappings.TryGetValue(part, out var actionCondition) && !actionCondition(state))
 				{
 					// Return out of context
 					return ReactionResult.OutOfContext;
@@ -137,7 +138,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			return ReactionResult.Success(reactions.Value);
 		}
 
-		public Action<ResultBuilder> CreateAction(ImmutableArray<ActionMap> actionMaps, Func<Symbol, Symbol>? replacer = null)
+		public Action<ResultBuilder> CreateAction(ImmutableArray<ActionMap> actionMaps, Func<Id, Id>? replacer = null)
 		{
 			// Create action
 			var action = Actions.Create(triggers: null, _entities, _commands, _reactionPaths, reactionPath: null, actionMaps, replacer);

@@ -10,7 +10,7 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 {
 	public class ItemMap
 	{
-		internal static ImmutableArray<ItemMap> Create(List<Item?>? items, Symbol locationSymbol)
+		internal static ImmutableArray<ItemMap> Create(List<Item?>? items, Id locationId)
 		{
 			// Check if items does not exist
 			if (items == null)
@@ -19,20 +19,20 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 				return ImmutableArray<ItemMap>.Empty;
 			}
 			// Create item maps
-			var itemMaps = items.Select(i => new ItemMap(locationSymbol, i)).ToImmutableArray();
+			var itemMaps = items.Select(i => new ItemMap(locationId, i)).ToImmutableArray();
 			// Return item maps
 			return itemMaps;
 		}
 
-		public Symbol ItemSymbol { get; }
-		public Symbol LocationSymbol { get; }
+		public Id ItemId { get; }
+		public Id LocationId { get; }
 		public Names ItemNames { get; }
 		public bool? Active { get; }
 		
 		internal ImmutableArray<ItemMap> ItemMaps { get; }
 		internal ImmutableArray<ReactionMap> ReactionMaps { get; }
 
-		private ItemMap(Symbol locationSymbol, Item? item)
+		private ItemMap(Id locationId, Item? item)
 		{
 			// Check if item does not exist
 			if (item == null)
@@ -40,13 +40,13 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 				// Throw error
 				throw new ValidationError("Item body cannot be null.");
 			}
-			// Set item symbol
-			ItemSymbol = Symbol.TryCreate(item.Id) ?? throw new ValidationError($"Item symbol ({item.Id}) is not valid.");
+			// Set item ID
+			ItemId = Id.TryCreate(item.Id) ?? throw new ValidationError($"Item ID ({item.Id}) is not valid.");
 			// Try to create item map
 			try
 			{
-				// Set location symbol
-				LocationSymbol = locationSymbol ?? throw new ValidationError("Location symbol cannot be null.");
+				// Set location ID
+				LocationId = locationId ?? throw new ValidationError("Location ID cannot be null.");
 				// Check if names does not exist
 				if (item.Names == null || item.Names.Count == 0)
 				{
@@ -59,16 +59,16 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 				// Set active
 				Active = item.Active;
 				// Create item maps
-				var itemMaps = Create(item.Items, LocationSymbol);
+				var itemMaps = Create(item.Items, LocationId);
 				// Set item maps
 				ItemMaps = itemMaps.Concat(itemMaps.SelectMany(im => im.ItemMaps)).ToImmutableArray();
 				// Set reaction maps
-				ReactionMaps = ReactionMap.Create(ItemSymbol, item.Reactions);
+				ReactionMaps = ReactionMap.Create(ItemId, item.Reactions);
 			}
 			catch (GenericException<ValidationError> exception)
 			{
 				// Throw error
-				throw new ValidationError($"Item ({ItemSymbol}) is not valid.").ToGenericException(exception);
+				throw new ValidationError($"Item ({ItemId}) is not valid.").ToGenericException(exception);
 			}
 		}
 	}

@@ -27,7 +27,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			}
 		}
 
-		public Symbol Symbol { get; }
+		public Id Id { get; }
 		public ImmutableArray<CommandInput> Inputs { get; }
 
 		private readonly Regex _regularExpression;
@@ -36,8 +36,8 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 
 		public Command(Entities entities, CommandMap commandMap)
 		{
-			// Set symbol
-			Symbol = commandMap.CommandSymbol;
+			// Set ID
+			Id = commandMap.CommandId;
 			// Create command input metadata
 			var commandInputMetadata = ImmutableArray.CreateBuilder<CommandInputMetadatum>();
 			// Create regular expressions
@@ -108,8 +108,8 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 
 		public override string ToString()
 		{
-			// Return symbol
-			return Symbol.ToString();
+			// Return ID
+			return Id.ToString();
 		}
 
 		public CommandMatch? TryGetMatch(string? input)
@@ -133,7 +133,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 						// Get get entities by name
 						var getEntitiesByName = commandInputMetadatum.GetEntitiesByName;
 						// Get group name
-						var groupName = commandInput.Symbol.ToString();
+						var groupName = commandInput.Id.ToString();
 						// Get group
 						var group = match.Groups[groupName];
 						// Get entity name
@@ -187,20 +187,20 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				throw new ArgumentException($"Parts count ({parts.Count}) must match input length ({inputsLength}).", nameof(parts));
 			}
 			// Create replacer
-			Symbol replacer(Symbol symbol)
+			Id replacer(Id id)
 			{
 				// Run through inputs
 				for (int i = 0; i < inputsLength; i++)
 				{
-					// Check if symbol matches input
-					if (inputs[i].Symbol == symbol)
+					// Check if ID matches input
+					if (inputs[i].Id == id)
 					{
-						// Return part symbol
-						return parts[i].Symbol;
+						// Return part ID
+						return parts[i].Id;
 					}
 				}
-				// Return symbol
-				return symbol;
+				// Return ID
+				return id;
 			}
 			// Return action
 			return reactions.CreateAction(_actionMapsFail, replacer);

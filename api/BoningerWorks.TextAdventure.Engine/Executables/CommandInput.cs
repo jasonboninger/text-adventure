@@ -6,14 +6,14 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 {
 	public class CommandInput
 	{
-		public Symbol Symbol { get; }
+		public Id Id { get; }
 
 		private readonly Func<IEntity, bool> _isValid;
 
-		public CommandInput(Symbol symbol, Func<IEntity, bool> isValid)
+		public CommandInput(Id id, Func<IEntity, bool> isValid)
 		{
-			// Set symbol
-			Symbol = symbol;
+			// Set ID
+			Id = id;
 			// Set is valid
 			_isValid = isValid;
 		}

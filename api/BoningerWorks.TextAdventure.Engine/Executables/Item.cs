@@ -8,23 +8,23 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 {
 	public class Item : IEntity
 	{
-		private static readonly Symbol _datumId = new Symbol("ID");
-		private static readonly Symbol _datumName = new Symbol("NAME");
+		private static readonly Id _datumId = new Id("ID");
+		private static readonly Id _datumName = new Id("NAME");
 
-		public Symbol Symbol { get; }
+		public Id Id { get; }
 		public Names Names { get; }
-		public ImmutableDictionary<Symbol, string> Metadata { get; }
+		public ImmutableDictionary<Id, string> Metadata { get; }
 
 		public Item(ItemMap itemMap)
 		{
-			// Set symbol
-			Symbol = itemMap.ItemSymbol;
+			// Set ID
+			Id = itemMap.ItemId;
 			// Set names
 			Names = itemMap.ItemNames;
 			// Create metadata
-			Metadata = ImmutableDictionary.CreateRange(new KeyValuePair<Symbol, string>[]
+			Metadata = ImmutableDictionary.CreateRange(new KeyValuePair<Id, string>[]
 			{
-				KeyValuePair.Create(_datumId, Symbol.ToString()),
+				KeyValuePair.Create(_datumId, Id.ToString()),
 				KeyValuePair.Create(_datumName, Names.Name.ToString())
 			});
 		}
@@ -32,7 +32,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		public override string ToString()
 		{
 			// Return string
-			return Symbol.ToString();
+			return Id.ToString();
 		}
 	}
 }

@@ -18,7 +18,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 				@"\${" + RegularExpressions.CreateCaptureGroup(_GROUP_PATH, @"[^}]+") + @"}"
 			);
 
-		public static Func<State, string> Create(Func<Symbol, Symbol> replacer, Entities entities, string value)
+		public static Func<State, string> Create(Func<Id, Id> replacer, Entities entities, string value)
 		{
 			// Create replaces
 			var replaces = _regularExpressionReplacements
@@ -40,7 +40,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 						// Replace target
 						target = replacer(target);
 						// Get entity
-						var entity = entities.TryGet(target) ?? throw new ValidationError($"Entity for symbol ({target}) could not be found.");
+						var entity = entities.TryGet(target) ?? throw new ValidationError($"Entity for ID ({target}) could not be found.");
 						// Get datum
 						var datum = path.Datum;
 						// Create replace
@@ -52,7 +52,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 							if (!entity.Metadata.ContainsKey(datum))
 							{
 								// Throw error
-								throw new ValidationError($"Entity ({entity.Symbol}) metadata ({datum}) does not exist.");
+								throw new ValidationError($"Entity ({entity.Id}) metadata ({datum}) does not exist.");
 							}
 							// Set metadata
 							var metadata = entity.Metadata;

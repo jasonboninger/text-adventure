@@ -16,11 +16,11 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 			ImmutableArray<ReactionPath> reactionPaths,
 			ReactionPath? reactionPath,
 			ImmutableArray<ActionMap> actionMaps,
-			Func<Symbol, Symbol>? replacer = null
+			Func<Id, Id>? replacer = null
 		)
 		{
 			// Set replacer
-			replacer ??= s => s;
+			replacer ??= id => id;
 			// Create actions
 			var actions = actionMaps
 				.SelectMany(am => Action.Create(replacer, triggers, entities, commands, reactionPaths, reactionPath, am))

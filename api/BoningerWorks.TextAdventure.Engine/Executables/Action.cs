@@ -12,7 +12,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 	{
 		public static IEnumerable<Action<ResultBuilder>> Create
 		(
-			Func<Symbol, Symbol> replacer,
+			Func<Id, Id> replacer,
 			Triggers? triggers,
 			Entities entities,
 			Commands commands,

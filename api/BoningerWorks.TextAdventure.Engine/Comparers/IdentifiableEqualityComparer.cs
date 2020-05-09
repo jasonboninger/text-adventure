@@ -8,9 +8,9 @@ namespace BoningerWorks.TextAdventure.Engine.Comparers
 	{
 		public static IdentifiableEqualityComparer<TIdentifiable> Instance { get; } = new IdentifiableEqualityComparer<TIdentifiable>();
 
-		public override bool Equals(TIdentifiable? x, TIdentifiable? y) => x == null ? y == null : (y != null && x.Symbol == y.Symbol);
+		public override bool Equals(TIdentifiable? x, TIdentifiable? y) => x == null ? y == null : (y != null && x.Id == y.Id);
 
-		public override int GetHashCode(TIdentifiable? obj) => obj == null ? 0 : obj.Symbol.GetHashCode();
+		public override int GetHashCode(TIdentifiable? obj) => obj == null ? 0 : obj.Id.GetHashCode();
 
 		private IdentifiableEqualityComparer() { }
 	}

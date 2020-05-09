@@ -5,18 +5,18 @@ namespace BoningerWorks.TextAdventure.Json.Outputs
 {
 	public class Entity
 	{
-		public ImmutableDictionary<Symbol, string> Data { get; }
+		public ImmutableDictionary<Id, string> Data { get; }
 
-		public Entity(ImmutableDictionary<Symbol, string>? data = null)
+		public Entity(ImmutableDictionary<Id, string>? data = null)
 		{
 			// Set data
-			Data = data ?? ImmutableDictionary<Symbol, string>.Empty;
+			Data = data ?? ImmutableDictionary<Id, string>.Empty;
 		}
 
-		public Entity UpdateData(Symbol symbol, string value)
+		public Entity UpdateData(Id id, string value)
 		{
 			// Set data
-			var data = Data.SetItem(symbol, value);
+			var data = Data.SetItem(id, value);
 			// Create entity
 			var entity = new Entity(data);
 			// Return entity

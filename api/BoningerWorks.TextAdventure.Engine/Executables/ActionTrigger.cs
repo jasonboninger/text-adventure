@@ -19,12 +19,12 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		)
 		{
 			// Get command
-			var command = commands.TryGet(triggerMap.CommandSymbol);
+			var command = commands.TryGet(triggerMap.CommandId);
 			// Check if command does not exist
 			if (command == null)
 			{
 				// Throw error
-				throw new ValidationError($"No command with symbol ({triggerMap.CommandSymbol}) could be found.");
+				throw new ValidationError($"No command with ID ({triggerMap.CommandId}) could be found.");
 			}
 			// Get reaction queries
 			var reactionQueries = reactionPaths
@@ -33,9 +33,9 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 					{
 						// Return if reaction path matches trigger
 						return rp.Command == command
-							&& rp.Parts.Count == triggerMap.InputMap.InputSymbolToEntitySymbolMappings.Count
-							&& rp.Parts.All(p => triggerMap.InputMap.InputSymbolToEntitySymbolMappings.ContainsKey(p.Input.Symbol))
-							&& rp.Parts.All(p => triggerMap.InputMap.InputSymbolToEntitySymbolMappings[p.Input.Symbol] == p.Entity.Symbol);
+							&& rp.Parts.Count == triggerMap.InputMap.InputIdToEntityIdMappings.Count
+							&& rp.Parts.All(p => triggerMap.InputMap.InputIdToEntityIdMappings.ContainsKey(p.Input.Id))
+							&& rp.Parts.All(p => triggerMap.InputMap.InputIdToEntityIdMappings[p.Input.Id] == p.Entity.Id);
 					})
 				.Select
 					(rp =>

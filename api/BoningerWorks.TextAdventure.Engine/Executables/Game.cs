@@ -65,12 +65,12 @@ namespace BoningerWorks.TextAdventure.Engine.Executables
 		private Result _New()
 		{
 			// Create entities
-			var entities = ImmutableDictionary.CreateBuilder<Symbol, Entity>();
+			var entities = ImmutableDictionary.CreateBuilder<Id, Entity>();
 			// Run through entities
 			for (int i = 0; i < Entities.Count; i++)
 			{
 				// Add entity
-				entities.Add(Entities[i].Symbol, new Entity());
+				entities.Add(Entities[i].Id, new Entity());
 			}
 			// Create state
 			var state = new State(entities.ToImmutable(), ImmutableList<Message>.Empty, complete: false);
