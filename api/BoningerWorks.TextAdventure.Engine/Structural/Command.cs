@@ -33,7 +33,7 @@ namespace BoningerWorks.TextAdventure.Engine.Structural
 
 		private readonly Regex _regularExpression;
 		private readonly ImmutableArray<CommandInputMetadatum> _commandInputMetadata;
-		private readonly ImmutableArray<ActionMap> _actionMapsFail;
+		private readonly ImmutableArray<ActionMap>? _actionMapsFail;
 
 		public Command(Entities entities, CommandMap commandMap)
 		{
@@ -167,6 +167,12 @@ namespace BoningerWorks.TextAdventure.Engine.Structural
 			}
 		}
 
+		public bool HasFail()
+		{
+			// Return if fail action maps exist
+			return _actionMapsFail.HasValue;
+		}
+
 		public void ExecuteFail(ResultBuilder result, ImmutableList<IEntity> parts)
 		{
 			// Create fail action
@@ -208,7 +214,7 @@ namespace BoningerWorks.TextAdventure.Engine.Structural
 				return id;
 			}
 			// Return action
-			return reactions.CreateAction(_actionMapsFail, replacer);
+			return reactions.CreateAction(_actionMapsFail ?? ImmutableArray<ActionMap>.Empty, replacer);
 		}
 	}
 }

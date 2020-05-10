@@ -12,7 +12,7 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 	{
 		public Id CommandId { get; }
 		public ImmutableArray<CommandPartMap> CommandPartMaps { get; }
-		public ImmutableArray<ActionMap> ActionMapsFail { get; }
+		public ImmutableArray<ActionMap>? ActionMapsFail { get; }
 
 		internal CommandMap(Command? command)
 		{
@@ -49,7 +49,7 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 					throw new ValidationError("Not all command part IDs are unique.");
 				}
 				// Set fail action maps
-				ActionMapsFail = command.ActionsFail?.Select(a => new ActionMap(a)).ToImmutableArray() ?? ImmutableArray<ActionMap>.Empty;
+				ActionMapsFail = command.ActionsFail?.Select(a => new ActionMap(a)).ToImmutableArray();
 			}
 			catch (GenericException<ValidationError> exception)
 			{

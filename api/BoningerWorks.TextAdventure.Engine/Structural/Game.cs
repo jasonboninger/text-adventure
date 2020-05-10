@@ -161,8 +161,17 @@ namespace BoningerWorks.TextAdventure.Engine.Structural
 			switch (reactionResult.Outcome)
 			{
 				case EReactionOutcome.Nothing:
-					// Execute command fail
-					reactionQuery.Command.ExecuteFail(result, reactionQuery.Parts);
+					// Check if command has fail
+					if (reactionQuery.Command.HasFail())
+					{
+						// Execute command fail
+						reactionQuery.Command.ExecuteFail(result, reactionQuery.Parts);
+					}
+					else
+					{
+						// Execute fail
+						_actionFail(result);
+					}
 					break;
 				case EReactionOutcome.OutOfContext:
 					// Execute fail
