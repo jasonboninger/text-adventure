@@ -1,8 +1,11 @@
-﻿using BoningerWorks.TextAdventure.Engine.Structural;
+﻿using BoningerWorks.TextAdventure.Core.Exceptions;
+using BoningerWorks.TextAdventure.Engine.Structural;
+using BoningerWorks.TextAdventure.Intermediate.Errors;
 using BoningerWorks.TextAdventure.Json.Outputs;
 using BoningerWorks.TextAdventure.Json.Outputs.Enums;
 using System;
 using System.Collections.Immutable;
+using System.IO;
 
 namespace BoningerWorks.TextAdventure.Cli
 {
@@ -11,19 +14,67 @@ namespace BoningerWorks.TextAdventure.Cli
 		private enum EColor
 		{
 			Input,
-			Normal
+			Normal,
+			Error
 		}
 
-		static void Main()
+		static void Main(string[] arguments)
 		{
-			// Get JSON
-			var json = string.Empty;
 			// Clear console
 			Console.Clear();
+			// Set color
+			_SetColor(EColor.Normal);
 			// Create game
-			var game = Game.Deserialize(json);
+			Game game;
+			// Try to load game
+			try
+			{
+				// Load game
+				game = _LoadGame(arguments);
+			}
+			catch (GenericException<ValidationError> exception)
+			{
+				// Check if validation error and message exists
+				if (exception.Error != null && !string.IsNullOrWhiteSpace(exception.Error.Message))
+				{
+					// Display error
+					_DisplayError(exception.Error.Message);
+					// Return
+					return;
+				}
+				// Throw error
+				throw;
+			}
 			// Run game
 			_RunGame(game);
+		}
+
+		private static Game _LoadGame(string?[]? arguments)
+		{
+			// Get path
+			var path = arguments != null && arguments.Length > 0 ? arguments[0] : null;
+			// Check if path does not exist
+			if (string.IsNullOrWhiteSpace(path))
+			{
+				// Throw error
+				throw new ValidationError("File path cannot be null, empty, or whitespace.");
+			}
+			// Get folder
+			var folder = Environment.CurrentDirectory;
+			// Get file
+			var file = Path.Combine(folder, path, "game.json");
+			// Check if file does not exist
+			if (!File.Exists(file))
+			{
+				// Throw error
+				throw new ValidationError($"File ({file}) could not be found.");
+			}
+			// Get JSON
+			var json = File.ReadAllText(file);
+			// Create game
+			var game = Game.Deserialize(json);
+			// Return game
+			return game;
 		}
 
 		private static void _RunGame(Game game)
@@ -156,6 +207,20 @@ namespace BoningerWorks.TextAdventure.Cli
 			}
 		}
 
+		private static void _DisplayError(string message)
+		{
+			// Set color
+			_SetColor(EColor.Error);
+			// Preface error
+			Console.WriteLine("Game JSON could not be parsed. Please fix the following issue:");
+			// Write line
+			Console.WriteLine();
+			// Show error
+			Console.WriteLine(message);
+			// Set color
+			_SetColor(EColor.Normal);
+		}
+
 		private static void _SetColor(EColor color)
 		{
 			// Check if color
@@ -170,6 +235,11 @@ namespace BoningerWorks.TextAdventure.Cli
 					// Set color
 					Console.ForegroundColor = ConsoleColor.Gray;
 					Console.BackgroundColor = ConsoleColor.Black;
+					break;
+				case EColor.Error:
+					// Set color
+					Console.ForegroundColor = ConsoleColor.White;
+					Console.BackgroundColor = ConsoleColor.DarkRed;
 					break;
 				default:
 					// Throw error

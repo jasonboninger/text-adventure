@@ -16,7 +16,7 @@ namespace BoningerWorks.TextAdventure.Engine.Structural
 		{
 			// Set command
 			Command = commands.TryGet(reactionMap.CommandId)
-				?? throw new InvalidOperationException($"No command with ID ({reactionMap.CommandId}) could be found.");
+				?? throw new ValidationError($"No command with ID ({reactionMap.CommandId}) could be found.");
 			// Try to create reaction path
 			try
 			{
