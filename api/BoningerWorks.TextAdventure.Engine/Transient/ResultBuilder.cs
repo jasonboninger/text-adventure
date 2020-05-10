@@ -20,13 +20,5 @@ namespace BoningerWorks.TextAdventure.Engine.Transient
 			// Set state
 			State = state;
 		}
-
-		public Result ToImmutable()
-		{
-			// Create result
-			var result = new Result(State, Messages.ToImmutable());
-			// Return result
-			return result;
-		}
 	}
 }

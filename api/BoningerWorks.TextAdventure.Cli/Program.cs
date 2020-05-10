@@ -24,8 +24,8 @@ namespace BoningerWorks.TextAdventure.Cli
 			var result = game.New();
 			// Set state
 			var state = result.State;
-			// Display messages
-			_DisplayMessages(result.Messages);
+			// Display effect messages
+			_DisplayMessages(result.MessagesEffect);
 			// Run game
 			while (!state.Complete)
 			{
@@ -36,7 +36,7 @@ namespace BoningerWorks.TextAdventure.Cli
 				// Set color
 				_SetColor(EColor.Input);
 				// Display prompt messages
-				_DisplayMessages(state.Prompt);
+				_DisplayMessages(result.MessagesPrompt);
 				// Create input
 				string input;
 				// Get input
@@ -61,18 +61,16 @@ namespace BoningerWorks.TextAdventure.Cli
 				result = game.Execute(state, input);
 				// Set state
 				state = result.State;
-				// Get messages
-				var messages = result.Messages;
-				// Check if messages exist
-				if (messages.Count > 0)
+				// Check if effect messages exist
+				if (result.MessagesEffect.Count > 0)
 				{
 					// Write line
 					Console.WriteLine();
 					// Write line
 					Console.WriteLine();
 				}
-				// Display messages
-				_DisplayMessages(messages);
+				// Display effect messages
+				_DisplayMessages(result.MessagesEffect);
 			}
 			// Loop forever
 			while (true)

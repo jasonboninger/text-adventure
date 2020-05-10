@@ -7,15 +7,12 @@ namespace BoningerWorks.TextAdventure.Json.Outputs
 	public class State
 	{
 		public ImmutableDictionary<Id, Entity> Entities { get; }
-		public ImmutableList<Message> Prompt { get; }
 		public bool Complete { get; }
 
-		public State(ImmutableDictionary<Id, Entity> entityStates, ImmutableList<Message> prompt, bool complete)
+		public State(ImmutableDictionary<Id, Entity> entityStates, bool complete)
 		{
 			// Set entities
 			Entities = entityStates ?? ImmutableDictionary<Id, Entity>.Empty;
-			// Set prompt
-			Prompt = prompt;
 			// Set complete
 			Complete = complete;
 		}
@@ -31,15 +28,7 @@ namespace BoningerWorks.TextAdventure.Json.Outputs
 			// Set entity
 			var entities = Entities.SetItem(entityId, entityState);
 			// Create state
-			var state = new State(entities, Prompt, Complete);
-			// Return state
-			return state;
-		}
-
-		public State SetPrompt(ImmutableList<Message> prompt)
-		{
-			// Create state
-			var state = new State(Entities, prompt, Complete);
+			var state = new State(entities, Complete);
 			// Return state
 			return state;
 		}
@@ -47,7 +36,7 @@ namespace BoningerWorks.TextAdventure.Json.Outputs
 		public State UpdateComplete(bool complete)
 		{
 			// Create state
-			var state = new State(Entities, Prompt, complete);
+			var state = new State(Entities, complete);
 			// Return state
 			return state;
 		}
