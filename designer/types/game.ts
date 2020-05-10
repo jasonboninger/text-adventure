@@ -15,4 +15,6 @@ export interface IGame {
 	prompt?: XOneOrArray<XAction>;
 	areaInContext?: IConditionArea;
 	itemInContext?: IConditionItem;
+	areaAmbiguous?: XOneOrArray<XAction>;
+	itemAmbiguous?: XOneOrArray<XAction>;
 }

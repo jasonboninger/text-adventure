@@ -1,10 +1,12 @@
 ﻿using BoningerWorks.TextAdventure.Core.Extensions;
 using BoningerWorks.TextAdventure.Core.Utilities;
+using BoningerWorks.TextAdventure.Engine.Interfaces;
 using BoningerWorks.TextAdventure.Engine.Structural;
 using BoningerWorks.TextAdventure.Intermediate.Maps;
 using BoningerWorks.TextAdventure.Json.Outputs;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 
 namespace BoningerWorks.TextAdventure.Engine.Executable
@@ -15,23 +17,25 @@ namespace BoningerWorks.TextAdventure.Engine.Executable
 		(
 			Func<Id, Id> replacer,
 			Entities entities,
+			ImmutableList<IEntity> entitiesAmbiguous,
 			IfMap<TMap> ifMap,
 			Func<TMap, TOutput> create
 		)
 		{
 			// Return action
-			return Create(replacer, entities, ifMap, m => create(m).ToEnumerable());
+			return Create(replacer, entities, entitiesAmbiguous, ifMap, m => create(m).ToEnumerable());
 		}
 		public static Func<State, IEnumerable<TOutput>> Create<TMap, TOutput>
 		(
 			Func<Id, Id> replacer,
 			Entities entities,
+			ImmutableList<IEntity> entitiesAmbiguous,
 			IfMap<TMap> ifMap,
 			Func<TMap, IEnumerable<TOutput>> create
 		)
 		{
 			// Create condition action
-			var actionCondition = ActionCondition.Create(replacer, entities, ifMap.ConditionMap);
+			var actionCondition = ActionCondition.Create(replacer, entities, entitiesAmbiguous, ifMap.ConditionMap);
 			// Get true maps
 			var mapsTrue = ifMap.MapsTrue;
 			// Create true actions

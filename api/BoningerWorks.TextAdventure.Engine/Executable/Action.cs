@@ -1,4 +1,5 @@
 ﻿using BoningerWorks.TextAdventure.Core.Utilities;
+using BoningerWorks.TextAdventure.Engine.Interfaces;
 using BoningerWorks.TextAdventure.Engine.Structural;
 using BoningerWorks.TextAdventure.Engine.Transient;
 using BoningerWorks.TextAdventure.Intermediate.Maps;
@@ -18,11 +19,28 @@ namespace BoningerWorks.TextAdventure.Engine.Executable
 			ImmutableArray<ReactionPath> reactionPaths,
 			ReactionPath? reactionPath,
 			ImmutableArray<ActionMap> actionMaps,
-			Func<Id, Id>? replacer = null
+			Func<Id, Id>? replacer = null,
+			ImmutableList<IEntity>? entitiesAmbiguous = null
 		)
 		{
 			// Create actions
-			var actions = actionMaps.Select(am => _Create(replacer ?? (id => id), triggers, entities, commands, reactionPaths, reactionPath, am));
+			var actions = actionMaps.Select(am =>
+			{
+				// Create action
+				var action = _Create
+					(
+						replacer ?? (id => id),
+						triggers,
+						entities,
+						entitiesAmbiguous ?? ImmutableList<IEntity>.Empty,
+						commands,
+						reactionPaths,
+						reactionPath,
+						am
+					);
+				// Return action
+				return action;
+			});
 			// Test actions
 			_ = actions.ToList();
 			// Return action
@@ -37,6 +55,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executable
 			Func<Id, Id> replacer,
 			Triggers? triggers,
 			Entities entities,
+			ImmutableList<IEntity> entitiesAmbiguous,
 			Commands commands,
 			ImmutableArray<ReactionPath> reactionPaths,
 			ReactionPath? reactionPath,
@@ -52,7 +71,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executable
 						replacer,
 						entities,
 						actionMap.IteratorMaps.Value,
-						(r, am) => _Create(r, triggers, entities, commands, reactionPaths, reactionPath, am)
+						(r, am) => _Create(r, triggers, entities, entitiesAmbiguous, commands, reactionPaths, reactionPath, am)
 					);
 				// Return action
 				return r =>
@@ -67,10 +86,11 @@ namespace BoningerWorks.TextAdventure.Engine.Executable
 				// Create if action
 				var actionIf = ActionIf.Create
 					(
-						replacer, 
-						entities, 
+						replacer,
+						entities,
+						entitiesAmbiguous,
 						actionMap.IfMap,
-						am => _Create(replacer, triggers, entities, commands, reactionPaths, reactionPath, am)
+						am => _Create(replacer, triggers, entities, entitiesAmbiguous, commands, reactionPaths, reactionPath, am)
 					);
 				// Return action
 				return r =>
@@ -85,7 +105,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executable
 				// Get message maps
 				var messageMaps = actionMap.MessageMaps.Value;
 				// Create message actions
-				var actionsMessage = messageMaps.Select(mm => ActionMessage.Create(replacer, entities, mm));
+				var actionsMessage = messageMaps.Select(mm => ActionMessage.Create(replacer, entities, entitiesAmbiguous, mm));
 				// Test message actions
 				_ = actionsMessage.ToList();
 				// Return action
@@ -101,7 +121,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executable
 				// Get change maps
 				var changeMaps = actionMap.ChangeMaps.Value;
 				// Create change actions
-				var actionsChange = changeMaps.Select(cm => ActionChange.Create(replacer, entities, cm));
+				var actionsChange = changeMaps.Select(cm => ActionChange.Create(replacer, entities, entitiesAmbiguous, cm));
 				// Test change actions
 				_ = actionsChange.ToList();
 				// Return action

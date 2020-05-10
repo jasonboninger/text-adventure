@@ -1,24 +1,32 @@
 ﻿using BoningerWorks.TextAdventure.Core.Utilities;
+using BoningerWorks.TextAdventure.Engine.Interfaces;
 using BoningerWorks.TextAdventure.Engine.Structural;
 using BoningerWorks.TextAdventure.Intermediate.Enums;
 using BoningerWorks.TextAdventure.Intermediate.Maps;
 using BoningerWorks.TextAdventure.Json.Outputs;
 using System;
+using System.Collections.Immutable;
 using System.Linq;
 
 namespace BoningerWorks.TextAdventure.Engine.Executable
 {
 	public static class ActionCondition
 	{
-		public static Func<State, bool> Create(Func<Id, Id> replacer, Entities entities, ConditionMap conditionMap)
+		public static Func<State, bool> Create
+		(
+			Func<Id, Id> replacer,
+			Entities entities,
+			ImmutableList<IEntity> entitiesAmbiguous,
+			ConditionMap conditionMap
+		)
 		{
 			// Check if single
 			if (conditionMap.SingleMap != null)
 			{
 				// Get left replace action
-				var actionReplaceLeft = ActionReplace.Create(replacer, entities, conditionMap.SingleMap.Left);
+				var actionReplaceLeft = ActionReplace.Create(replacer, entities, entitiesAmbiguous, conditionMap.SingleMap.Left);
 				// Get right replace action
-				var actionReplaceRight = ActionReplace.Create(replacer, entities, conditionMap.SingleMap.Right);
+				var actionReplaceRight = ActionReplace.Create(replacer, entities, entitiesAmbiguous, conditionMap.SingleMap.Right);
 				// Get comparison
 				var comparison = conditionMap.SingleMap.Comparison;
 				// Return action
@@ -33,7 +41,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executable
 			if (conditionMap.ManyMap != null)
 			{
 				// Get condition actions
-				var actionsCondition = conditionMap.ManyMap.ConditionMaps.Select(cm => Create(replacer, entities, cm));
+				var actionsCondition = conditionMap.ManyMap.ConditionMaps.Select(cm => Create(replacer, entities, entitiesAmbiguous, cm));
 				// Test condition actions
 				_ = actionsCondition.ToList();
 				// Get operator

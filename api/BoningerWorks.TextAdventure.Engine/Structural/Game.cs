@@ -6,7 +6,6 @@ using BoningerWorks.TextAdventure.Intermediate.Maps;
 using BoningerWorks.TextAdventure.Json.Outputs;
 using System;
 using System.Collections.Immutable;
-using System.Text;
 
 namespace BoningerWorks.TextAdventure.Engine.Structural
 {
@@ -23,8 +22,10 @@ namespace BoningerWorks.TextAdventure.Engine.Structural
 
 		private readonly Action<ResultBuilder> _actionStart;
 		private readonly Action<ResultBuilder> _actionEnd;
-		private readonly Action<ResultBuilder> _actionFail;
 		private readonly Action<ResultBuilder> _actionPrompt;
+		private readonly Action<ResultBuilder> _actionFail;
+		private readonly ImmutableArray<ActionMap> _actionMapsAreaAmbiguous;
+		private readonly ImmutableArray<ActionMap> _actionMapsItemAmbiguous;
 
 		private Game(GameMap gameMap)
 		{
@@ -54,6 +55,14 @@ namespace BoningerWorks.TextAdventure.Engine.Structural
 			_actionFail = Reactions.CreateAction(gameMap.ActionMapsFail);
 			// Set prompt action
 			_actionPrompt = Reactions.CreateAction(gameMap.ActionMapsPrompt);
+			// Set ambiguous area action maps
+			_actionMapsAreaAmbiguous = gameMap.ActionMapsAreaAmbiguous;
+			// Test ambiguous area action maps
+			_ = Reactions.CreateAction(_actionMapsAreaAmbiguous);
+			// Set ambiguous item action maps
+			_actionMapsItemAmbiguous = gameMap.ActionMapsItemAmbiguous;
+			// Test ambiguous item action maps
+			_ = Reactions.CreateAction(_actionMapsItemAmbiguous);
 		}
 
 		public Result New()
@@ -117,33 +126,18 @@ namespace BoningerWorks.TextAdventure.Engine.Structural
 				// Check if more than one match entity
 				if (entitiesMatch.Count > 1)
 				{
-					// Create text
-					var text = new StringBuilder("Input matched more than one entity. Did you mean ");
-					// Run through match entities
-					for (int k = 0; k < entitiesMatch.Count; k++)
-					{
-						var entityMatch = entitiesMatch[k];
-						// Check if not first
-						if (k > 0)
-						{
-							// Add comma
-							text.Append(", ");
-						}
-						// Check if last
-						if (k == entitiesMatch.Count - 1)
-						{
-							// Add or
-							text.Append("or ");
-						}
-						// Add name
-						text.Append(entityMatch.Names.Name);
-					}
-					// Add question mark
-					text.Append("?");
-					// Create message
-					var message = new Message(text.ToString());
-					// Add message
-					result.Messages.Add(message);
+					// Get entity type
+					var typeEntity = entitiesMatch[0].GetType();
+					// Create ambiguous entities
+					var entitiesAmbiguous = entitiesMatch.ToImmutableList();
+					// Get ambiguous action maps
+					var actionMapsAmbiguous = (typeEntity.Equals(typeof(Area)) ? _actionMapsAreaAmbiguous : (ImmutableArray<ActionMap>?)null)
+						?? (typeEntity.Equals(typeof(Item)) ? _actionMapsItemAmbiguous : (ImmutableArray<ActionMap>?)null)
+						?? throw new InvalidOperationException($"Ambiguous action for entity type ({typeEntity.Name}) could not be handled.");
+					// Create ambiguous action
+					var actionAmbiguous = Reactions.CreateAction(actionMapsAmbiguous, entitiesAmbiguous: entitiesAmbiguous);
+					// Execute ambiguous action
+					actionAmbiguous(result);
 					// Return
 					return;
 				}

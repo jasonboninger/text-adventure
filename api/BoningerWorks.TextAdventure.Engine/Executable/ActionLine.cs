@@ -1,22 +1,36 @@
 ﻿using BoningerWorks.TextAdventure.Core.Extensions;
 using BoningerWorks.TextAdventure.Core.Utilities;
+using BoningerWorks.TextAdventure.Engine.Interfaces;
 using BoningerWorks.TextAdventure.Engine.Structural;
 using BoningerWorks.TextAdventure.Intermediate.Maps;
 using BoningerWorks.TextAdventure.Json.Outputs;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 
 namespace BoningerWorks.TextAdventure.Engine.Executable
 {
 	public static class ActionLine
 	{
-		public static Func<State, IEnumerable<Line>> Create(Func<Id, Id> replacer, Entities entities, LineMap lineMap)
+		public static Func<State, IEnumerable<Line>> Create
+		(
+			Func<Id, Id> replacer,
+			Entities entities,
+			ImmutableList<IEntity> entitiesAmbiguous,
+			LineMap lineMap
+		)
 		{
 			// Check if iterator maps exists
 			if (lineMap.IteratorMaps.HasValue)
 			{
 				// Create iterator action
-				var actionIterator = ActionIterator.Create(replacer, entities, lineMap.IteratorMaps.Value, (r, lm) => Create(r, entities, lm));
+				var actionIterator = ActionIterator.Create
+					(
+						replacer,
+						entities,
+						lineMap.IteratorMaps.Value,
+						(r, lm) => Create(r, entities, entitiesAmbiguous, lm)
+					);
 				// Create action
 				IEnumerable<Line> action(State state)
 				{
@@ -38,7 +52,14 @@ namespace BoningerWorks.TextAdventure.Engine.Executable
 			if (lineMap.IfMap != null)
 			{
 				// Create if action
-				var actionIf = ActionIf.Create(replacer, entities, lineMap.IfMap, lm => Create(replacer, entities, lm).ToEnumerable());
+				var actionIf = ActionIf.Create
+					(
+						replacer,
+						entities,
+						entitiesAmbiguous,
+						lineMap.IfMap,
+						lm => Create(replacer, entities, entitiesAmbiguous, lm)
+					);
 				// Create action
 				IEnumerable<Line> action(State state)
 				{
@@ -68,7 +89,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executable
 			if (lineMap.InlinedMap != null)
 			{
 				// Create inlined line action
-				var actionLineInlined = ActionLineInlined.Create(replacer, entities, lineMap.InlinedMap);
+				var actionLineInlined = ActionLineInlined.Create(replacer, entities, entitiesAmbiguous, lineMap.InlinedMap);
 				// Return action
 				return s => actionLineInlined(s).ToEnumerable();
 			}

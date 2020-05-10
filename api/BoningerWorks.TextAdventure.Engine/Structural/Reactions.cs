@@ -81,7 +81,13 @@ namespace BoningerWorks.TextAdventure.Engine.Structural
 						// Get entity ID
 						var entityId = entity.Id;
 						// Create condition action
-						var actionCondition = ActionCondition.Create(id => id == inputId ? entityId : id, entities, conditionMap);
+						var actionCondition = ActionCondition.Create
+							(
+								id => id == inputId ? entityId : id,
+								entities,
+								ImmutableList<IEntity>.Empty,
+								conditionMap
+							);
 						// Return ID to condition mappings
 						return KeyValuePair.Create(entity, actionCondition);
 					})
@@ -140,10 +146,25 @@ namespace BoningerWorks.TextAdventure.Engine.Structural
 			return ReactionResult.Success(reactions.Value);
 		}
 
-		public Action<ResultBuilder> CreateAction(ImmutableArray<ActionMap> actionMaps, Func<Id, Id>? replacer = null)
+		public Action<ResultBuilder> CreateAction
+		(
+			ImmutableArray<ActionMap> actionMaps,
+			Func<Id, Id>? replacer = null,
+			ImmutableList<IEntity>? entitiesAmbiguous = null
+		)
 		{
 			// Create action
-			var action = Executable.Action.Create(triggers: null, _entities, _commands, _reactionPaths, reactionPath: null, actionMaps, replacer);
+			var action = Executable.Action.Create
+				(
+					triggers: null,
+					_entities,
+					_commands,
+					_reactionPaths,
+					reactionPath: null,
+					actionMaps,
+					replacer,
+					entitiesAmbiguous
+				);
 			// Return action
 			return action;
 		}

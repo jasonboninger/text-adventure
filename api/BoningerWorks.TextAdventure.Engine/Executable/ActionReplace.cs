@@ -1,9 +1,11 @@
 ﻿using BoningerWorks.TextAdventure.Core.Static;
 using BoningerWorks.TextAdventure.Core.Utilities;
+using BoningerWorks.TextAdventure.Engine.Interfaces;
 using BoningerWorks.TextAdventure.Engine.Structural;
 using BoningerWorks.TextAdventure.Intermediate.Errors;
 using BoningerWorks.TextAdventure.Json.Outputs;
 using System;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -15,8 +17,9 @@ namespace BoningerWorks.TextAdventure.Engine.Executable
 		private const string _GROUP_PATH = "PATH";
 		
 		private static readonly Regex _regularExpression = new Regex(@"\${" + RegularExpressions.CreateCaptureGroup(_GROUP_PATH, @"[^}]*") + @"}");
+		private static readonly Id _datumAmbiguous = new Id("AMBIGUOUS");
 
-		public static Func<State, string> Create(Func<Id, Id> replacer, Entities entities, string value)
+		public static Func<State, string> Create(Func<Id, Id> replacer, Entities entities, ImmutableList<IEntity> entitiesAmbiguous, string value)
 		{
 			// Create replaces
 			var replaces = _regularExpression
@@ -48,14 +51,25 @@ namespace BoningerWorks.TextAdventure.Engine.Executable
 						{
 							// Get metadata
 							var metadata = entity.Metadata;
-							// Check if datum does not exist
-							if (!metadata.ContainsKey(datum))
+							// Check if ambiguous
+							if (datum == _datumAmbiguous)
 							{
-								// Throw error
-								throw new ValidationError($"Entity ({entity.Id}) metadata ({datum}) does not exist.");
+								// Get replaced
+								var replaced = entitiesAmbiguous.Contains(entity) ? Id.True : Id.False;
+								// Set replace
+								replace = (s, sb) => sb.Replace(value, replaced.ToString());
 							}
-							// Set replace
-							replace = (s, sb) => sb.Replace(value, metadata[datum]);
+							else
+							{
+								// Check if datum does not exist
+								if (!metadata.ContainsKey(datum))
+								{
+									// Throw error
+									throw new ValidationError($"Entity ({entity.Id}) metadata ({datum}) does not exist.");
+								}
+								// Set replace
+								replace = (s, sb) => sb.Replace(value, metadata[datum]);
+							}
 						}
 						else
 						{

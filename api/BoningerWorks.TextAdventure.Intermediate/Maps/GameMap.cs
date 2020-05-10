@@ -1,7 +1,7 @@
 ﻿using BoningerWorks.TextAdventure.Core.Utilities;
 using BoningerWorks.TextAdventure.Intermediate.Errors;
+using BoningerWorks.TextAdventure.Intermediate.Static;
 using BoningerWorks.TextAdventure.Json.Inputs;
-using BoningerWorks.TextAdventure.Json.Utilities;
 using System.Collections.Immutable;
 using System.Linq;
 
@@ -18,8 +18,10 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 		public ImmutableArray<ReactionMap> ReactionMaps { get; }
 		public ImmutableArray<ActionMap> ActionMapsStart { get; }
 		public ImmutableArray<ActionMap> ActionMapsEnd { get; }
-		public ImmutableArray<ActionMap> ActionMapsFail { get; }
 		public ImmutableArray<ActionMap> ActionMapsPrompt { get; }
+		public ImmutableArray<ActionMap> ActionMapsFail { get; }
+		public ImmutableArray<ActionMap> ActionMapsAreaAmbiguous { get; }
+		public ImmutableArray<ActionMap> ActionMapsItemAmbiguous { get; }
 		public ConditionInputMap? ConditionAreaMap { get; }
 		public ConditionInputMap? ConditionItemMap { get; }
 
@@ -89,34 +91,24 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 			ActionMapsStart = game.ActionsStart?.Select(a => new ActionMap(a)).ToImmutableArray() ?? ImmutableArray<ActionMap>.Empty;
 			// Set end action maps
 			ActionMapsEnd = game.ActionsEnd?.Select(a => new ActionMap(a)).ToImmutableArray() ?? ImmutableArray<ActionMap>.Empty;
+			// Set prompt action maps
+			ActionMapsPrompt = game.ActionsPrompt?.Select(a => new ActionMap(a)).ToImmutableArray() ?? Defaults.ActionMapsPrompt;
 			// Set fail action maps
 			ActionMapsFail = game.ActionsFail?.Select(a => new ActionMap(a)).ToImmutableArray() ?? ImmutableArray<ActionMap>.Empty;
-			// Set prompt action maps
-			ActionMapsPrompt = game.ActionsPrompt?
+			// Set ambiguous area action maps
+			ActionMapsAreaAmbiguous = game.ActionsAreaAmbiguous?
 				.Select(a => new ActionMap(a))
 				.ToImmutableArray() 
-				?? ImmutableArray.Create(new ActionMap(new Action
-				{
-					Messages = new OneOrManyList<SFlexibleObject<Message>>
-					{
-						new Message
-						{
-							Lines = new OneOrManyList<SFlexibleObject<Line>>
-							{
-								new Line
-								{
-									Texts = new OneOrManyList<SFlexibleObject<Text>>
-									{
-										new Text
-										{
-											Value = "What do you want to do next?"
-										}
-									}
-								}
-							}
-						}
-					}
-				}));
+				?? Defaults.ActionMapsAreaAmbiguous;
+			// Set ambiguous item action maps
+			ActionMapsItemAmbiguous = game.ActionsItemAmbiguous?
+				.Select(a => new ActionMap(a))
+				.ToImmutableArray() 
+				?? Defaults.ActionMapsItemAmbiguous;
+			// Set area condition map
+			ConditionAreaMap = game.ConditionArea == null ? null : new ConditionInputMap(game.ConditionArea);
+			// Set item condition map
+			ConditionItemMap = game.ConditionItem == null ? null : new ConditionInputMap(game.ConditionItem);
 			// Create IDs
 			var ids = Enumerable.Empty<Id>()
 				.Concat(CommandMaps.Select(cm => cm.CommandId))
@@ -130,10 +122,6 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 				// Throw error
 				throw new ValidationError("Not all IDs are unique.");
 			}
-			// Set area condition map
-			ConditionAreaMap = game.ConditionArea == null ? null : new ConditionInputMap(game.ConditionArea);
-			// Set item condition map
-			ConditionItemMap = game.ConditionItem == null ? null : new ConditionInputMap(game.ConditionItem);
 		}
 	}
 }

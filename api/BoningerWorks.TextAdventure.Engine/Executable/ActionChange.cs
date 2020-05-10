@@ -1,15 +1,23 @@
 ﻿using BoningerWorks.TextAdventure.Core.Utilities;
+using BoningerWorks.TextAdventure.Engine.Interfaces;
 using BoningerWorks.TextAdventure.Engine.Structural;
 using BoningerWorks.TextAdventure.Engine.Transient;
 using BoningerWorks.TextAdventure.Intermediate.Errors;
 using BoningerWorks.TextAdventure.Intermediate.Maps;
 using System;
+using System.Collections.Immutable;
 
 namespace BoningerWorks.TextAdventure.Engine.Executable
 {
 	public static class ActionChange
 	{
-		public static Action<ResultBuilder> Create(Func<Id, Id> replacer, Entities entities, ChangeMap changeMap)
+		public static Action<ResultBuilder> Create
+		(
+			Func<Id, Id> replacer,
+			Entities entities,
+			ImmutableList<IEntity> entitiesAmbiguous,
+			ChangeMap changeMap
+		)
 		{
 			// Get path
 			var path = changeMap.Path;
@@ -32,7 +40,7 @@ namespace BoningerWorks.TextAdventure.Engine.Executable
 			// Get datum
 			var datum = path.Datum;
 			// Get replace action
-			var actionReplace = ActionReplace.Create(replacer, entities, changeMap.Value);
+			var actionReplace = ActionReplace.Create(replacer, entities, entitiesAmbiguous, changeMap.Value);
 			// Return action
 			return r =>
 			{

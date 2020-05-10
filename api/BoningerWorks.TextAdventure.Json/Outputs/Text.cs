@@ -9,7 +9,7 @@ namespace BoningerWorks.TextAdventure.Json.Outputs
 		public Text(string value)
 		{
 			// Set value
-			Value = string.IsNullOrWhiteSpace(value) ? throw new ArgumentException("Value cannot be null or whitespace.", nameof(value)) : value;
+			Value = value ?? throw new ArgumentException("Value cannot be null.", nameof(value));
 		}
 	}
 }
