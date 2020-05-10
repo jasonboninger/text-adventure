@@ -24,6 +24,7 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 		public ImmutableArray<ActionMap> ActionMapsItemAmbiguous { get; }
 		public ConditionInputMap? ConditionAreaMap { get; }
 		public ConditionInputMap? ConditionItemMap { get; }
+		public OptionsMap OptionsMap { get; }
 
 		private GameMap(Game? game)
 		{
@@ -87,6 +88,19 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 				// Throw error
 				throw new ValidationError("Not all item names are unique.");
 			}
+			// Create IDs
+			var ids = Enumerable.Empty<Id>()
+				.Concat(CommandMaps.Select(cm => cm.CommandId))
+				.Append(PlayerMap.PlayerId)
+				.Concat(AreaMaps.Select(am => am.AreaId))
+				.Concat(ItemMaps.Select(im => im.ItemId))
+				.ToList();
+			// Check if not all IDs are unique
+			if (ids.Distinct().Count() != ids.Count)
+			{
+				// Throw error
+				throw new ValidationError("Not all IDs are unique.");
+			}
 			// Set start action maps
 			ActionMapsStart = game.ActionsStart?.Select(a => new ActionMap(a)).ToImmutableArray() ?? ImmutableArray<ActionMap>.Empty;
 			// Set end action maps
@@ -109,19 +123,8 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 			ConditionAreaMap = game.ConditionArea == null ? null : new ConditionInputMap(game.ConditionArea);
 			// Set item condition map
 			ConditionItemMap = game.ConditionItem == null ? null : new ConditionInputMap(game.ConditionItem);
-			// Create IDs
-			var ids = Enumerable.Empty<Id>()
-				.Concat(CommandMaps.Select(cm => cm.CommandId))
-				.Append(PlayerMap.PlayerId)
-				.Concat(AreaMaps.Select(am => am.AreaId))
-				.Concat(ItemMaps.Select(im => im.ItemId))
-				.ToList();
-			// Check if not all IDs are unique
-			if (ids.Distinct().Count() != ids.Count)
-			{
-				// Throw error
-				throw new ValidationError("Not all IDs are unique.");
-			}
+			// Set options map
+			OptionsMap = new OptionsMap(game.Options);
 		}
 	}
 }

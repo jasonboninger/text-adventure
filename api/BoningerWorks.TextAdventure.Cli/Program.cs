@@ -133,12 +133,6 @@ namespace BoningerWorks.TextAdventure.Cli
 				// Display effect messages
 				_DisplayMessages(result.MessagesEffect);
 			}
-			// Loop forever
-			while (true)
-			{
-				// Prevent input
-				Console.ReadKey(intercept: true);
-			}
 		}
 
 		private static void _DisplayMessages(ImmutableList<Message> messages)

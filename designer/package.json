@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "install": "npm run build-api",
-    "start": "npm run build-game && start cmd /k npm run run-game",
+    "start": "npm run build-game && start cmd /k npm run run-game runtime",
     "build-api": "ts-node build.ts api runtime",
     "build-game": "ts-node build.ts game runtime",
     "run-game": "dotnet runtime/BoningerWorks.TextAdventure.Cli.dll"

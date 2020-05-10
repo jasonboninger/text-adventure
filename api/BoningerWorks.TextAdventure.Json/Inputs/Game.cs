@@ -20,5 +20,6 @@ namespace BoningerWorks.TextAdventure.Json.Inputs
 		[JsonPropertyName("itemAmbiguous")] public OneOrManyList<Action?>? ActionsItemAmbiguous { get; set; }
 		[JsonPropertyName("areaInContext")] public ConditionArea? ConditionArea { get; set; }
 		[JsonPropertyName("itemInContext")] public ConditionItem? ConditionItem { get; set; }
+		[JsonPropertyName("options")] public Options? Options { get; set; }
 	}
 }

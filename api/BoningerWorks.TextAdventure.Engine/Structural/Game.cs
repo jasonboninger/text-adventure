@@ -26,6 +26,7 @@ namespace BoningerWorks.TextAdventure.Engine.Structural
 		private readonly Action<ResultBuilder> _actionFail;
 		private readonly ImmutableArray<ActionMap> _actionMapsAreaAmbiguous;
 		private readonly ImmutableArray<ActionMap> _actionMapsItemAmbiguous;
+		private readonly OptionsMap _optionsMap;
 
 		private Game(GameMap gameMap)
 		{
@@ -63,6 +64,8 @@ namespace BoningerWorks.TextAdventure.Engine.Structural
 			_actionMapsItemAmbiguous = gameMap.ActionMapsItemAmbiguous;
 			// Test ambiguous item action maps
 			_ = Reactions.CreateAction(_actionMapsItemAmbiguous);
+			// Set options map
+			_optionsMap = gameMap.OptionsMap;
 		}
 
 		public Result New()
@@ -103,6 +106,12 @@ namespace BoningerWorks.TextAdventure.Engine.Structural
 		
 		private void _Execute(ResultBuilder result, string? input)
 		{
+			// Run through ignored characters
+			for (int i = 0; i < _optionsMap.IgnoredCharacters.Length; i++)
+			{
+				// Set input
+				input = input?.Replace(_optionsMap.IgnoredCharacters[i].ToString(), string.Empty);
+			}
 			// Try to get match
 			var match = Commands.TryGetMatch(input);
 			// Check if match does not exist

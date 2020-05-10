@@ -1,3 +1,3 @@
-import { CRAZY_EX } from "./crazy-ex";
+import { EXAMPLE } from "./example";
 
-export const GAME = CRAZY_EX;
+export const GAME = EXAMPLE;
