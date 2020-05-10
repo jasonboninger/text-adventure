@@ -16,10 +16,20 @@ namespace BoningerWorks.TextAdventure.Cli
 
 		static void Main()
 		{
+			// Get JSON
+			var json = string.Empty;
+			// Clear console
+			Console.Clear();
+			// Create game
+			var game = Game.Deserialize(json);
+			// Run game
+			_RunGame(game);
+		}
+
+		private static void _RunGame(Game game)
+		{
 			// Set color
 			_SetColor(EColor.Normal);
-			// Create game
-			var game = Game.Deserialize(CrazyEx.JSON);
 			// Start game
 			var result = game.New();
 			// Set state

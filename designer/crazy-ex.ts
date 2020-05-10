@@ -42,6 +42,9 @@ export const CRAZY_EX: IGame = {
 			]
 		}
 	],
+	itemAmbiguous: {
+		messages: "NOPE!"
+	},
 	player: {
 		id: "PLAYER",
 		names: ["Self", "Myself"],
@@ -62,7 +65,7 @@ export const CRAZY_EX: IGame = {
 		items: [
 			{
 				id: "PHONE",
-				names: ["Phone", "My phone", "Cellphone", "My cellphone", "Cell phone", "My cell phone"],
+				names: ["Phone", "Test", "My phone", "Cellphone", "My cellphone", "Cell phone", "My cell phone"],
 				reactions: [
 					{
 						command: "INSPECT",
@@ -104,7 +107,7 @@ export const CRAZY_EX: IGame = {
 			},
 			{
 				id: "WALLET",
-				names: ["Wallet", "My wallet"],
+				names: ["Wallet", "Test", "My wallet"],
 				reactions: [
 					{
 						command: "INSPECT",

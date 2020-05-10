@@ -3,17 +3,18 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "scripts": {
+    "install": "npm run build-api",
+    "start": "npm run build-game && start cmd /k npm run run-game",
+    "build-api": "ts-node build.ts api runtime",
+    "build-game": "ts-node build.ts game runtime",
+    "run-game": "dotnet runtime/BoningerWorks.TextAdventure.Cli.dll"
+  },
   "dependencies": {},
   "devDependencies": {
     "@types/node": "^13.11.1",
     "ts-node": "^8.8.2",
     "typescript": "^3.8.3"
-  },
-  "scripts": {
-    "start": "npm run generate && npm run cli",
-    "cli": "start cmd /k \"dotnet run --project ../api/BoningerWorks.TextAdventure.Cli\"",
-    "generate": "ts-node generate.ts ../api/BoningerWorks.TextAdventure.Cli",
-    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC"
