@@ -3,7 +3,7 @@ import { item } from "./utilities/helpers";
 
 export const EXAMPLE: IGame = {
 	options: {
-		ignoredCharacters: ["?", "!", "."]
+		ignoredCharacters: ["?", "!", ".", ","]
 	},
 	commands: [
 		{
