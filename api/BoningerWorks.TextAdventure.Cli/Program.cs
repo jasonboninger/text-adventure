@@ -147,7 +147,7 @@ namespace BoningerWorks.TextAdventure.Cli
 					// Write ellipsis
 					Console.WriteLine("...");
 					// Wait for user
-					Console.ReadKey();
+					Console.ReadKey(intercept: true);
 				}
 				// Get lines
 				var lines = message.Lines;
