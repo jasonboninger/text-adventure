@@ -11,7 +11,6 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 	{
 		public Id PlayerId { get; }
 		public Names PlayerNames { get; }
-		public Id AreaId { get; }
 
 		internal ImmutableArray<ItemMap> ItemMaps { get; }
 		internal ImmutableArray<ReactionMap> ReactionMaps { get; }
@@ -38,8 +37,6 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 				// Set player names
 				PlayerNames = Names.TryCreate(player.Names?.Select(n => Name.TryCreate(n) ?? throw new ValidationError($"Name ({n}) is not valid.")))
 					?? throw new ValidationError("Names is not valid.");
-				// Set area ID
-				AreaId = Id.TryCreate(player.AreaId) ?? throw new ValidationError($"Area ID ({player.AreaId}) is not valid.");
 				// Set item maps
 				ItemMaps = ItemMap.Create(player.Items, PlayerId);
 				// Set reaction maps

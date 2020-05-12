@@ -26,7 +26,6 @@ export const EXAMPLE: IGame = {
 	player: {
 		id: "PLAYER",
 		names: ["Self"],
-		area: "OUTSIDE",
 		reactions: [
 			{
 				command: "LOOK",
