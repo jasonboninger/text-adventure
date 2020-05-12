@@ -31,7 +31,7 @@ export const EXAMPLE: IGame = {
 			{
 				command: "LOOK",
 				actions: {
-					messages: "You look around. It's pretty much just grass and clear skies as far as you can see across the gently rolling hills."
+					messages: "You look in every direction. It's pretty much just grass and clear skies all around you."
 				}
 			}
 		]
@@ -56,17 +56,12 @@ export const EXAMPLE: IGame = {
 						"3) If at first you don't succeed, try, try, again."
 					]
 				},
-				"You're in a grassy field with your best friend in the whole, wide world.",
+				"You're in a grassy field with your best friend in the world.",
 				"Suddenly, your friend turns to you and says:",
 				"I spy, with my little eye, something...",
 				"blue!",
 				"What do you think I spied?!"
 			]
-		},
-		{
-			triggers: {
-				command: "LOOK"
-			}
 		}
 	],
 	areas: [
@@ -110,7 +105,7 @@ export const EXAMPLE: IGame = {
 						{
 							command: "CHOOSE",
 							actions: {
-								messages: "No, silly! That's not what I spied."
+								messages: "No way! That's not what I spied."
 							}
 						}
 					]
@@ -122,7 +117,7 @@ export const EXAMPLE: IGame = {
 						{
 							command: "CHOOSE",
 							actions: {
-								messages: "Me?! I'm flattered, but no..."
+								messages: "Me?! What kind of meta game do you think this is?"
 							}
 						}
 					]
