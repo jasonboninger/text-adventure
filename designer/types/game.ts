@@ -9,7 +9,7 @@ import { IOptions } from "./options";
 export interface IGame {
 	commands: ICommand[];
 	player: IPlayer;
-	areas: IArea[];
+	areas?: IArea[];
 	start?: XOneOrArray<XAction>;
 	end?: XOneOrArray<XAction>;
 	fail?: XOneOrArray<XAction>;

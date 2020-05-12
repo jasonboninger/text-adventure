@@ -50,19 +50,19 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 			}
 			// Set player map
 			PlayerMap = new PlayerMap(game.Player);
-			// Check if areas does not exist
-			if (game.Areas == null || game.Areas.Count == 0)
-			{
-				// Throw error
-				throw new ValidationError("Areas cannot be null or empty.");
-			}
 			// Set area maps
-			AreaMaps = game.Areas.Select(a => new AreaMap(a)).ToImmutableArray();
+			AreaMaps = game.Areas?.Select(a => new AreaMap(a)).ToImmutableArray() ?? ImmutableArray<AreaMap>.Empty;
 			// Check if not all area IDs are unqiue
 			if (AreaMaps.Select(am => am.AreaId).Distinct().Count() != AreaMaps.Length)
 			{
 				// Throw error
 				throw new ValidationError("Not all area IDs are unique.");
+			}
+			// Check if not all area names are unqiue
+			if (AreaMaps.Select(am => am.AreaNames.Name).Distinct().Count() != AreaMaps.Length)
+			{
+				// Throw error
+				throw new ValidationError("Not all area names are unique.");
 			}
 			// Set item maps
 			ItemMaps = Enumerable.Empty<ItemMap>() 
