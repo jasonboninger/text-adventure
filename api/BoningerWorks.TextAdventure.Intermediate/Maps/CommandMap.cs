@@ -38,7 +38,7 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 				// Get duplicate command part IDs
 				var commandPartIdDuplicates = CommandPartMaps
 					.Where(cpm => cpm.Words == null)
-					.GroupBy(cpm => cpm.Area ?? cpm.Item ?? throw new InvalidOperationException("No ID found."))
+					.GroupBy(cpm => cpm.Player ?? cpm.Area ?? cpm.Item ?? throw new InvalidOperationException("No ID found."))
 					.Where(g => g.Count() > 1)
 					.Select(g => g.Key)
 					.ToList();

@@ -13,6 +13,7 @@ namespace BoningerWorks.TextAdventure.Json.Inputs
 		}
 
 		[JsonPropertyName("words")] public List<string?>? Words { get; set; }
+		[JsonPropertyName("player")] public string? Player { get; set; }
 		[JsonPropertyName("area")] public string? Area { get; set; }
 		[JsonPropertyName("item")] public string? Item { get; set; }
 	}

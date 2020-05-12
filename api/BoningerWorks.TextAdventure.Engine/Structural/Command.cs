@@ -58,6 +58,24 @@ namespace BoningerWorks.TextAdventure.Engine.Structural
 					// Continue
 					continue;
 				}
+				// Check if player exists
+				if (commandPartMap.Player != null)
+				{
+					// Create players
+					var players = ImmutableArray.Create(entities.Player);
+					// Get player
+					var player = commandPartMap.Player;
+					// Create command input metadatum
+					var commandInputMetadatum = new CommandInputMetadatum(new CommandInput(player, e => e is Player), n => players);
+					// Add command input metadatum
+					commandInputMetadata.Add(commandInputMetadatum);
+					// Create regular expression
+					var regularExpression = RegularExpressions.CreateCaptureGroup(player.ToString(), entities.Player.Names.RegularExpression);
+					// Add regular expression
+					regularExpressions.Add(regularExpression);
+					// Continue
+					continue;
+				}
 				// Check if area exists
 				if (commandPartMap.Area != null)
 				{
