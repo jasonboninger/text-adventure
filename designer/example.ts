@@ -2,6 +2,14 @@ import { IGame } from "./types/game";
 import { item } from "./utilities/helpers";
 
 export const EXAMPLE: IGame = {
+	development: {
+		testCommands: [
+			"look around",
+			"is it grass",
+			"is it you",
+			"is it sky"
+		]
+	},
 	options: {
 		ignoredCharacters: ["?", "!", ".", ","]
 	},

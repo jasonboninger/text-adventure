@@ -6,6 +6,7 @@ using BoningerWorks.TextAdventure.Json.Outputs.Enums;
 using System;
 using System.Collections.Immutable;
 using System.IO;
+using System.Linq;
 
 namespace BoningerWorks.TextAdventure.Cli
 {
@@ -45,8 +46,11 @@ namespace BoningerWorks.TextAdventure.Cli
 				// Throw error
 				throw;
 			}
+			// Get development
+			var development = (arguments?.Contains("--development", StringComparer.OrdinalIgnoreCase) ?? false)
+				|| (arguments?.Contains("-d", StringComparer.OrdinalIgnoreCase) ?? false);
 			// Run game
-			_RunGame(game);
+			_RunGame(game, development);
 		}
 
 		private static Game _LoadGame(string?[]? arguments)
@@ -77,19 +81,25 @@ namespace BoningerWorks.TextAdventure.Cli
 			return game;
 		}
 
-		private static void _RunGame(Game game)
+		private static void _RunGame(Game game, bool development)
 		{
+			// Get commands
+			var commands = (development ? game.Development.TestCommands : ImmutableArray<string>.Empty).ToList();
 			// Set color
 			_SetColor(EColor.Normal);
 			// Start game
 			var result = game.New();
 			// Set state
 			var state = result.State;
+			// Set wait
+			var wait = commands.Count == 0;
 			// Display effect messages
-			_DisplayMessages(result.MessagesEffect);
+			_DisplayMessages(result.MessagesEffect, wait);
 			// Run game
 			while (!state.Complete)
 			{
+				// Set wait
+				wait = commands.Count == 0;
 				// Write line
 				Console.WriteLine();
 				// Write line
@@ -97,14 +107,27 @@ namespace BoningerWorks.TextAdventure.Cli
 				// Set color
 				_SetColor(EColor.Input);
 				// Display prompt messages
-				_DisplayMessages(result.MessagesPrompt);
+				_DisplayMessages(result.MessagesPrompt, wait);
 				// Create input
 				string input;
 				// Get input
 				while (true)
 				{
-					// Get input
-					input = Console.ReadLine();
+					// Check if commands exist
+					if (commands.Count > 0)
+					{
+						// Set input
+						input = commands[0];
+						// Remove command
+						commands.RemoveAt(0);
+						// Write input
+						Console.WriteLine(input);
+					}
+					else
+					{
+						// Get input
+						input = Console.ReadLine();
+					}
 					// Check if input does not exist
 					if (string.IsNullOrWhiteSpace(input))
 					{
@@ -131,11 +154,11 @@ namespace BoningerWorks.TextAdventure.Cli
 					Console.WriteLine();
 				}
 				// Display effect messages
-				_DisplayMessages(result.MessagesEffect);
+				_DisplayMessages(result.MessagesEffect, wait);
 			}
 		}
 
-		private static void _DisplayMessages(ImmutableList<Message> messages)
+		private static void _DisplayMessages(ImmutableList<Message> messages, bool wait)
 		{
 			// Run through messages
 			for (int i = 0; i < messages.Count; i++)
@@ -146,8 +169,12 @@ namespace BoningerWorks.TextAdventure.Cli
 				{
 					// Write ellipsis
 					Console.WriteLine("...");
-					// Wait for user
-					Console.ReadKey(intercept: true);
+					// Check if wait
+					if (wait)
+					{
+						// Wait for user
+						Console.ReadKey(intercept: true);
+					}
 				}
 				// Get lines
 				var lines = message.Lines;

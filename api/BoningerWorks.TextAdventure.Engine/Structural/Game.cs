@@ -19,6 +19,7 @@ namespace BoningerWorks.TextAdventure.Engine.Structural
 		public Entities Entities { get; }
 		public Commands Commands { get; }
 		public Reactions Reactions { get; }
+		public DevelopmentMap Development { get; }
 
 		private readonly Action<ResultBuilder> _actionStart;
 		private readonly Action<ResultBuilder> _actionEnd;
@@ -42,6 +43,8 @@ namespace BoningerWorks.TextAdventure.Engine.Structural
 			Commands = new Commands(Entities, gameMap.CommandMaps);
 			// Set reactions
 			Reactions = new Reactions(Entities, Commands, gameMap.ReactionMaps, gameMap.ConditionAreaMap, gameMap.ConditionItemMap);
+			// Set development
+			Development = gameMap.DevelopmentMap;
 			// Run through commands
 			foreach (var command in Commands)
 			{

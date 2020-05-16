@@ -5,10 +5,11 @@
   "main": "index.js",
   "scripts": {
     "install": "npm run build-api",
-    "start": "npm run build-game && start cmd /k npm run run-game runtime",
+    "start": "npm run build-game && start cmd /k npm run run-game",
+    "dev": "npm run build-game && start cmd /k npm run run-game -- --development",
     "build-api": "ts-node build.ts api runtime",
     "build-game": "ts-node build.ts game runtime",
-    "run-game": "dotnet runtime/BoningerWorks.TextAdventure.Cli.dll"
+    "run-game": "dotnet runtime/BoningerWorks.TextAdventure.Cli.dll runtime"
   },
   "dependencies": {},
   "devDependencies": {

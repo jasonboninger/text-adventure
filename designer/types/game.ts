@@ -5,6 +5,7 @@ import { IArea } from "./area";
 import { XAction } from "./action";
 import { IConditionArea, IConditionItem } from "./condition";
 import { IOptions } from "./options";
+import { IDevelopment } from "./development";
 
 export interface IGame {
 	commands: ICommand[];
@@ -19,4 +20,5 @@ export interface IGame {
 	areaAmbiguous?: XOneOrArray<XAction>;
 	itemAmbiguous?: XOneOrArray<XAction>;
 	options?: IOptions;
+	development?: IDevelopment;
 }

@@ -21,5 +21,6 @@ namespace BoningerWorks.TextAdventure.Json.Inputs
 		[JsonPropertyName("areaInContext")] public ConditionArea? ConditionArea { get; set; }
 		[JsonPropertyName("itemInContext")] public ConditionItem? ConditionItem { get; set; }
 		[JsonPropertyName("options")] public Options? Options { get; set; }
+		[JsonPropertyName("development")] public Development? Development { get; set; }
 	}
 }

@@ -25,6 +25,7 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 		public ConditionInputMap? ConditionAreaMap { get; }
 		public ConditionInputMap? ConditionItemMap { get; }
 		public OptionsMap OptionsMap { get; }
+		public DevelopmentMap DevelopmentMap { get; }
 
 		private GameMap(Game? game)
 		{
@@ -125,6 +126,8 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 			ConditionItemMap = game.ConditionItem == null ? null : new ConditionInputMap(game.ConditionItem);
 			// Set options map
 			OptionsMap = new OptionsMap(game.Options);
+			// Set development map
+			DevelopmentMap = new DevelopmentMap(game.Development);
 		}
 	}
 }
