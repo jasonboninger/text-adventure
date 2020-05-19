@@ -19,7 +19,7 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 		public ImmutableArray<ActionMap> ActionMapsStart { get; }
 		public ImmutableArray<ActionMap> ActionMapsEnd { get; }
 		public ImmutableArray<ActionMap> ActionMapsPrompt { get; }
-		public ImmutableArray<ActionMap> ActionMapsFail { get; }
+		public ImmutableArray<ActionMap> ActionMapsFallback { get; }
 		public ImmutableArray<ActionMap> ActionMapsAreaAmbiguous { get; }
 		public ImmutableArray<ActionMap> ActionMapsItemAmbiguous { get; }
 		public ConditionInputMap? ConditionAreaMap { get; }
@@ -108,8 +108,8 @@ namespace BoningerWorks.TextAdventure.Intermediate.Maps
 			ActionMapsEnd = game.ActionsEnd?.Select(a => new ActionMap(a)).ToImmutableArray() ?? ImmutableArray<ActionMap>.Empty;
 			// Set prompt action maps
 			ActionMapsPrompt = game.ActionsPrompt?.Select(a => new ActionMap(a)).ToImmutableArray() ?? Defaults.ActionMapsPrompt;
-			// Set fail action maps
-			ActionMapsFail = game.ActionsFail?.Select(a => new ActionMap(a)).ToImmutableArray() ?? ImmutableArray<ActionMap>.Empty;
+			// Set fallback action maps
+			ActionMapsFallback = game.ActionsFallback?.Select(a => new ActionMap(a)).ToImmutableArray() ?? ImmutableArray<ActionMap>.Empty;
 			// Set ambiguous area action maps
 			ActionMapsAreaAmbiguous = game.ActionsAreaAmbiguous?
 				.Select(a => new ActionMap(a))

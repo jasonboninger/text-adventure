@@ -28,7 +28,7 @@ export const EXAMPLE: IGame = {
 			]
 		}
 	],
-	fail: {
+	fallback: {
 		messages: "What? That doesn't even make any sense."
 	},
 	player: {

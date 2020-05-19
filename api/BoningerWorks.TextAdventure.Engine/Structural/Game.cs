@@ -24,7 +24,7 @@ namespace BoningerWorks.TextAdventure.Engine.Structural
 		private readonly Action<ResultBuilder> _actionStart;
 		private readonly Action<ResultBuilder> _actionEnd;
 		private readonly Action<ResultBuilder> _actionPrompt;
-		private readonly Action<ResultBuilder> _actionFail;
+		private readonly Action<ResultBuilder> _actionFallback;
 		private readonly ImmutableArray<ActionMap> _actionMapsAreaAmbiguous;
 		private readonly ImmutableArray<ActionMap> _actionMapsItemAmbiguous;
 		private readonly OptionsMap _optionsMap;
@@ -48,15 +48,15 @@ namespace BoningerWorks.TextAdventure.Engine.Structural
 			// Run through commands
 			foreach (var command in Commands)
 			{
-				// Check command fail action
-				command.CheckFail(Entities, Reactions);
+				// Check command fallback action
+				command.CheckFallback(Entities, Reactions);
 			}
 			// Set start action
 			_actionStart = Reactions.CreateAction(gameMap.ActionMapsStart);
 			// Set end action
 			_actionEnd = Reactions.CreateAction(gameMap.ActionMapsEnd);
-			// Set fail action
-			_actionFail = Reactions.CreateAction(gameMap.ActionMapsFail);
+			// Set fallback action
+			_actionFallback = Reactions.CreateAction(gameMap.ActionMapsFallback);
 			// Set prompt action
 			_actionPrompt = Reactions.CreateAction(gameMap.ActionMapsPrompt);
 			// Set ambiguous area action maps
@@ -120,8 +120,8 @@ namespace BoningerWorks.TextAdventure.Engine.Structural
 			// Check if match does not exist
 			if (match == null)
 			{
-				// Execute fail
-				_actionFail(result);
+				// Execute fallback
+				_actionFallback(result);
 				// Return
 				return;
 			}
@@ -164,21 +164,21 @@ namespace BoningerWorks.TextAdventure.Engine.Structural
 			switch (reactionResult.Outcome)
 			{
 				case EReactionOutcome.Nothing:
-					// Check if command has fail
-					if (reactionQuery.Command.HasFail())
+					// Check if command has fallback
+					if (reactionQuery.Command.HasFallback())
 					{
-						// Execute command fail
-						reactionQuery.Command.ExecuteFail(result, reactionQuery.Parts);
+						// Execute command fallback
+						reactionQuery.Command.ExecuteFallback(result, reactionQuery.Parts);
 					}
 					else
 					{
-						// Execute fail
-						_actionFail(result);
+						// Execute fallback
+						_actionFallback(result);
 					}
 					break;
 				case EReactionOutcome.OutOfContext:
-					// Execute fail
-					_actionFail(result);
+					// Execute fallback
+					_actionFallback(result);
 					break;
 				case EReactionOutcome.Success:
 					// Get reactions

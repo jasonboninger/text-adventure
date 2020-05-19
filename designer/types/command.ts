@@ -6,7 +6,7 @@ export type XCommandPart = string[] | ICommandPartWord | ICommandPartPlayer | IC
 export interface ICommand {
 	id: string;
 	parts: XCommandPart[];
-	fail?: XOneOrArray<XAction>;
+	fallback?: XOneOrArray<XAction>;
 }
 
 export interface ICommandPartWord {

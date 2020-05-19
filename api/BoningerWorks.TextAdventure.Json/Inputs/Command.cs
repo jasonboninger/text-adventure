@@ -8,6 +8,6 @@ namespace BoningerWorks.TextAdventure.Json.Inputs
 	{
 		[JsonPropertyName("id")] public string? Id { get; set; }
 		[JsonPropertyName("parts")] public List<SFlexibleObject<CommandPart>>? CommandParts { get; set; }
-		[JsonPropertyName("fail")] public OneOrManyList<Action?>? ActionsFail { get; set; }
+		[JsonPropertyName("fallback")] public OneOrManyList<Action?>? ActionsFallback { get; set; }
 	}
 }

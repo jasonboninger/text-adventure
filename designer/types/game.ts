@@ -13,7 +13,7 @@ export interface IGame {
 	areas?: IArea[];
 	start?: XOneOrArray<XAction>;
 	end?: XOneOrArray<XAction>;
-	fail?: XOneOrArray<XAction>;
+	fallback?: XOneOrArray<XAction>;
 	prompt?: XOneOrArray<XAction>;
 	areaInContext?: IConditionArea;
 	itemInContext?: IConditionItem;

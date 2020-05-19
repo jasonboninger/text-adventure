@@ -33,7 +33,7 @@ namespace BoningerWorks.TextAdventure.Engine.Structural
 
 		private readonly Regex _regularExpression;
 		private readonly ImmutableArray<CommandInputMetadatum> _commandInputMetadata;
-		private readonly ImmutableArray<ActionMap>? _actionMapsFail;
+		private readonly ImmutableArray<ActionMap>? _actionMapsFallback;
 
 		public Command(Entities entities, CommandMap commandMap)
 		{
@@ -121,8 +121,8 @@ namespace BoningerWorks.TextAdventure.Engine.Structural
 			_regularExpression = new Regex(@"^" + string.Join(@" +", regularExpressions) + @"$", RegexOptions.IgnoreCase | RegexOptions.Singleline);
 			// Set inputs
 			Inputs = _commandInputMetadata.Select(cim => cim.CommandInput).ToImmutableArray();
-			// Set fail action maps
-			_actionMapsFail = commandMap.ActionMapsFail;
+			// Set fallback action maps
+			_actionMapsFallback = commandMap.ActionMapsFallback;
 		}
 
 		public override string ToString()
@@ -173,33 +173,33 @@ namespace BoningerWorks.TextAdventure.Engine.Structural
 			return null;
 		}
 
-		public void CheckFail(Entities entities, Reactions reactions)
+		public void CheckFallback(Entities entities, Reactions reactions)
 		{
 			// Get parts
 			var parts = Inputs.Select(i => entities.FirstOrDefault(e => i.IsValid(e))).ToImmutableList();
 			// Check if parts exist
 			if (parts.All(p => p != null))
 			{
-				// Create fail action
-				_CreateFail(parts, reactions);
+				// Create fallback action
+				_CreateFallback(parts, reactions);
 			}
 		}
 
-		public bool HasFail()
+		public bool HasFallback()
 		{
-			// Return if fail action maps exist
-			return _actionMapsFail.HasValue;
+			// Return if fallback action maps exist
+			return _actionMapsFallback.HasValue;
 		}
 
-		public void ExecuteFail(ResultBuilder result, ImmutableList<IEntity> parts)
+		public void ExecuteFallback(ResultBuilder result, ImmutableList<IEntity> parts)
 		{
-			// Create fail action
-			var actionFail = _CreateFail(parts, result.Game.Reactions);
-			// Execute fail action
-			actionFail(result);
+			// Create fallback action
+			var actionFallback = _CreateFallback(parts, result.Game.Reactions);
+			// Execute fallback action
+			actionFallback(result);
 		}
 
-		private Action<ResultBuilder> _CreateFail(ImmutableList<IEntity> parts, Reactions reactions)
+		private Action<ResultBuilder> _CreateFallback(ImmutableList<IEntity> parts, Reactions reactions)
 		{
 			// Get inputs
 			var inputs = Inputs;
@@ -232,7 +232,7 @@ namespace BoningerWorks.TextAdventure.Engine.Structural
 				return id;
 			}
 			// Return action
-			return reactions.CreateAction(_actionMapsFail ?? ImmutableArray<ActionMap>.Empty, replacer);
+			return reactions.CreateAction(_actionMapsFallback ?? ImmutableArray<ActionMap>.Empty, replacer);
 		}
 	}
 }
